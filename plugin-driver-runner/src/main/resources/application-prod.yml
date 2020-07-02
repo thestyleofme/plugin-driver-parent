@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: ${SPRING_APPLICATION_NAME:plugin-driver}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/plugin?useUnicode=true&characterEncoding=utf-8&useSSL=false}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:tse@9527}
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      # 连接池最小空闲连接数
+      minimum-idle: ${SPRING_DATASOURCE_MINIMUM_IDLE:20}
+      # 连接池允许的最大连接数
+      maximum-pool-size: ${SPRING_DATASOURCE_MAXIMUM_POOL_SIZE:200}
+      # 等待连接池分配连接的最大时长（毫秒）
+      connection-timeout: ${SPRING_DATASOURCE_CONNECTION_TIMEOUT:30000}
+  redis:
+    host: ${SPRING_REDIS_HOST:localhost}
+    port: ${SPRING_REDIS_PORT:6379}
+    database: ${SPRING_REDIS_DATABASE:1}
+    password: ${SPRING_REDIS_PASSWORD:}
+    timeout: 5000
+  mvc:
+    dateFormat: yyyy-MM-dd HH:mm:ss
+  jackson:
+    dateFormat: yyyy-MM-dd HH:mm:ss
+    timeZone: GMT+8
+    default-property-inclusion: non_null
+
+mybatis-plus:
+  mapperLocations: classpath*:mapper/*.xml
+  configuration:
+    mapUnderscoreToCamelCase: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+plugin:
+  runMode: prod
+  pluginPath: plugins
+  pluginConfigFilePath: pluginConfig

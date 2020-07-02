@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.github.codingdebugallday.driver.core.infra.mapper.PluginMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="com.github.codingdebugallday.driver.core.domain.entity.Plugin">
+        <result column="id" property="id" jdbcType="DECIMAL"/>
+        <result column="plugin_id" property="pluginId" jdbcType="VARCHAR"/>
+        <result column="plugin_description" property="pluginDescription" jdbcType="VARCHAR"/>
+        <result column="plugin_class" property="pluginClass" jdbcType="VARCHAR"/>
+        <result column="plugin_version" property="pluginVersion" jdbcType="VARCHAR"/>
+        <result column="plugin_requires" property="pluginRequires" jdbcType="VARCHAR"/>
+        <result column="plugin_provider" property="pluginProvider" jdbcType="VARCHAR"/>
+        <result column="plugin_dependencies" property="pluginDependencies" jdbcType="VARCHAR"/>
+        <result column="plugin_license" property="pluginLicense" jdbcType="VARCHAR"/>
+        <result column="plugin_state" property="pluginState" jdbcType="VARCHAR"/>
+        <result column="plugin_path" property="pluginPath" jdbcType="VARCHAR"/>
+        <result column="run_mode" property="runMode" jdbcType="VARCHAR"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+</mapper>

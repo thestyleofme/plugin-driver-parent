@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.github.codingdebugallday.driver.core.infra.mapper.DatasourceMapper">
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap id="BaseResultMap" type="com.github.codingdebugallday.driver.core.domain.entity.Datasource">
+        <result column="datasource_id" property="datasourceId" jdbcType="DECIMAL"/>
+        <result column="datasource_code" property="datasourceCode" jdbcType="VARCHAR"/>
+        <result column="datasource_description" property="datasourceDescription" jdbcType="VARCHAR"/>
+        <result column="datasource_type" property="datasourceType" jdbcType="VARCHAR"/>
+        <result column="datasource_class" property="datasourceClass" jdbcType="VARCHAR"/>
+        <result column="plugin_id" property="pluginId" jdbcType="VARCHAR"/>
+        <result column="settings_info" property="settingsInfo" jdbcType="VARCHAR"/>
+        <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+</mapper>

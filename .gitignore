@@ -1,0 +1,8 @@
+# Project exclude paths
+/out/
+/plugin-driver-common/target/
+/plugin-driver-common-pom/target/
+/plugin-driver-main/target/
+/plugin-driver-runner/target/
+/plugins/driver-mysql/target/
+/plugins/target/

@@ -1,0 +1,2 @@
+name: mysqlplugin
+plugin: driver-mysql
