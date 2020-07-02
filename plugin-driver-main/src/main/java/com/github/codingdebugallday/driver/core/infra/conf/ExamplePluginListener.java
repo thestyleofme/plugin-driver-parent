@@ -1,5 +1,6 @@
 package com.github.codingdebugallday.driver.core.infra.conf;
 
+import com.github.codingdebugallday.driver.core.infra.utils.PluginDataSourceHolder;
 import com.github.codingdebugallday.integration.listener.PluginListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +25,11 @@ public class ExamplePluginListener implements PluginListener {
     @Override
     public void unregister(String pluginId) {
         logger.info("Listener: unRegistry pluginId {}", pluginId);
+        PluginDataSourceHolder.remove(pluginId);
     }
 
     @Override
     public void failure(String pluginId, Throwable throwable) {
-        // ignore
+        PluginDataSourceHolder.remove(pluginId);
     }
 }
