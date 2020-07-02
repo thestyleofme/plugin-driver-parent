@@ -2,11 +2,11 @@ package com.github.codingdebugallday.driver.core.app.service.impl;
 
 import java.util.List;
 
-import com.github.codingdebugallday.driver.common.exception.DriverException;
+import com.github.codingdebugallday.driver.common.exceptions.DriverException;
+import com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO;
 import com.github.codingdebugallday.driver.core.app.service.BridgeService;
 import com.github.codingdebugallday.driver.core.app.service.DatasourceService;
 import com.github.codingdebugallday.driver.core.app.service.SessionService;
-import com.github.codingdebugallday.driver.core.domain.entity.Datasource;
 import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.user.PluginUser;
 import lombok.extern.slf4j.Slf4j;
@@ -46,8 +46,8 @@ public class BridgeServiceImpl implements BridgeService {
             log.info("use default datasource");
             tables = defaultSessionService.getTables(null, schema);
         } else {
-            Datasource datasource = datasourceService.getDatasourceByCode(tenantId, datasourceCode);
-            String pluginId = datasource.getPluginId();
+            DatasourceDTO datasourceDTO = datasourceService.getDatasourceByCode(tenantId, datasourceCode);
+            String pluginId = datasourceDTO.getPluginId();
             List<SessionService> pluginSessionServices = pluginUser.getPluginBeans(pluginId, SessionService.class);
             if (CollectionUtils.isEmpty(pluginSessionServices)) {
                 log.error("the plugin [{}] maybe stopped, not find DatasourceService", datasourceCode);
@@ -55,7 +55,7 @@ public class BridgeServiceImpl implements BridgeService {
             } else {
                 log.info("use plugin {}", pluginId);
                 // 插件中有且仅有一个 所以这里get(0)
-                tables = pluginSessionServices.get(0).getTables(datasource, schema);
+                tables = pluginSessionServices.get(0).getTables(datasourceDTO, schema);
             }
         }
         return tables;

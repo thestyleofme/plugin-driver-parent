@@ -1,7 +1,6 @@
-package com.github.codingdebugallday.driver.core.infra.exceptions;
+package com.github.codingdebugallday.driver.common.exceptions;
 
-import com.github.codingdebugallday.driver.common.exception.DriverException;
-import com.github.codingdebugallday.driver.core.domain.entity.Err;
+import com.github.codingdebugallday.driver.common.model.Err;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

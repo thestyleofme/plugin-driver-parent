@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Objects;
 import javax.sql.DataSource;
 
+import com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO;
 import com.github.codingdebugallday.driver.core.app.service.SessionService;
-import com.github.codingdebugallday.driver.core.domain.entity.Datasource;
 import com.github.codingdebugallday.driver.core.infra.utils.ConnectionUtil;
 import com.github.codingdebugallday.driver.core.infra.utils.DriverUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -52,10 +52,10 @@ public class DefaultSessionServiceImpl implements SessionService {
     }
 
     @Override
-    public List<String> getTables(Datasource entity, String schema) {
-        if (Objects.nonNull(entity)) {
+    public List<String> getTables(DatasourceDTO datasourceDTO, String schema) {
+        if (Objects.nonNull(datasourceDTO)) {
             // 使用传的数据源信息 只有一次 用后需要恢复默认的数据源
-            setDatasource(DriverUtil.entityToHikariDataSource(entity));
+            setDatasource(DriverUtil.dtoToHikariDataSource(datasourceDTO));
         }
         DataSource dataSource = Objects.requireNonNull(jdbcTemplate.getDataSource());
         List<String> list = ConnectionUtil.getTables(dataSource, schema);

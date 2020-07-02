@@ -6,10 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.sql.DataSource;
 
-import com.github.codingdebugallday.driver.common.exception.DriverException;
+import com.github.codingdebugallday.driver.common.exceptions.DriverException;
 
 /**
  * <p>

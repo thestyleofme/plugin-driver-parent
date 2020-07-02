@@ -2,15 +2,13 @@ package com.github.codingdebugallday.driver.core.api.controller.v1;
 
 import java.util.List;
 
+import com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO;
 import com.github.codingdebugallday.driver.core.app.service.DatasourceService;
-import com.github.codingdebugallday.driver.core.domain.entity.Datasource;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -31,10 +29,19 @@ public class DatasourceController {
         this.datasourceService = datasourceService;
     }
 
-    @ApiOperation(value = "list")
+    @ApiOperation(value = "查询该租户下所有数据源")
     @GetMapping
-    public ResponseEntity<List<Datasource>> list(@PathVariable(name = "organizationId") Long tenantId) {
-        return ResponseEntity.ok(datasourceService.list());
+    public ResponseEntity<List<DatasourceDTO>> list(@PathVariable(name = "organizationId") Long tenantId) {
+        return ResponseEntity.ok(datasourceService.fetchDatasource(tenantId));
+    }
+
+    @ApiOperation(value = "创建或更新数据源")
+    @PostMapping
+    public ResponseEntity<Void> save(@PathVariable(name = "organizationId") Long tenantId,
+                                     @RequestBody DatasourceDTO datasourceDTO) {
+        datasourceDTO.setTenantId(tenantId);
+        datasourceService.create(datasourceDTO);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

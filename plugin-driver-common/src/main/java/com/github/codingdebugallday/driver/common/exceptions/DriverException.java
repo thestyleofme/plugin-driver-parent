@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.common.exception;
+package com.github.codingdebugallday.driver.common.exceptions;
 
 /**
  * <p>

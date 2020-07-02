@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.core.domain.entity;
+package com.github.codingdebugallday.driver.common.model;
 
 import java.io.Serializable;
 

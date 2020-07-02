@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.core.infra.conf;
+package com.github.codingdebugallday.driver.common.conf;
 
 import com.github.codingdebugallday.driver.common.utils.IpUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 @Slf4j
 public class DriverApiCommandLineRunner implements CommandLineRunner, DisposableBean {
 
-    public static final String INSTANCE_KEY = "plugin:service:source:instances";
+    public static final String INSTANCE_KEY = "plugin:datasource:instances";
 
     private final int port;
     private final StringRedisTemplate stringRedisTemplate;

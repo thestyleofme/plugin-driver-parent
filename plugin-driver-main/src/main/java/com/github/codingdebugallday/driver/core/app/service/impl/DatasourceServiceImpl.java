@@ -1,14 +1,16 @@
 package com.github.codingdebugallday.driver.core.app.service.impl;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.github.codingdebugallday.driver.common.exception.DriverException;
+import com.github.codingdebugallday.driver.common.constants.CommonConstant;
+import com.github.codingdebugallday.driver.common.exceptions.DriverException;
+import com.github.codingdebugallday.driver.common.utils.JsonUtil;
+import com.github.codingdebugallday.driver.common.utils.RedisHelper;
+import com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO;
 import com.github.codingdebugallday.driver.core.app.service.DatasourceService;
-import com.github.codingdebugallday.driver.core.domain.entity.Datasource;
-import com.github.codingdebugallday.driver.core.infra.mapper.DatasourceMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * <p>
@@ -19,13 +21,37 @@ import org.springframework.stereotype.Service;
  * @since 1.0
  */
 @Service
-public class DatasourceServiceImpl extends ServiceImpl<DatasourceMapper, Datasource> implements DatasourceService {
+public class DatasourceServiceImpl implements DatasourceService {
+
+    private final RedisHelper redisHelper;
+
+    public DatasourceServiceImpl(RedisHelper redisHelper) {
+        this.redisHelper = redisHelper;
+    }
 
     @Override
-    public Datasource getDatasourceByCode(Long tenantId, String datasourceCode) {
-        return Optional.ofNullable(this.getOne(new QueryWrapper<>(Datasource.builder()
-                .tenantId(tenantId).datasourceCode(datasourceCode).build())))
-                .orElseThrow(() -> new DriverException("cannot find datasource by datasourceCode[" + datasourceCode + "]"));
+    public DatasourceDTO getDatasourceByCode(Long tenantId, String datasourceCode) {
+        String value = redisHelper.hashGet(String.format(
+                CommonConstant.REDIS_PLUGIN_DATASOURCE_PATTERN, tenantId), datasourceCode);
+        if (StringUtils.isEmpty(value)) {
+            throw new DriverException("cannot find datasource by datasourceCode[" + datasourceCode + "]");
+        }
+        return JsonUtil.toObj(value, DatasourceDTO.class);
+    }
+
+    @Override
+    public void create(DatasourceDTO datasourceDTO) {
+        redisHelper.hashPut(String.format(CommonConstant.REDIS_PLUGIN_DATASOURCE_PATTERN, datasourceDTO.getTenantId()),
+                datasourceDTO.getDatasourceCode(), JsonUtil.toJson(datasourceDTO));
+    }
+
+    @Override
+    public List<DatasourceDTO> fetchDatasource(Long tenantId) {
+        List<String> hashValues = redisHelper.hashValues(String.format(
+                CommonConstant.REDIS_PLUGIN_DATASOURCE_PATTERN, tenantId));
+        return hashValues.stream()
+                .map(value -> JsonUtil.toObj(value, DatasourceDTO.class))
+                .collect(Collectors.toList());
     }
 
 }

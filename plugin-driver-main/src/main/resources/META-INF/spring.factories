@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.github.codingdebugallday.driver.core.infra.conf.DriverApiAutoConfigure
+com.github.codingdebugallday.driver.core.infra.conf.Swagger2Config,\
+com.github.codingdebugallday.driver.core.infra.conf.PluginBeanConfig

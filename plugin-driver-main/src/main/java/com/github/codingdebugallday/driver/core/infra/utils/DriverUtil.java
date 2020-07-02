@@ -1,9 +1,9 @@
 package com.github.codingdebugallday.driver.core.infra.utils;
 
-import com.github.codingdebugallday.driver.common.exception.DriverException;
+import com.github.codingdebugallday.driver.common.exceptions.DriverException;
 import com.github.codingdebugallday.driver.common.utils.JsonUtil;
+import com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO;
 import com.github.codingdebugallday.driver.core.domain.entity.CommonDatasourceSettingInfo;
-import com.github.codingdebugallday.driver.core.domain.entity.Datasource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.util.StringUtils;
@@ -22,8 +22,10 @@ public class DriverUtil {
         throw new IllegalStateException("util class");
     }
 
-    public static HikariDataSource entityToHikariDataSource(Datasource entity) {
-        String settingsInfo = entity.getSettingsInfo();
+    // todo 驱动数据源进行统一管理 防止创建更多datasource
+
+    public static HikariDataSource dtoToHikariDataSource(DatasourceDTO dto) {
+        String settingsInfo = dto.getSettingsInfo();
         if (StringUtils.isEmpty(settingsInfo)) {
             throw new DriverException("the datasource settingsInfo cannot be empty");
         }

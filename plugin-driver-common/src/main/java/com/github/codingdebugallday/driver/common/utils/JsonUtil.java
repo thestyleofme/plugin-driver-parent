@@ -7,8 +7,8 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import com.github.codingdebugallday.driver.common.exception.DriverException;
-import com.github.codingdebugallday.driver.common.exception.JsonException;
+import com.github.codingdebugallday.driver.common.exceptions.DriverException;
+import com.github.codingdebugallday.driver.common.exceptions.JsonException;
 import org.springframework.context.ApplicationContext;
 
 /**

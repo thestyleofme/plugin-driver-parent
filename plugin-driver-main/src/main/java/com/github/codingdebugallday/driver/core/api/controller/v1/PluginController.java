@@ -43,6 +43,16 @@ public class PluginController {
     }
 
     /**
+     * 获取插件信息
+     *
+     * @return 返回插件信息
+     */
+    @GetMapping("/{pluginId}")
+    public PluginInfo getPluginInfo(@PathVariable String pluginId) {
+        return pluginOperator.getPluginInfo(pluginId);
+    }
+
+    /**
      * 获取插件jar文件名
      *
      * @return 获取插件文件名。只在生产环境显示
