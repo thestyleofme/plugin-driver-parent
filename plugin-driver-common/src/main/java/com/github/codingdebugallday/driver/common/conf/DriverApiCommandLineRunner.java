@@ -1,5 +1,6 @@
 package com.github.codingdebugallday.driver.common.conf;
 
+import com.github.codingdebugallday.driver.common.constants.CommonConstant;
 import com.github.codingdebugallday.driver.common.utils.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -17,8 +18,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 @Slf4j
 public class DriverApiCommandLineRunner implements CommandLineRunner, DisposableBean {
 
-    public static final String INSTANCE_KEY = "plugin:datasource:instances";
-
     private final int port;
     private final StringRedisTemplate stringRedisTemplate;
 
@@ -30,14 +29,14 @@ public class DriverApiCommandLineRunner implements CommandLineRunner, Disposable
     @Override
     public void destroy() {
         final String instance = IpUtil.LOCAL_IP + "-" + port;
-        stringRedisTemplate.boundSetOps(INSTANCE_KEY).remove(instance);
+        stringRedisTemplate.boundSetOps(CommonConstant.REDIS_PLUGIN_DATASOURCE_INSTANCE_KEY).remove(instance);
         log.info("destroy driver service instance: {}", instance);
     }
 
     @Override
     public void run(String... args) {
         final String instance = IpUtil.LOCAL_IP + "-" + port;
-        stringRedisTemplate.boundSetOps(INSTANCE_KEY).add(instance);
+        stringRedisTemplate.boundSetOps(CommonConstant.REDIS_PLUGIN_DATASOURCE_INSTANCE_KEY).add(instance);
         log.info("register driver service instance: {}", instance);
     }
 

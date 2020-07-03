@@ -2,8 +2,10 @@ package com.github.codingdebugallday.driver.core.api.controller.v1;
 
 import java.util.List;
 
-import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.core.app.service.PluginDatasourceService;
+import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
- * description
+ * 插件数据源controller
+ * <strong>注意</strong> tenantId传-1即所有
  * </p>
  *
  * @author isaac 2020/7/1 17:10
@@ -29,18 +32,39 @@ public class PluginDatasourceController {
         this.pluginDatasourceService = pluginDatasourceService;
     }
 
-    @ApiOperation(value = "查询该租户下所有数据源")
+    @ApiOperation(value = "查询数据源")
+    @ApiImplicitParams({@ApiImplicitParam(
+            name = "organizationId",
+            value = "租户Id，-1表示所有租户",
+            paramType = "path"
+    )})
     @GetMapping
-    public ResponseEntity<List<PluginDatasource>> list(@PathVariable(name = "organizationId") Long tenantId) {
-        return ResponseEntity.ok(pluginDatasourceService.fetchDatasource(tenantId));
+    public ResponseEntity<List<PluginDatasource>> list(@PathVariable(name = "organizationId") Long tenantId,
+                                                       PluginDatasource pluginDatasource) {
+        return ResponseEntity.ok(pluginDatasourceService.fetchDatasource(tenantId, pluginDatasource));
     }
 
-    @ApiOperation(value = "创建或更新数据源")
+    @ApiOperation(value = "创建数据源")
     @PostMapping
-    public ResponseEntity<Void> save(@PathVariable(name = "organizationId") Long tenantId,
-                                     @RequestBody PluginDatasource pluginDatasource) {
+    public ResponseEntity<PluginDatasource> create(@PathVariable(name = "organizationId") Long tenantId,
+                                                   @RequestBody PluginDatasource pluginDatasource) {
         pluginDatasource.setTenantId(tenantId);
-        pluginDatasourceService.create(pluginDatasource);
+        return ResponseEntity.ok(pluginDatasourceService.create(pluginDatasource));
+    }
+
+    @ApiOperation(value = "更新数据源")
+    @PutMapping
+    public ResponseEntity<PluginDatasource> update(@PathVariable(name = "organizationId") Long tenantId,
+                                                   @RequestBody PluginDatasource pluginDatasource) {
+        pluginDatasource.setTenantId(tenantId);
+        return ResponseEntity.ok(pluginDatasourceService.update(pluginDatasource));
+    }
+
+    @ApiOperation(value = "删除数据源")
+    @DeleteMapping
+    public ResponseEntity<Void> delete(@PathVariable(name = "organizationId") Long tenantId,
+                                       String datasourceCode) {
+        pluginDatasourceService.delete(tenantId, datasourceCode);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

@@ -14,9 +14,11 @@ public class CommonConstant {
         throw new IllegalStateException("constant class");
     }
 
+    public static final String REDIS_PLUGIN_DATASOURCE_INSTANCE_KEY = "plugin:datasource:instances";
     /**
      * 数据源储存到redis的key格式，如plugin:datasource:${tenantId}
      */
-    public static final String REDIS_PLUGIN_DATASOURCE_PATTERN = "plugin:datasource:%d";
+    public static final String REDIS_PLUGIN_DATASOURCE_PREFIX = "plugin:datasource";
+    public static final String REDIS_PLUGIN_DATASOURCE_PATTERN = REDIS_PLUGIN_DATASOURCE_PREFIX + "::%d";
 
 }

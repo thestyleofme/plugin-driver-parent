@@ -1,10 +1,14 @@
 package com.github.codingdebugallday.driver.common.utils;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Consumer;
 
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
+import com.github.codingdebugallday.driver.common.exceptions.DriverException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +22,7 @@ import org.springframework.stereotype.Component;
  */
 @SuppressWarnings("unused")
 @Component
+@Slf4j
 public class RedisHelper {
 
     private final RedisTemplate<String, String> redisTemplate;
@@ -40,6 +45,46 @@ public class RedisHelper {
     public static final long NOT_EXPIRE = -1;
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+    /**
+     * scan 实现
+     *
+     * @param pattern  表达式
+     * @param consumer 对迭代到的key进行操作
+     */
+    public void scan(String pattern, Consumer<byte[]> consumer) {
+        redisTemplate.execute((RedisConnection connection) -> {
+            try (Cursor<byte[]> cursor = connection
+                    .scan(
+                            ScanOptions.scanOptions()
+                                    .count(Long.MAX_VALUE)
+                                    .match(pattern)
+                                    .build())) {
+                cursor.forEachRemaining(consumer);
+                return null;
+            } catch (IOException e) {
+                log.error("error.driver.redis.scan");
+                throw new DriverException("error.driver.redis.scan", e);
+            }
+        });
+    }
+
+    /**
+     * 获取符合条件的key
+     * pattern: plugin:datasource:*
+     *
+     * @param pattern 表达式
+     * @return List<String>
+     */
+    public List<String> keys(String pattern) {
+        List<String> keys = new ArrayList<>();
+        this.scan(pattern, item -> {
+            // 符合条件的key
+            String key = new String(item, StandardCharsets.UTF_8);
+            keys.add(key);
+        });
+        return keys;
+    }
 
     /**
      * Hash 将哈希表 key 中的域 field的值设为 value
