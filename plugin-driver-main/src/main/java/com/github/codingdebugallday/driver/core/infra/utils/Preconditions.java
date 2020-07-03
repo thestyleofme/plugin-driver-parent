@@ -1,9 +1,9 @@
 package com.github.codingdebugallday.driver.core.infra.utils;
 
+import java.util.Objects;
+
 import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import org.springframework.util.StringUtils;
-
-import java.util.Objects;
 
 /**
  * <p>
@@ -20,7 +20,7 @@ public class Preconditions {
     }
 
     /**
-     * 类似sql，只要right的某个属性与left相等就返回true
+     * 类似sql，只要right的某个属性与left相等即返回true
      *
      * @param left  PluginDatasource
      * @param right PluginDatasource
