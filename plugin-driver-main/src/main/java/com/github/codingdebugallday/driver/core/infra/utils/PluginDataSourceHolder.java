@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.sql.DataSource;
 import javax.validation.constraints.NotBlank;
 
-import com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO;
+import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import com.zaxxer.hikari.HikariDataSource;
 
 /**
@@ -28,13 +28,13 @@ public class PluginDataSourceHolder {
     /**
      * 根据数据源信息创建或直接获取数据源，防止插件创建太多DataSource
      *
-     * @param dto DatasourceDTO
+     * @param pluginDatasource PluginDatasource
      * @return javax.sql.DataSource
      */
-    public static DataSource getOrCreate(DatasourceDTO dto) {
-        @NotBlank String pluginId = dto.getPluginId();
+    public static DataSource getOrCreate(PluginDatasource pluginDatasource) {
+        @NotBlank String pluginId = pluginDatasource.getPluginId();
         if (Objects.isNull(PLUGIN_DATASOURCE_MAP.get(pluginId))) {
-            HikariDataSource dataSource = DriverUtil.dtoToHikariDataSource(dto);
+            HikariDataSource dataSource = DriverUtil.createHikariDataSource(pluginDatasource);
             PLUGIN_DATASOURCE_MAP.put(pluginId, dataSource);
             return dataSource;
         }

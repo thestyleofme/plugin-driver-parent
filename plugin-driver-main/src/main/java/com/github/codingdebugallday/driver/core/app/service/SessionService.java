@@ -2,7 +2,7 @@ package com.github.codingdebugallday.driver.core.app.service;
 
 import java.util.List;
 
-import com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO;
+import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 
 /**
  * <p>
@@ -17,10 +17,10 @@ public interface SessionService {
     /**
      * 获取表
      *
-     * @param datasourceDTO 数据源信息，可为null即服务本身数据源
+     * @param pluginDatasource 数据源信息，可为null即服务本身数据源
      * @param schema        库
      * @return List<String> 表
      */
-    List<String> getTables(DatasourceDTO datasourceDTO, String schema);
+    List<String> getTables(PluginDatasource pluginDatasource, String schema);
 
 }

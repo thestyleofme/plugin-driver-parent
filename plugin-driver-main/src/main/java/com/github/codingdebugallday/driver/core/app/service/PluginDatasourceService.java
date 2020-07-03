@@ -2,7 +2,7 @@ package com.github.codingdebugallday.driver.core.app.service;
 
 import java.util.List;
 
-import com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO;
+import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 
 /**
  * <p>
@@ -12,29 +12,29 @@ import com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO;
  * @author isaac 2020/7/1 17:03
  * @since 1.0
  */
-public interface DatasourceService {
+public interface PluginDatasourceService {
 
     /**
      * 通过数据源编码获取数据源
      *
      * @param tenantId       租户id
      * @param datasourceCode 数据源编码
-     * @return DatasourceDTO
+     * @return PluginDatasource
      */
-    DatasourceDTO getDatasourceByCode(Long tenantId, String datasourceCode);
+    PluginDatasource getDatasourceByCode(Long tenantId, String datasourceCode);
 
     /**
      * 创建数据源
      *
-     * @param datasourceDTO DatasourceDTO
+     * @param pluginDatasource PluginDatasource
      */
-    void create(DatasourceDTO datasourceDTO);
+    void create(PluginDatasource pluginDatasource);
 
     /**
      * 条件获取数据源
      *
      * @param tenantId 租户id
-     * @return java.util.List<com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO>
+     * @return List<PluginDatasource>
      */
-    List<DatasourceDTO> fetchDatasource(Long tenantId);
+    List<PluginDatasource> fetchDatasource(Long tenantId);
 }

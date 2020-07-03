@@ -3,9 +3,9 @@ package com.github.codingdebugallday.driver.core.app.service.impl;
 import java.util.List;
 
 import com.github.codingdebugallday.driver.common.exceptions.DriverException;
-import com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO;
+import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.core.app.service.BridgeService;
-import com.github.codingdebugallday.driver.core.app.service.DatasourceService;
+import com.github.codingdebugallday.driver.core.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.core.app.service.SessionService;
 import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.user.PluginUser;
@@ -29,14 +29,14 @@ public class BridgeServiceImpl implements BridgeService {
 
     private final PluginUser pluginUser;
     private final SessionService defaultSessionService;
-    private final DatasourceService datasourceService;
+    private final PluginDatasourceService pluginDatasourceService;
 
     public BridgeServiceImpl(PluginApplication pluginApplication,
                              @Qualifier("defaultSessionService") SessionService defaultSessionService,
-                             DatasourceService datasourceService) {
+                             PluginDatasourceService pluginDatasourceService) {
         this.pluginUser = pluginApplication.getPluginUser();
         this.defaultSessionService = defaultSessionService;
-        this.datasourceService = datasourceService;
+        this.pluginDatasourceService = pluginDatasourceService;
     }
 
     @Override
@@ -46,8 +46,8 @@ public class BridgeServiceImpl implements BridgeService {
             log.info("use default datasource");
             tables = defaultSessionService.getTables(null, schema);
         } else {
-            DatasourceDTO datasourceDTO = datasourceService.getDatasourceByCode(tenantId, datasourceCode);
-            String pluginId = datasourceDTO.getPluginId();
+            PluginDatasource pluginDatasource = pluginDatasourceService.getDatasourceByCode(tenantId, datasourceCode);
+            String pluginId = pluginDatasource.getPluginId();
             List<SessionService> pluginSessionServices = pluginUser.getPluginBeans(pluginId, SessionService.class);
             if (CollectionUtils.isEmpty(pluginSessionServices)) {
                 log.error("the plugin [{}] maybe stopped, not find DatasourceService", datasourceCode);
@@ -55,7 +55,7 @@ public class BridgeServiceImpl implements BridgeService {
             } else {
                 log.info("use plugin {}", pluginId);
                 // 插件中有且仅有一个 所以这里get(0)
-                tables = pluginSessionServices.get(0).getTables(datasourceDTO, schema);
+                tables = pluginSessionServices.get(0).getTables(pluginDatasource, schema);
             }
         }
         return tables;

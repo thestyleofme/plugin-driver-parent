@@ -4,12 +4,10 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.github.codingdebugallday.driver.core.api.dto.DatasourceDTO;
+import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.core.app.service.SessionService;
 import com.github.codingdebugallday.driver.core.infra.utils.ConnectionUtil;
-import com.github.codingdebugallday.driver.core.infra.utils.DriverUtil;
 import com.github.codingdebugallday.driver.core.infra.utils.PluginDataSourceHolder;
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -28,8 +26,8 @@ import org.springframework.stereotype.Component;
 public class MysqlSessionServiceImpl implements SessionService {
 
     @Override
-    public List<String> getTables(DatasourceDTO datasourceDTO, String schema) {
-        DataSource dataSource = PluginDataSourceHolder.getOrCreate(datasourceDTO);
+    public List<String> getTables(PluginDatasource pluginDatasource, String schema) {
+        DataSource dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasource);
         return ConnectionUtil.getTables(dataSource, schema);
     }
 

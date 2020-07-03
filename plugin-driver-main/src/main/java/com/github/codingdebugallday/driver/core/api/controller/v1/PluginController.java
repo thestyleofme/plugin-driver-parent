@@ -15,12 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * <p>
  * 操作插件jar包
+ * todo 后续迁移到springboot-plugin-framework依赖中
  * </p>
  *
  * @author isaac 2020/6/16 17:34
  * @since 1.0
  */
-@RestController
+@RestController("pluginController")
 @RequestMapping("/plugin")
 @Slf4j
 public class PluginController {
