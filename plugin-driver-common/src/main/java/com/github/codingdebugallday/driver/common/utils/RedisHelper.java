@@ -1,16 +1,16 @@
 package com.github.codingdebugallday.driver.common.utils;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.function.Consumer;
-
 import com.github.codingdebugallday.driver.common.exceptions.DriverException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * <p>
@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
  * @since 1.0
  */
 @SuppressWarnings("unused")
-@Component
 @Slf4j
+@Component
 public class RedisHelper {
 
     private final RedisTemplate<String, String> redisTemplate;
@@ -248,5 +248,23 @@ public class RedisHelper {
         hashOpr.delete(key, hashKeys);
     }
 
+    /**
+     * 删除key
+     *
+     * @param key
+     */
+    public void delKey(String key) {
+        redisTemplate.delete(key);
+    }
+
+    /**
+     * 模糊查询key
+     *
+     * @param pattern pattern
+     * @return Map<String, String>
+     */
+    public Set<String> keysPattern(String pattern) {
+        return redisTemplate.keys(pattern);
+    }
 
 }

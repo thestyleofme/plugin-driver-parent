@@ -1,8 +1,10 @@
 package com.github.codingdebugallday.driver.core.app.service;
 
-import java.util.List;
-
 import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * <p>
@@ -17,7 +19,7 @@ public interface PluginDatasourceService {
     /**
      * 条件查询数据源
      *
-     * @param tenantId 租户id
+     * @param tenantId         租户id
      * @param pluginDatasource PluginDatasource
      * @return List<PluginDatasource>
      */
@@ -56,4 +58,19 @@ public interface PluginDatasourceService {
      */
     void delete(Long tenantId, String datasourceCode);
 
+    /**
+     * 导出数据源配置
+     *
+     * @param tenantId 租户ID
+     * @param response 响应
+     */
+    void exportDatasource(Long tenantId, HttpServletResponse response);
+
+    /**
+     * 导入数据源配置
+     *
+     * @param tenantId       租户ID
+     * @param datasourceFile 文件
+     */
+    void importDatasource(Long tenantId, MultipartFile datasourceFile);
 }

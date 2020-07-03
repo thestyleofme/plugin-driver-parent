@@ -1,7 +1,5 @@
 package com.github.codingdebugallday.driver.core.api.controller.v1;
 
-import java.util.List;
-
 import com.github.codingdebugallday.driver.core.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import io.swagger.annotations.ApiImplicitParam;
@@ -11,6 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * <p>
@@ -65,6 +67,21 @@ public class PluginDatasourceController {
     public ResponseEntity<Void> delete(@PathVariable(name = "organizationId") Long tenantId,
                                        String datasourceCode) {
         pluginDatasourceService.delete(tenantId, datasourceCode);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @ApiOperation(value = "导出数据源配置")
+    @GetMapping("/export")
+    public ResponseEntity<Void> exportDataSource(@PathVariable(name = "organizationId") Long tenantId, HttpServletResponse response) {
+        pluginDatasourceService.exportDatasource(tenantId, response);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @ApiOperation(value = "导入数据源配置")
+    @PostMapping("/import")
+    public ResponseEntity<Void> importDataSource(@PathVariable(name = "organizationId") Long tenantId, @RequestParam(name = "file")
+            MultipartFile datasourceFile) {
+        pluginDatasourceService.importDatasource(tenantId, datasourceFile);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
