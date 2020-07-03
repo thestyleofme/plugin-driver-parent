@@ -20,7 +20,7 @@ public class Preconditions {
     }
 
     /**
-     * 类似sql，只有right的所有属性与left相等才返回true
+     * 类似sql，只要right的某个属性与left相等即返回true
      *
      * @param left  PluginDatasource
      * @param right PluginDatasource
@@ -29,6 +29,10 @@ public class Preconditions {
     public static boolean pluginDatasourceFilter(PluginDatasource left, PluginDatasource right) {
         if (Objects.isNull(right)) {
             return true;
+        }
+        if (!StringUtils.isEmpty(right.getDatasourceCode()) &&
+                !right.getDatasourceCode().equals(left.getDatasourceCode())) {
+            return false;
         }
         if (!StringUtils.isEmpty(right.getPluginId()) &&
                 !right.getPluginId().equals(left.getPluginId())) {
