@@ -30,7 +30,7 @@ public class RedisBaseRepositoryImpl<T> implements RedisBaseRepository<T> {
     @SuppressWarnings("unchecked")
     @PostConstruct
     public void init() {
-        this.entityClass = Reflections.getClassGenericType(getClass());
+        this.entityClass = (Class<T>) Reflections.getClassGenericType(getClass());
     }
 
     @Override
@@ -43,15 +43,19 @@ public class RedisBaseRepositoryImpl<T> implements RedisBaseRepository<T> {
         if (CommonConstant.ALL_TENANT.equals(tenantId)) {
             return this.getAll();
         }
-        Map<String, String> map = redisHelper.hashGetAll(this.getKey(tenantId));
-        return map.values().stream().map(json -> JsonUtil.toObj(json, entityClass)).collect(Collectors.toList());
+        List<String> list = redisHelper.hashValues(this.getKey(tenantId));
+        return list.stream()
+                .map(json -> JsonUtil.toObj(json, entityClass))
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<T> getAll() {
         Set<String> keys = redisHelper.keysPattern(this.getKey(null));
-        return keys.stream().flatMap(key -> redisHelper.hashGetAll(key).values().stream()).map(json ->
-                JsonUtil.toObj(json, entityClass)).collect(Collectors.toList());
+        return keys.stream()
+                .flatMap(key -> redisHelper.hashGetAll(key).values().stream())
+                .map(json -> JsonUtil.toObj(json, entityClass))
+                .collect(Collectors.toList());
     }
 
     @Override
