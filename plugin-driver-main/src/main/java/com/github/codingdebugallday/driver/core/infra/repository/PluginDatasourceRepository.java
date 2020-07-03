@@ -22,7 +22,8 @@ public interface PluginDatasourceRepository extends RedisBaseRepository<PluginDa
      */
     @Override
     default String getKey(Long tenantId) {
-        return Optional.ofNullable(tenantId).map(t -> String.format(CommonConstant.REDIS_PLUGIN_DATASOURCE_PATTERN, tenantId))
+        return Optional.ofNullable(tenantId)
+                .map(t -> String.format(CommonConstant.REDIS_PLUGIN_DATASOURCE_PATTERN, tenantId))
                 .orElse(String.format(CommonConstant.REDIS_PLUGIN_DATASOURCE_PATTERN, StringPool.ASTERISK));
     }
 }

@@ -251,7 +251,7 @@ public class RedisHelper {
     /**
      * 删除key
      *
-     * @param key
+     * @param key key
      */
     public void delKey(String key) {
         redisTemplate.delete(key);
