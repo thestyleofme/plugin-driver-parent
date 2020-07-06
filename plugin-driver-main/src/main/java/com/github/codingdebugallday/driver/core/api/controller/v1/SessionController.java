@@ -2,7 +2,7 @@ package com.github.codingdebugallday.driver.core.api.controller.v1;
 
 import java.util.List;
 
-import com.github.codingdebugallday.driver.core.app.service.BridgeService;
+import com.github.codingdebugallday.driver.common.app.service.BridgeService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -35,7 +35,7 @@
 
         <dependency>
             <groupId>com.github.codingdebugallday</groupId>
-            <artifactId>plugin-driver-core</artifactId>
+            <artifactId>plugin-driver-common</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
