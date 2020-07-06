@@ -1,10 +1,13 @@
+server:
+  port: 9898
+
 spring:
   application:
     name: ${SPRING_APPLICATION_NAME:plugin-driver}
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/plugin_driver?useUnicode=true&characterEncoding=utf-8&useSSL=false}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:tse@9527}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://172.23.16.63:23306/hdsp_core?useUnicode=true&characterEncoding=utf-8&useSSL=false}
+    username: ${SPRING_DATASOURCE_USERNAME:hdsp_dev}
+    password: ${SPRING_DATASOURCE_PASSWORD:hdsp_dev123$%^}
     driver-class-name: com.mysql.jdbc.Driver
     hikari:
       # 连接池最小空闲连接数
@@ -14,10 +17,10 @@ spring:
       # 等待连接池分配连接的最大时长（毫秒）
       connection-timeout: ${SPRING_DATASOURCE_CONNECTION_TIMEOUT:30000}
   redis:
-    host: ${SPRING_REDIS_HOST:localhost}
-    port: ${SPRING_REDIS_PORT:6379}
+    host: ${SPRING_REDIS_HOST:172.23.16.63}
+    port: ${SPRING_REDIS_PORT:26379}
     database: ${SPRING_REDIS_DATABASE:1}
-    password: ${SPRING_REDIS_PASSWORD:}
+    password: ${SPRING_REDIS_PASSWORD:redis!qaz}
     timeout: 5000
     lettuce:
       pool:

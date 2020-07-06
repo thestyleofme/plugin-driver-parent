@@ -1,5 +1,9 @@
 package com.github.codingdebugallday.driver.core.api.controller.v1;
 
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
 import com.github.codingdebugallday.driver.core.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import io.swagger.annotations.ApiImplicitParam;
@@ -10,9 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * <p>
@@ -49,7 +50,7 @@ public class PluginDatasourceController {
     @ApiOperation(value = "创建数据源")
     @PostMapping
     public ResponseEntity<PluginDatasource> create(@PathVariable(name = "organizationId") Long tenantId,
-                                                   @RequestBody PluginDatasource pluginDatasource) {
+                                                   @RequestBody @Valid PluginDatasource pluginDatasource) {
         pluginDatasource.setTenantId(tenantId);
         return ResponseEntity.ok(pluginDatasourceService.create(pluginDatasource));
     }
@@ -57,7 +58,7 @@ public class PluginDatasourceController {
     @ApiOperation(value = "更新数据源")
     @PutMapping
     public ResponseEntity<PluginDatasource> update(@PathVariable(name = "organizationId") Long tenantId,
-                                                   @RequestBody PluginDatasource pluginDatasource) {
+                                                   @RequestBody @Valid PluginDatasource pluginDatasource) {
         pluginDatasource.setTenantId(tenantId);
         return ResponseEntity.ok(pluginDatasourceService.update(pluginDatasource));
     }

@@ -35,7 +35,7 @@ public class RedisBaseRepositoryImpl<T> implements RedisBaseRepository<T> {
 
     @Override
     public T getByKey(Long tenantId, String key) {
-        return JsonUtil.toObj(this.redisHelper.hashGet(key, this.getKey(tenantId)), entityClass);
+        return JsonUtil.toObj(this.redisHelper.hashGet(this.getKey(tenantId), key), entityClass);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class RedisBaseRepositoryImpl<T> implements RedisBaseRepository<T> {
         if (Boolean.TRUE.equals(this.isExist(tenantId, key))) {
             throw new DriverException("the entity is exist!");
         }
-        this.redisHelper.hashPut(key, this.getKey(tenantId), JsonUtil.toJson(entity));
+        this.redisHelper.hashPut(this.getKey(tenantId), key, JsonUtil.toJson(entity));
     }
 
     @Override
@@ -82,7 +82,7 @@ public class RedisBaseRepositoryImpl<T> implements RedisBaseRepository<T> {
         if (Boolean.FALSE.equals(this.isExist(tenantId, key))) {
             throw new DriverException("the entity is not exist!");
         }
-        this.redisHelper.hashPut(key, this.getKey(tenantId), JsonUtil.toJson(entity));
+        this.redisHelper.hashPut(this.getKey(tenantId), key, JsonUtil.toJson(entity));
     }
 
     @Override
@@ -113,7 +113,7 @@ public class RedisBaseRepositoryImpl<T> implements RedisBaseRepository<T> {
 
     @Override
     public Boolean isExist(Long tenantId, String key) {
-        return this.redisHelper.hashHasKey(key, this.getKey(tenantId));
+        return this.redisHelper.hashHasKey(this.getKey(tenantId), key);
     }
 
 }

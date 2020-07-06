@@ -1,8 +1,11 @@
+server:
+  port: 9898
+
 spring:
   application:
     name: ${SPRING_APPLICATION_NAME:plugin-driver}
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/plugin?useUnicode=true&characterEncoding=utf-8&useSSL=false}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/plugin_driver?useUnicode=true&characterEncoding=utf-8&useSSL=false}
     username: ${SPRING_DATASOURCE_USERNAME:root}
     password: ${SPRING_DATASOURCE_PASSWORD:tse@9527}
     driver-class-name: com.mysql.jdbc.Driver
