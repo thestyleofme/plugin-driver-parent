@@ -38,10 +38,12 @@ public class PluginDataSourceHolder {
     }
 
     /**
-     * 根据数据源信息创建或直接获取数据源，防止插件创建太多DataSource
+     * 根据数据源信息创建或直接获取数据源，防止插件创建太多数据源
      *
      * @param pluginDatasource PluginDatasource
-     * @return javax.sql.DataSource
+     * @param clazz            数据源具体的class，如HikariDataSource.class
+     * @param <T>              数据源
+     * @return T 数据源
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T> T getOrCreate(PluginDatasource pluginDatasource, Class<T> clazz) {
