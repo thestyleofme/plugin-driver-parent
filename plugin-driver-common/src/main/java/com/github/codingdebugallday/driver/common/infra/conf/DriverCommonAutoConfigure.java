@@ -16,6 +16,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -27,6 +28,9 @@ import org.springframework.context.annotation.Configuration;
  * @since 1.0
  */
 @Configuration
+@ComponentScan(basePackages = {
+        "com.github.codingdebugallday.driver"
+})
 public class DriverCommonAutoConfigure {
 
     /**

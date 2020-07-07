@@ -13,7 +13,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>driver-mysql</module>
+        <module>driver-session-mysql</module>
+        <module>driver-datasource-mysql</module>
     </modules>
 
     <properties>
@@ -30,17 +31,6 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
     </properties>
-
-    <dependencies>
-
-        <dependency>
-            <groupId>com.github.codingdebugallday</groupId>
-            <artifactId>plugin-driver-common</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-    </dependencies>
 
     <build>
         <plugins>

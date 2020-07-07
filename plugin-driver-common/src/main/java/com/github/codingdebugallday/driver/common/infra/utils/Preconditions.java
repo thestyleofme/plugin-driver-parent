@@ -34,8 +34,12 @@ public class Preconditions {
                 !right.getDatasourceCode().equals(left.getDatasourceCode())) {
             return false;
         }
-        if (!StringUtils.isEmpty(right.getPluginId()) &&
-                !right.getPluginId().equals(left.getPluginId())) {
+        if (!StringUtils.isEmpty(right.getDatasourcePluginId()) &&
+                !right.getDatasourcePluginId().equals(left.getDatasourcePluginId())) {
+            return false;
+        }
+        if (!StringUtils.isEmpty(right.getSessionPluginId()) &&
+                !right.getSessionPluginId().equals(left.getSessionPluginId())) {
             return false;
         }
         if (!StringUtils.isEmpty(right.getDatasourceClass()) &&

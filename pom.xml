@@ -10,11 +10,12 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>plugin-driver-main</module>
-        <module>plugin-driver-runner</module>
-        <module>plugins</module>
         <module>plugin-driver-common</module>
         <module>plugin-driver-common-pom</module>
+        <module>plugin-driver-datasource</module>
+        <module>plugin-driver-session</module>
+        <module>plugin-driver-runner</module>
+        <module>plugins</module>
     </modules>
 
 

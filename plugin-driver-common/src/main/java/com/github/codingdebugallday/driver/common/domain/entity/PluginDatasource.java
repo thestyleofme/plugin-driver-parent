@@ -31,7 +31,8 @@ public class PluginDatasource implements Serializable {
     @NotBlank
     private String datasourceClass;
     @NotBlank
-    private String pluginId;
+    private String datasourcePluginId;
+    private String sessionPluginId;
     private String settingsInfo;
     private Integer enabledFlag;
     private Long tenantId;
