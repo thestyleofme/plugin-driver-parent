@@ -5,7 +5,7 @@ import javax.sql.DataSource;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.common.infra.utils.DriverUtil;
 import com.github.codingdebugallday.driver.datasource.function.DriverDataSourceFunction;
-import org.springframework.stereotype.Component;
+import org.pf4j.Extension;
 
 /**
  * <p>
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * @author isaac 2020/7/7 14:13
  * @since 1.0
  */
-@Component("mysqlDataSourceFunction")
+@Extension
 public class MysqlDataSourceFunction implements DriverDataSourceFunction<PluginDatasource, DataSource> {
 
     @Override

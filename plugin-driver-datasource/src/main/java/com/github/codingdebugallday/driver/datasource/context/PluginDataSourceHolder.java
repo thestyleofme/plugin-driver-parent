@@ -51,7 +51,7 @@ public class PluginDataSourceHolder {
         String key = pluginDatasource.getTenantId() + "_" + datasourcePluginId;
         if (Objects.isNull(PLUGIN_DATASOURCE_MAP.get(key))) {
             List<DriverDataSourceFunction> driverDataSourceFunctionList =
-                    PLUGIN_USER.getPluginBeans(datasourcePluginId, DriverDataSourceFunction.class);
+                    PLUGIN_USER.getPluginExtensions(DriverDataSourceFunction.class, datasourcePluginId);
             if (CollectionUtils.isEmpty(driverDataSourceFunctionList)) {
                 throw new DriverException(String.format("the datasource plugin [%s] maybe stopped, not find DriverDataSourceFunction", datasourcePluginId));
             }
