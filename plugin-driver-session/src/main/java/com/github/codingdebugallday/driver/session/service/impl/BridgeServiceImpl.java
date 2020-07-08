@@ -5,15 +5,13 @@ import javax.validation.constraints.NotBlank;
 
 import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
-import com.github.codingdebugallday.driver.session.service.DriverSession;
 import com.github.codingdebugallday.driver.session.service.BridgeService;
+import com.github.codingdebugallday.driver.session.service.DriverSession;
 import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.user.PluginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -49,15 +47,9 @@ public class BridgeServiceImpl implements BridgeService {
         } else {
             PluginDatasource pluginDatasource = pluginDatasourceService.getDatasourceByCode(tenantId, datasourceCode);
             @NotBlank String pluginId = pluginDatasource.getSessionPluginId();
-            List<DriverSession> driverSessionList = pluginUser.getPluginBeans(pluginId, DriverSession.class);
-            if (CollectionUtils.isEmpty(driverSessionList)) {
-                log.error("the plugin [{}] maybe stopped, not find DatasourceService", datasourceCode);
-                throw new DriverException(String.format("the plugin [%s] maybe stopped, not find DatasourceService", pluginId));
-            } else {
-                log.info("use plugin {}", pluginId);
-                // 插件中有且仅有一个 所以这里get(0)
-                tables = driverSessionList.get(0).getTables(pluginDatasource, schema);
-            }
+            DriverSession pluginDriverSession = pluginUser.getPluginBean(pluginId, DriverSession.class);
+            log.info("use plugin {}", pluginId);
+            tables = pluginDriverSession.getTables(pluginDatasource, schema);
         }
         return tables;
     }
