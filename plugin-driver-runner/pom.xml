@@ -16,9 +16,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
-        <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
-        <quartz.version>2.3.2</quartz.version>
-        <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
     </properties>
 
     <dependencies>

@@ -1,6 +1,5 @@
 package com.github.codingdebugallday.driver.runner;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -13,9 +12,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0
  */
 @SpringBootApplication
-@MapperScan({
-        "com.github.codingdebugallday.driver.**.mapper"
-})
 public class DriverApplication {
 
     public static void main(String[] args) {

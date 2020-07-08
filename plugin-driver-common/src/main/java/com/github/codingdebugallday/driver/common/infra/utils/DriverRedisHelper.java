@@ -23,13 +23,13 @@ import java.util.function.Consumer;
 @SuppressWarnings("unused")
 @Slf4j
 @Component
-public class RedisHelper {
+public class DriverRedisHelper {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final HashOperations<String, String, String> hashOpr;
 
-    public RedisHelper(RedisTemplate<String, String> redisTemplate,
-                       HashOperations<String, String, String> hashOpr) {
+    public DriverRedisHelper(RedisTemplate<String, String> redisTemplate,
+                             HashOperations<String, String, String> hashOpr) {
         this.redisTemplate = redisTemplate;
         this.hashOpr = hashOpr;
     }
