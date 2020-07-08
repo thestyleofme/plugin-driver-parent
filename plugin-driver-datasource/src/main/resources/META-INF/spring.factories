@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.github.codingdebugallday.driver.datasource.autoconfigure.PluginApplicationAutoConfiguration
+com.github.codingdebugallday.driver.datasource.postgresql.datasource.autoconfigure.PluginApplicationAutoConfiguration

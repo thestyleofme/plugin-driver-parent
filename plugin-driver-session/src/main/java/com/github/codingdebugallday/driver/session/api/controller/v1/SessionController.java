@@ -1,12 +1,12 @@
 package com.github.codingdebugallday.driver.session.api.controller.v1;
 
-import java.util.List;
-
-import com.github.codingdebugallday.driver.session.service.BridgeService;
+import com.github.codingdebugallday.driver.session.service.DriverSessionService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class SessionController {
 
-    private final BridgeService bridgeService;
+    private final DriverSessionService driverSessionService;
 
-    public SessionController(BridgeService bridgeService) {
-        this.bridgeService = bridgeService;
+    public SessionController(DriverSessionService driverSessionService) {
+        this.driverSessionService = driverSessionService;
     }
 
     @ApiOperation(value = "获取该schema下所有表")
@@ -33,7 +33,9 @@ public class SessionController {
                                                   @RequestParam(required = false) String datasourceCode,
                                                   @RequestParam String schema) {
         // datasourceCode不传 使用服务本身数据源
-        return ResponseEntity.ok(bridgeService.getTables(tenantId, datasourceCode, schema));
+        List<String> tables = driverSessionService.getTableSession(tenantId, datasourceCode)
+                .tables(schema);
+        return ResponseEntity.ok(tables);
     }
 
 

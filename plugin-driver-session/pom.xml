@@ -41,6 +41,12 @@
             <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>org.postgresql</groupId>-->
+        <!--            <artifactId>postgresql</artifactId>-->
+        <!--            <version>42.2.6</version>-->
+        <!--            &lt;!&ndash;            <scope>provided</scope>&ndash;&gt;-->
+        <!--        </dependency>-->
     </dependencies>
 
 </project>
