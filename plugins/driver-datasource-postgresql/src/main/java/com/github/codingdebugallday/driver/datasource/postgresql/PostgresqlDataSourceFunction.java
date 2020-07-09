@@ -1,12 +1,12 @@
 package com.github.codingdebugallday.driver.datasource.postgresql;
 
+import javax.sql.DataSource;
+
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.common.infra.utils.DriverUtil;
 import com.github.codingdebugallday.driver.datasource.function.DriverDataSourceFunction;
 import lombok.extern.slf4j.Slf4j;
-import org.pf4j.Extension;
-
-import javax.sql.DataSource;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -16,8 +16,9 @@ import javax.sql.DataSource;
  * @author JupiterMouse 2020/07/07
  * @since 1.0
  */
+@SuppressWarnings("unused")
 @Slf4j
-@Extension
+@Component("postgresqlDataSourceFunction")
 public class PostgresqlDataSourceFunction implements DriverDataSourceFunction<PluginDatasource, DataSource> {
 
     @Override

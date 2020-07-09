@@ -1,8 +1,8 @@
 package com.github.codingdebugallday.driver.session.mysql;
 
-import com.github.codingdebugallday.driver.session.common.funcations.extractor.*;
-import com.github.codingdebugallday.driver.session.common.funcations.setter.SchemaSetter;
-import com.github.codingdebugallday.driver.session.rdbms.AbstractRdbmsSchemaSession;
+import com.github.codingdebugallday.driver.session.infra.funcations.extractor.*;
+import com.github.codingdebugallday.driver.session.infra.funcations.setter.SchemaSetter;
+import com.github.codingdebugallday.driver.session.app.service.rdbms.RdbmsSchemaSession;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
@@ -16,7 +16,7 @@ import java.sql.DatabaseMetaData;
  * @author JupiterMouse 2020/07/08
  * @since 1.0
  */
-public class MysqlSchemaSession extends AbstractRdbmsSchemaSession {
+public class MysqlSchemaSession extends RdbmsSchemaSession {
 
     public MysqlSchemaSession(DataSource dataSource) {
         super(dataSource);

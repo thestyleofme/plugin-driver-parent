@@ -1,15 +1,14 @@
 package com.github.codingdebugallday.driver.session.postgresql;
 
-import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.datasource.context.PluginDataSourceHolder;
-import com.github.codingdebugallday.driver.session.common.session.SchemaSession;
-import com.github.codingdebugallday.driver.session.common.session.TableSession;
-import com.github.codingdebugallday.driver.session.common.DriverSession;
-import com.zaxxer.hikari.HikariDataSource;
-import lombok.extern.slf4j.Slf4j;
-import org.pf4j.Extension;
-
+import java.util.List;
+import java.util.Map;
 import javax.sql.DataSource;
+
+import com.github.codingdebugallday.driver.session.app.service.rdbms.DefaultRdbmsDriverSession;
+import com.github.codingdebugallday.driver.session.app.service.session.DriverSessionFunction;
+import com.github.codingdebugallday.driver.session.domian.entity.TableColumn;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -21,18 +20,83 @@ import javax.sql.DataSource;
  */
 @SuppressWarnings("unused")
 @Slf4j
-@Extension
-public class PostgresqlDriverSession implements DriverSession {
+@Component("postgresqlDriverSession")
+public class PostgresqlDriverSession implements DriverSessionFunction<DataSource> {
+
+    private DefaultRdbmsDriverSession defaultRdbmsDriverSession;
 
     @Override
-    public SchemaSession getSchemaSession(PluginDatasource pluginDatasource) {
-        DataSource dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasource, HikariDataSource.class);
-        return new PostgresqlSchemaSession(dataSource);
+    public Class<DataSource> getDataSource() {
+        return DataSource.class;
     }
 
     @Override
-    public TableSession getTableSession(PluginDatasource pluginDatasource) {
-        DataSource dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasource, HikariDataSource.class);
-        return new PostgresqlTableSession(dataSource);
+    public void setDataSource(DataSource dataSource) {
+        defaultRdbmsDriverSession = new DefaultRdbmsDriverSession(dataSource);
+    }
+
+    @Override
+    public boolean createSchema(String schema) {
+        return defaultRdbmsDriverSession.createSchema(schema);
+    }
+
+    @Override
+    public List<String> schemas() {
+        return defaultRdbmsDriverSession.schemas();
+    }
+
+    @Override
+    public boolean executeStatement(String schema, String sql) {
+        return defaultRdbmsDriverSession.executeStatement(schema, sql);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryStatement(String schema, String sql) {
+        return defaultRdbmsDriverSession.queryStatement(schema, sql);
+    }
+
+    @Override
+    public List<Map<String, Object>> callProcedure(String schema, String sql, Object... args) {
+        return defaultRdbmsDriverSession.callProcedure(schema, sql, args);
+    }
+
+    @Override
+    public List<String> tables(String schema) {
+        return defaultRdbmsDriverSession.tables(schema);
+    }
+
+    @Override
+    public List<Map<String, Object>> tableStructure(String schema, String table) {
+        return defaultRdbmsDriverSession.tableStructure(schema, table);
+    }
+
+    @Override
+    public List<Map<String, Object>> tablePk(String schema, String table) {
+        return defaultRdbmsDriverSession.tablePk(schema, table);
+    }
+
+    @Override
+    public List<Map<String, Object>> tableIndex(String schema, String table) {
+        return defaultRdbmsDriverSession.tableIndex(schema, table);
+    }
+
+    @Override
+    public List<TableColumn> columns(String schema, String sql) {
+        return defaultRdbmsDriverSession.columns(schema, sql);
+    }
+
+    @Override
+    public Long count(String schema, String sql) {
+        return defaultRdbmsDriverSession.count(schema, sql);
+    }
+
+    @Override
+    public boolean exists(String schema, String table) {
+        return defaultRdbmsDriverSession.exists(schema, table);
+    }
+
+    @Override
+    public List<String> views(String schema) {
+        return defaultRdbmsDriverSession.views(schema);
     }
 }

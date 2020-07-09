@@ -4,37 +4,25 @@ import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 
-import com.github.codingdebugallday.driver.session.app.service.session.DriverSessionFunction;
+import com.github.codingdebugallday.driver.session.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.session.domian.entity.TableColumn;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
 
 /**
  * <p>
- * 主程序定义SessionService接口的实现类
+ * description
  * </p>
  *
- * @author isaac 2020/6/16 17:54
+ * @author isaac 2020/7/9 15:07
  * @since 1.0
  */
-@SuppressWarnings("unused")
-@Slf4j
-@Component("mysqlDriverSession")
-public class MysqlDriverSession implements DriverSessionFunction<DataSource> {
+public class AbstractMysqlDriverSession implements DriverSession {
 
-    private MysqlSchemaSession mysqlSchemaSession;
-    private MysqlTableSession mysqlTableSession;
+    private final MysqlSchemaSession mysqlSchemaSession;
+    private final MysqlTableSession mysqlTableSession;
 
-    @Override
-    public Class<DataSource> getDataSource() {
-        return DataSource.class;
-    }
-
-    @Override
-    public void setDataSource(DataSource dataSource) {
-        mysqlSchemaSession = new MysqlSchemaSession(dataSource);
-        mysqlTableSession = new MysqlTableSession(dataSource);
+    public AbstractMysqlDriverSession(DataSource dataSource) {
+        this.mysqlSchemaSession = new MysqlSchemaSession(dataSource);
+        this.mysqlTableSession = new MysqlTableSession(dataSource);
     }
 
     //============================================

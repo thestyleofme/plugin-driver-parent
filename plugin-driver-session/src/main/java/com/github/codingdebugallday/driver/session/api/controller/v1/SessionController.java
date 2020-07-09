@@ -1,6 +1,6 @@
 package com.github.codingdebugallday.driver.session.api.controller.v1;
 
-import com.github.codingdebugallday.driver.session.service.DriverSessionService;
+import com.github.codingdebugallday.driver.session.app.service.DriverSessionService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +33,7 @@ public class SessionController {
                                                   @RequestParam(required = false) String datasourceCode,
                                                   @RequestParam String schema) {
         // datasourceCode不传 使用服务本身数据源
-        List<String> tables = driverSessionService.getTableSession(tenantId, datasourceCode)
+        List<String> tables = driverSessionService.getDriverSession(tenantId, datasourceCode)
                 .tables(schema);
         return ResponseEntity.ok(tables);
     }

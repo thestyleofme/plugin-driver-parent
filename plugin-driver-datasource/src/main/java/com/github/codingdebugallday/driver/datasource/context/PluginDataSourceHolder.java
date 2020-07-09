@@ -1,5 +1,12 @@
 package com.github.codingdebugallday.driver.datasource.context;
 
+import java.sql.Driver;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.validation.constraints.NotBlank;
+
+import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.common.domain.entity.CommonDatasourceSettingInfo;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
@@ -10,16 +17,9 @@ import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.user.PluginUser;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.validation.constraints.NotBlank;
-import java.sql.Driver;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * <p>
- * // TODO
- * 1. 定义统一的DATASOURCE管理器，可以获取本地｜插件数据源。方法重载。
+ * 插件数据源创建获取context
  * </p>
  *
  * @author isaac 2020/7/2 20:21
@@ -34,11 +34,13 @@ public class PluginDataSourceHolder {
 
     private static final Map<String, Object> PLUGIN_DATASOURCE_MAP;
     private static final PluginUser PLUGIN_USER;
+    private static final PluginDatasourceService PLUGIN_DATASOURCE_SERVICE;
 
     static {
         PLUGIN_DATASOURCE_MAP = new ConcurrentHashMap<>(4);
         PluginApplication pluginApplication = ApplicationContextHelper.getContext().getBean(PluginApplication.class);
         PLUGIN_USER = pluginApplication.getPluginUser();
+        PLUGIN_DATASOURCE_SERVICE = ApplicationContextHelper.getContext().getBean(PluginDatasourceService.class);
     }
 
     /**
@@ -55,8 +57,8 @@ public class PluginDataSourceHolder {
         String key = pluginDatasource.getTenantId() + "_" + datasourcePluginId;
         if (Objects.isNull(PLUGIN_DATASOURCE_MAP.get(key))) {
             ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-            ClassLoader pluginClassLoader = PLUGIN_USER
-                    .getPluginManager().getPluginClassLoader(datasourcePluginId);
+            ClassLoader pluginClassLoader = PLUGIN_USER.getPluginManager()
+                    .getPluginClassLoader(datasourcePluginId);
             Thread.currentThread().setContextClassLoader(pluginClassLoader);
             try {
                 CommonDatasourceSettingInfo settingInfo =
@@ -64,12 +66,13 @@ public class PluginDataSourceHolder {
                 Driver driver = (Driver) Thread.currentThread()
                         .getContextClassLoader()
                         .loadClass(settingInfo.getDriverClassName())
+                        .getDeclaredConstructor()
                         .newInstance();
                 log.debug(">>>>>>>>> class loader class:{}", pluginClassLoader.getClass().getName());
                 log.debug(">>>>>>>>> driverClassName:{}", pluginDatasource.getDatasourceClass());
                 log.debug(">>>>>>>>> driver version:{}", driver.getMajorVersion() + "." + driver.getMinorVersion());
                 Object object = PLUGIN_USER
-                        .getPluginExtension(DriverDataSourceFunction.class, datasourcePluginId)
+                        .getPluginBean(datasourcePluginId, DriverDataSourceFunction.class)
                         .createDataSource(pluginDatasource);
                 Thread.currentThread().setContextClassLoader(oldClassLoader);
                 T t = clazz.cast(object);
@@ -82,6 +85,11 @@ public class PluginDataSourceHolder {
             }
         }
         return clazz.cast(PLUGIN_DATASOURCE_MAP.get(key));
+    }
+
+    public static <T> T getOrCreate(Long tenantId, String datasourceCode, Class<T> clazz) {
+        PluginDatasource pluginDatasource = PLUGIN_DATASOURCE_SERVICE.getDatasourceByCode(tenantId, datasourceCode);
+        return getOrCreate(pluginDatasource, clazz);
     }
 
     /**
