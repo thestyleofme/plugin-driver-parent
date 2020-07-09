@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.github.codingdebugallday.driver.datasource.postgresql.common.infra.autoconfigure.DriverCommonAutoConfigure,\
-com.github.codingdebugallday.driver.datasource.postgresql.common.infra.autoconfigure.RedisConfiguration,\
-com.github.codingdebugallday.driver.datasource.postgresql.common.infra.autoconfigure.Swagger2Config
+com.github.codingdebugallday.driver.common.infra.autoconfigure.DriverCommonAutoConfigure,\
+com.github.codingdebugallday.driver.common.infra.autoconfigure.RedisConfiguration,\
+com.github.codingdebugallday.driver.common.infra.autoconfigure.Swagger2Config

@@ -1,8 +1,8 @@
 package com.github.codingdebugallday.driver.datasource.mysql;
 
-import com.github.codingdebugallday.driver.datasource.postgresql.common.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.datasource.postgresql.common.infra.utils.DriverUtil;
-import com.github.codingdebugallday.driver.datasource.postgresql.datasource.function.DriverDataSourceFunction;
+import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
+import com.github.codingdebugallday.driver.common.infra.utils.DriverUtil;
+import com.github.codingdebugallday.driver.datasource.function.DriverDataSourceFunction;
 import org.pf4j.Extension;
 
 import javax.sql.DataSource;

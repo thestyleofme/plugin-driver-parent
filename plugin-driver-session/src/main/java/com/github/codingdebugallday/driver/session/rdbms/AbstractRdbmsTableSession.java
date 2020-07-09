@@ -1,7 +1,7 @@
 package com.github.codingdebugallday.driver.session.rdbms;
 
-import com.github.codingdebugallday.driver.datasource.postgresql.common.infra.exceptions.DriverException;
-import com.github.codingdebugallday.driver.datasource.postgresql.common.infra.utils.CloseUtil;
+import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
+import com.github.codingdebugallday.driver.common.infra.utils.CloseUtil;
 import com.github.codingdebugallday.driver.session.common.session.SessionTool;
 import com.github.codingdebugallday.driver.session.common.session.TableSession;
 import com.github.codingdebugallday.driver.session.common.model.TableColumn;

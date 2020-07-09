@@ -1,7 +1,7 @@
 package com.github.codingdebugallday.driver.session.service.extension;
 
-import com.github.codingdebugallday.driver.datasource.postgresql.common.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.datasource.postgresql.common.infra.utils.ApplicationContextHelper;
+import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
+import com.github.codingdebugallday.driver.common.infra.utils.ApplicationContextHelper;
 import com.github.codingdebugallday.driver.session.common.session.SchemaSession;
 import com.github.codingdebugallday.driver.session.common.session.TableSession;
 import com.github.codingdebugallday.driver.session.common.DriverSession;

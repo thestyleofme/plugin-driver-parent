@@ -1,6 +1,6 @@
 package com.github.codingdebugallday.driver.session.common;
 
-import com.github.codingdebugallday.driver.datasource.postgresql.common.domain.entity.PluginDatasource;
+import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.session.common.session.SchemaSession;
 import com.github.codingdebugallday.driver.session.common.session.TableSession;
 

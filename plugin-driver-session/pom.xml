@@ -24,6 +24,7 @@
             <artifactId>plugin-driver-datasource</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- scope设置为runtime的原因是mysql jdbc jar由mysql datasource plugin提供-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -34,6 +35,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
             <version>${spring-boot.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -41,12 +43,6 @@
             <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.postgresql</groupId>-->
-        <!--            <artifactId>postgresql</artifactId>-->
-        <!--            <version>42.2.6</version>-->
-        <!--            &lt;!&ndash;            <scope>provided</scope>&ndash;&gt;-->
-        <!--        </dependency>-->
     </dependencies>
 
 </project>

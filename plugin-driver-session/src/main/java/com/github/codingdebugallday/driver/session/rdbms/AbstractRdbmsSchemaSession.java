@@ -1,19 +1,19 @@
 package com.github.codingdebugallday.driver.session.rdbms;
 
-import com.github.codingdebugallday.driver.datasource.postgresql.common.infra.exceptions.DriverException;
-import com.github.codingdebugallday.driver.datasource.postgresql.common.infra.utils.CloseUtil;
+import java.sql.*;
+import java.util.*;
+import javax.sql.DataSource;
+
+import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
+import com.github.codingdebugallday.driver.common.infra.utils.CloseUtil;
 import com.github.codingdebugallday.driver.session.common.session.SchemaSession;
 import com.github.codingdebugallday.driver.session.common.session.SessionTool;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
-
-import javax.sql.DataSource;
-import java.sql.*;
-import java.util.*;
+import org.springframework.util.StringUtils;
 
 /**
  * <p>
@@ -116,7 +116,7 @@ public abstract class AbstractRdbmsSchemaSession implements SchemaSession, Sessi
             st = connection.createStatement();
             // 执行
             for (String s : sql) {
-                if (StringUtils.isNotBlank(s)) {
+                if (!StringUtils.isEmpty(s)) {
                     st.addBatch(s);
                 }
             }
