@@ -31,7 +31,7 @@ public class MysqlDriverSession implements DriverSession<DataSource> {
 
     @Override
     public TableSession getTableSession() {
-        return new MysqlTableSession(this.getDatasource());
+        return new MysqlTableSession(this.dataSource);
     }
 
     @Override
