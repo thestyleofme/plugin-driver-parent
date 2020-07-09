@@ -50,3 +50,7 @@ plugin:
   runMode: dev
   pluginPath: plugins
   pluginConfigFilePath:
+
+logging:
+  level:
+    com.github.codingdebugallday: debug
