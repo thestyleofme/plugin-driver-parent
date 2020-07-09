@@ -1,11 +1,8 @@
 package com.github.codingdebugallday.driver.session.mysql;
 
-import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.datasource.context.PluginDataSourceHolder;
+import com.github.codingdebugallday.driver.session.common.DriverSession;
 import com.github.codingdebugallday.driver.session.common.session.SchemaSession;
 import com.github.codingdebugallday.driver.session.common.session.TableSession;
-import com.github.codingdebugallday.driver.session.common.DriverSession;
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.pf4j.Extension;
 
@@ -23,17 +20,27 @@ import javax.sql.DataSource;
 @SuppressWarnings("unused")
 @Slf4j
 @Extension
-public class MysqlDriverSession implements DriverSession {
+public class MysqlDriverSession implements DriverSession<DataSource> {
+
+    private DataSource dataSource;
 
     @Override
-    public SchemaSession getSchemaSession(PluginDatasource pluginDatasource) {
-        DataSource dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasource, HikariDataSource.class);
-        return new MysqlSchemaSession(dataSource);
+    public SchemaSession getSchemaSession() {
+        return new MysqlSchemaSession(this.getDatasource());
     }
 
     @Override
-    public TableSession getTableSession(PluginDatasource pluginDatasource) {
-        DataSource dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasource, HikariDataSource.class);
-        return new MysqlTableSession(dataSource);
+    public TableSession getTableSession() {
+        return new MysqlTableSession(this.getDatasource());
+    }
+
+    @Override
+    public void setDatasource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    @Override
+    public DataSource getDatasource() {
+        return this.dataSource;
     }
 }

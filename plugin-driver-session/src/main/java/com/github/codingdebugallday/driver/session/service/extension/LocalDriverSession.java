@@ -1,12 +1,13 @@
 package com.github.codingdebugallday.driver.session.service.extension;
 
-import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.common.infra.utils.ApplicationContextHelper;
+import com.github.codingdebugallday.driver.session.common.DriverSession;
 import com.github.codingdebugallday.driver.session.common.session.SchemaSession;
 import com.github.codingdebugallday.driver.session.common.session.TableSession;
-import com.github.codingdebugallday.driver.session.common.DriverSession;
 import org.pf4j.Extension;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.DataSource;
 
 /**
  * <p>
@@ -18,7 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
  * @since 1.0
  */
 @Extension
-public class LocalDriverSession implements DriverSession {
+public class LocalDriverSession implements DriverSession<DataSource> {
 
     private static final JdbcTemplate JDBC_TEMPLATE;
 
@@ -27,13 +28,22 @@ public class LocalDriverSession implements DriverSession {
     }
 
     @Override
-    public SchemaSession getSchemaSession(PluginDatasource pluginDatasource) {
-        return new MysqlSchemaSession(JDBC_TEMPLATE.getDataSource());
+    public void setDatasource(DataSource dataSource) {
+        // nothing to do
     }
 
     @Override
-    public TableSession getTableSession(PluginDatasource pluginDatasource) {
-        return new MysqlTableSession(JDBC_TEMPLATE.getDataSource());
+    public DataSource getDatasource() {
+        return JDBC_TEMPLATE.getDataSource();
     }
 
+    @Override
+    public SchemaSession getSchemaSession() {
+        return new MysqlSchemaSession(this.getDatasource());
+    }
+
+    @Override
+    public TableSession getTableSession() {
+        return new MysqlTableSession(this.getDatasource());
+    }
 }

@@ -1,11 +1,8 @@
 package com.github.codingdebugallday.driver.session.postgresql;
 
-import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.datasource.context.PluginDataSourceHolder;
+import com.github.codingdebugallday.driver.session.common.DriverSession;
 import com.github.codingdebugallday.driver.session.common.session.SchemaSession;
 import com.github.codingdebugallday.driver.session.common.session.TableSession;
-import com.github.codingdebugallday.driver.session.common.DriverSession;
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.pf4j.Extension;
 
@@ -22,17 +19,34 @@ import javax.sql.DataSource;
 @SuppressWarnings("unused")
 @Slf4j
 @Extension
-public class PostgresqlDriverSession implements DriverSession {
+public class PostgresqlDriverSession implements DriverSession<DataSource> {
 
-    @Override
-    public SchemaSession getSchemaSession(PluginDatasource pluginDatasource) {
-        DataSource dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasource, HikariDataSource.class);
-        return new PostgresqlSchemaSession(dataSource);
+    private DataSource datasource;
+
+    public PostgresqlDriverSession() {
+    }
+
+    public PostgresqlDriverSession(DataSource datasource) {
+        this.datasource = datasource;
     }
 
     @Override
-    public TableSession getTableSession(PluginDatasource pluginDatasource) {
-        DataSource dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasource, HikariDataSource.class);
-        return new PostgresqlTableSession(dataSource);
+    public SchemaSession getSchemaSession() {
+        return new PostgresqlSchemaSession(datasource);
+    }
+
+    @Override
+    public TableSession getTableSession() {
+        return new PostgresqlTableSession(datasource);
+    }
+
+    @Override
+    public void setDatasource(DataSource dataSource) {
+        this.datasource = dataSource;
+    }
+
+    @Override
+    public DataSource getDatasource() {
+        return this.datasource;
     }
 }
