@@ -1,5 +1,9 @@
 package com.github.codingdebugallday.driver.session.app.service.rdbms;
 
+import java.sql.*;
+import java.util.*;
+import javax.sql.DataSource;
+
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.common.infra.utils.CloseUtil;
 import com.github.codingdebugallday.driver.session.app.service.session.DriverSession;
@@ -16,10 +20,6 @@ import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
 import org.springframework.util.StringUtils;
 
-import javax.sql.DataSource;
-import java.sql.*;
-import java.util.*;
-
 /**
  * <p>
  * RdbmsDriver抽象实现
@@ -29,13 +29,15 @@ import java.util.*;
  * @since 1.0
  */
 @Slf4j
-public abstract class AbstractRdbmsDriverSession implements DriverSession, SessionTool {
+public abstract class AbstractRdbmsDriverSession extends AbstractSessionTool
+        implements DriverSession, SessionTool {
 
     private static final String CREATE_SCHEMA = "CREATE DATABASE %s";
 
     protected final DataSource dataSource;
 
     public AbstractRdbmsDriverSession(DataSource dataSource) {
+        super(dataSource);
         this.dataSource = dataSource;
     }
 
@@ -204,7 +206,6 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     }
 
     @Override
-    @SuppressWarnings("all")
     public List<Map<String, Object>> callProcedure(String schema, String sql, Object... args) {
         Connection connection = null;
         try {
@@ -327,6 +328,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<String> views(String schema) {
         try {
