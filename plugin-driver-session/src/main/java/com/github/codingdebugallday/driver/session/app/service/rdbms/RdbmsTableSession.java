@@ -1,20 +1,22 @@
 package com.github.codingdebugallday.driver.session.app.service.rdbms;
 
+import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
+import com.github.codingdebugallday.driver.common.infra.utils.CloseUtil;
+import com.github.codingdebugallday.driver.session.app.service.session.SessionTool;
+import com.github.codingdebugallday.driver.session.app.service.session.TableSession;
+import com.github.codingdebugallday.driver.session.domian.entity.MetaDataInfo;
+import com.github.codingdebugallday.driver.session.domian.entity.TableColumn;
+import com.github.codingdebugallday.driver.session.domian.entity.Tuple;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.MetaDataAccessException;
+
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
-
-import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
-import com.github.codingdebugallday.driver.common.infra.utils.CloseUtil;
-import com.github.codingdebugallday.driver.session.domian.entity.TableColumn;
-import com.github.codingdebugallday.driver.session.app.service.session.SessionTool;
-import com.github.codingdebugallday.driver.session.app.service.session.TableSession;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.support.JdbcUtils;
-import org.springframework.jdbc.support.MetaDataAccessException;
 
 /**
  * <p>
@@ -33,9 +35,9 @@ public class RdbmsTableSession implements TableSession, SessionTool {
         this.dataSource = dataSource;
     }
 
-    @SuppressWarnings({"all"})
     @Override
-    public List<String> tables(String schema) {
+    @SuppressWarnings("all")
+    public List<String> tableList(String schema) {
         try {
             return (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, databaseMetaData -> {
                 List<String> tables = new ArrayList<>();
@@ -126,7 +128,7 @@ public class RdbmsTableSession implements TableSession, SessionTool {
     }
 
     @Override
-    public List<TableColumn> columns(String schema, String sql) {
+    public List<TableColumn> tableColumns(String schema, String sql) {
         List<TableColumn> columns = new ArrayList<>();
         Connection connection = null;
         PreparedStatement ps = null;
@@ -163,36 +165,10 @@ public class RdbmsTableSession implements TableSession, SessionTool {
     }
 
     @Override
-    public Long count(String schema, String sql) {
-        long count = 0L;
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            connection = this.dataSource.getConnection();
-            // 设置schema
-            schemaSetter().setSchema(connection, schema);
-            // 查询
-            final String countSql = "SELECT COUNT(1) FROM (" + sql + ") t";
-            log.debug("count sql [{}]", countSql);
-            ps = connection.prepareStatement(countSql);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                count = rs.getLong(1);
-            }
-        } catch (SQLException e) {
-            log.error("sql [{}] count error", sql);
-            throw new DriverException("sql count error", e);
-        } finally {
-            CloseUtil.close(rs, ps, connection);
-        }
-        return count;
-    }
-
-    @Override
-    public boolean exists(String schema, String table) {
+    public boolean tableExists(String schema, String table) {
         return false;
     }
+
 
     @SuppressWarnings({"all"})
     @Override
@@ -217,6 +193,31 @@ public class RdbmsTableSession implements TableSession, SessionTool {
             log.error("fetch views error");
             throw new DriverException("fetch views error", e);
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> tableQuery(String schema, String table) {
+        return null;
+    }
+
+    @Override
+    public boolean tableCreate(String schema, String tableName, List<TableColumn> columns) {
+        return false;
+    }
+
+    @Override
+    public boolean tableInsert(String schema, String table, List<Tuple<String, String>> values) {
+        return false;
+    }
+
+    @Override
+    public boolean tableUpdate(String schema, String tableName, List<TableColumn> columns) {
+        return false;
+    }
+
+    @Override
+    public MetaDataInfo tableMetaData(String schema, String tableName) {
+        return null;
     }
 
 }

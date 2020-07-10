@@ -34,7 +34,7 @@ public class SessionController {
                                                   @RequestParam String schema) {
         // datasourceCode不传 使用服务本身数据源
         List<String> tables = driverSessionService.getDriverSession(tenantId, datasourceCode)
-                .tables(schema);
+                .tableList(schema);
         return ResponseEntity.ok(tables);
     }
 

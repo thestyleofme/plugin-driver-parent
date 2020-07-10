@@ -1,5 +1,8 @@
 package com.github.codingdebugallday.driver.session.app.service.session;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,19 +17,19 @@ import java.util.Map;
 public interface SchemaSession {
 
     /**
+     * 获取schema名
+     *
+     * @return schemas
+     */
+    List<String> schemaList();
+
+    /**
      * 创建数据库
      *
      * @param schema 数据库，不可以为空
      * @return 是否创建成功
      */
-    boolean createSchema(String schema);
-
-    /**
-     * 获取schema名
-     *
-     * @return schemas
-     */
-    List<String> schemas();
+    boolean schemaCreate(String schema);
 
     /**
      * 执行sql
@@ -56,6 +59,25 @@ public interface SchemaSession {
      * @return 数据
      */
     List<Map<String, Object>> queryStatement(String schema, String sql);
+
+    /**
+     * 分页查询数据
+     *
+     * @param schema   数据库，可为空。为空则取当前连接的数据库
+     * @param sql      查询语句
+     * @param pageable 分页
+     * @return 分页数据
+     */
+    Page<Map<String, Object>> queryStatement(String schema, String sql, Pageable pageable);
+
+    /**
+     * 查询数据条数
+     *
+     * @param schema 数据库，可为空。为空则取当前连接的数据库
+     * @param sql    查询语句
+     * @return 条数
+     */
+    Long queryCount(String schema, String sql);
 
     /**
      * 调用存储过程

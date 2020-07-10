@@ -1,6 +1,8 @@
 package com.github.codingdebugallday.driver.session.app.service.session;
 
+import com.github.codingdebugallday.driver.session.domian.entity.MetaDataInfo;
 import com.github.codingdebugallday.driver.session.domian.entity.TableColumn;
+import com.github.codingdebugallday.driver.session.domian.entity.Tuple;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +23,7 @@ public interface TableSession {
      * @param schema 数据库，可为空。为空则取当前连接的数据库
      * @return 表名
      */
-    List<String> tables(String schema);
+    List<String> tableList(String schema);
 
     /**
      * 获取表结构
@@ -61,16 +63,7 @@ public interface TableSession {
      * @param sql    SQL
      * @return 字段信息
      */
-    List<TableColumn> columns(String schema, String sql);
-
-    /**
-     * 查询数据条数
-     *
-     * @param schema 数据库，可为空。为空则取当前连接的数据库
-     * @param sql    查询语句
-     * @return 条数
-     */
-    Long count(String schema, String sql);
+    List<TableColumn> tableColumns(String schema, String sql);
 
     /**
      * 表是否存在
@@ -79,7 +72,7 @@ public interface TableSession {
      * @param table  table
      * @return true|false
      */
-    boolean exists(String schema, String table);
+    boolean tableExists(String schema, String table);
 
     /**
      * 表视图
@@ -89,4 +82,52 @@ public interface TableSession {
      */
     List<String> views(String schema);
 
+    /**
+     * 查询表数据
+     *
+     * @param schema 库
+     * @param table  表
+     * @return 数据
+     */
+    List<Map<String, Object>> tableQuery(String schema, String table);
+
+    /**
+     * 建表
+     *
+     * @param schema    库
+     * @param tableName 表
+     * @param columns   列
+     * @return 是否创建成功
+     */
+    boolean tableCreate(String schema, String tableName, List<TableColumn> columns);
+
+
+    /**
+     * 插入数据
+     *
+     * @param schema 库
+     * @param table  表
+     * @param values 值 （二元组 <key（列）,value（值）>）
+     * @return 是否创建成功
+     */
+    boolean tableInsert(String schema, String table, List<Tuple<String, String>> values);
+
+    /**
+     * 更新表
+     *
+     * @param schema    库
+     * @param tableName 表
+     * @param columns   列
+     * @return 是否更新成功
+     */
+    boolean tableUpdate(String schema, String tableName, List<TableColumn> columns);
+
+    /**
+     * 查询元数据
+     *
+     * @param schema    schema
+     * @param tableName 表名
+     * @return MetaDataInfo
+     */
+    MetaDataInfo tableMetaData(String schema, String tableName);
 }

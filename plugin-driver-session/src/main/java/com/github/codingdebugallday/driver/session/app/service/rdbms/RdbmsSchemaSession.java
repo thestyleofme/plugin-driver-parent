@@ -1,19 +1,21 @@
 package com.github.codingdebugallday.driver.session.app.service.rdbms;
 
-import java.sql.*;
-import java.util.*;
-import javax.sql.DataSource;
-
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.common.infra.utils.CloseUtil;
 import com.github.codingdebugallday.driver.session.app.service.session.SchemaSession;
 import com.github.codingdebugallday.driver.session.app.service.session.SessionTool;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
 import org.springframework.util.StringUtils;
+
+import javax.sql.DataSource;
+import java.sql.*;
+import java.util.*;
 
 /**
  * <p>
@@ -35,25 +37,8 @@ public class RdbmsSchemaSession implements SchemaSession, SessionTool {
     }
 
     @Override
-    public boolean createSchema(String schema) {
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = dataSource.getConnection();
-            String sql = String.format(CREATE_SCHEMA, schema);
-            statement = connection.createStatement();
-            return statement.executeUpdate(sql) >= 0;
-        } catch (SQLException e) {
-            log.error("create {} error", schema);
-            throw new DriverException("create schema error", e);
-        } finally {
-            CloseUtil.close(statement, connection);
-        }
-    }
-
-    @Override
     @SuppressWarnings("all")
-    public List<String> schemas() {
+    public List<String> schemaList() {
         try {
             return (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, databaseMetaData -> {
                 List<String> schemas = new ArrayList<>();
@@ -73,6 +58,23 @@ public class RdbmsSchemaSession implements SchemaSession, SessionTool {
         } catch (MetaDataAccessException e) {
             log.error("fetch schemas error");
             throw new DriverException("fetch schemas error", e);
+        }
+    }
+
+    @Override
+    public boolean schemaCreate(String schema) {
+        Connection connection = null;
+        Statement statement = null;
+        try {
+            connection = dataSource.getConnection();
+            String sql = String.format(CREATE_SCHEMA, schema);
+            statement = connection.createStatement();
+            return statement.executeUpdate(sql) >= 0;
+        } catch (SQLException e) {
+            log.error("create {} error", schema);
+            throw new DriverException("create schema error", e);
+        } finally {
+            CloseUtil.close(statement, connection);
         }
     }
 
@@ -157,6 +159,38 @@ public class RdbmsSchemaSession implements SchemaSession, SessionTool {
             CloseUtil.close(rs, ps, connection);
         }
         return rows;
+    }
+
+    @Override
+    public Page<Map<String, Object>> queryStatement(String schema, String sql, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Long queryCount(String schema, String sql) {
+        long count = 0L;
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = this.dataSource.getConnection();
+            // 设置schema
+            schemaSetter().setSchema(connection, schema);
+            // 查询
+            final String countSql = "SELECT COUNT(1) FROM (" + sql + ") t";
+            log.debug("count sql [{}]", countSql);
+            ps = connection.prepareStatement(countSql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getLong(1);
+            }
+        } catch (SQLException e) {
+            log.error("sql [{}] count error", sql);
+            throw new DriverException("sql count error", e);
+        } finally {
+            CloseUtil.close(rs, ps, connection);
+        }
+        return count;
     }
 
     @Override

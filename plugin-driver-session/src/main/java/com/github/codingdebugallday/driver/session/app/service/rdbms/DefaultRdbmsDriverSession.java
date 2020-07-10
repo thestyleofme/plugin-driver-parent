@@ -1,11 +1,15 @@
 package com.github.codingdebugallday.driver.session.app.service.rdbms;
 
+import com.github.codingdebugallday.driver.session.app.service.session.DriverSession;
+import com.github.codingdebugallday.driver.session.domian.entity.MetaDataInfo;
+import com.github.codingdebugallday.driver.session.domian.entity.TableColumn;
+import com.github.codingdebugallday.driver.session.domian.entity.Tuple;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
-import javax.sql.DataSource;
-
-import com.github.codingdebugallday.driver.session.app.service.session.DriverSession;
-import com.github.codingdebugallday.driver.session.domian.entity.TableColumn;
 
 /**
  * <p>
@@ -30,13 +34,13 @@ public class DefaultRdbmsDriverSession implements DriverSession {
     //============================================
 
     @Override
-    public boolean createSchema(String schema) {
-        return rdbmsSchemaSession.createSchema(schema);
+    public List<String> schemaList() {
+        return null;
     }
 
     @Override
-    public List<String> schemas() {
-        return rdbmsSchemaSession.schemas();
+    public boolean schemaCreate(String schema) {
+        return false;
     }
 
     @Override
@@ -55,6 +59,16 @@ public class DefaultRdbmsDriverSession implements DriverSession {
     }
 
     @Override
+    public Page<Map<String, Object>> queryStatement(String schema, String sql, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Long queryCount(String schema, String sql) {
+        return null;
+    }
+
+    @Override
     public List<Map<String, Object>> callProcedure(String schema, String sql, Object... args) {
         return rdbmsSchemaSession.callProcedure(schema, sql, args);
     }
@@ -64,8 +78,8 @@ public class DefaultRdbmsDriverSession implements DriverSession {
     //============================================
 
     @Override
-    public List<String> tables(String schema) {
-        return rdbmsTableSession.tables(schema);
+    public List<String> tableList(String schema) {
+        return null;
     }
 
     @Override
@@ -84,23 +98,43 @@ public class DefaultRdbmsDriverSession implements DriverSession {
     }
 
     @Override
-    public List<TableColumn> columns(String schema, String sql) {
-        return rdbmsTableSession.columns(schema, sql);
+    public List<TableColumn> tableColumns(String schema, String sql) {
+        return null;
     }
 
     @Override
-    public Long count(String schema, String sql) {
-        return rdbmsTableSession.count(schema, sql);
-    }
-
-    @Override
-    public boolean exists(String schema, String table) {
-        return rdbmsTableSession.exists(schema, table);
+    public boolean tableExists(String schema, String table) {
+        return false;
     }
 
     @Override
     public List<String> views(String schema) {
         return rdbmsTableSession.views(schema);
+    }
+
+    @Override
+    public List<Map<String, Object>> tableQuery(String schema, String table) {
+        return null;
+    }
+
+    @Override
+    public boolean tableCreate(String schema, String tableName, List<TableColumn> columns) {
+        return false;
+    }
+
+    @Override
+    public boolean tableInsert(String schema, String table, List<Tuple<String, String>> values) {
+        return false;
+    }
+
+    @Override
+    public boolean tableUpdate(String schema, String tableName, List<TableColumn> columns) {
+        return false;
+    }
+
+    @Override
+    public MetaDataInfo tableMetaData(String schema, String tableName) {
+        return null;
     }
 
 }
