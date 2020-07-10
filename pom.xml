@@ -11,7 +11,6 @@
 
     <modules>
         <module>plugin-driver-common</module>
-        <module>plugin-driver-common-pom</module>
         <module>plugin-driver-datasource</module>
         <module>plugin-driver-session</module>
         <module>plugin-driver-runner</module>
