@@ -11,6 +11,9 @@ import com.github.codingdebugallday.driver.session.app.service.session.SessionTo
 import com.github.codingdebugallday.driver.session.domian.entity.MetaDataInfo;
 import com.github.codingdebugallday.driver.session.domian.entity.TableColumn;
 import com.github.codingdebugallday.driver.session.domian.entity.Tuple;
+import com.github.codingdebugallday.driver.session.infra.constants.DataSourceTypeConstant;
+import com.github.codingdebugallday.driver.session.infra.funcations.extractor.*;
+import com.github.codingdebugallday.driver.session.infra.funcations.setter.SchemaSetter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,24 +32,95 @@ import org.springframework.util.StringUtils;
  * @since 1.0
  */
 @Slf4j
-public abstract class AbstractRdbmsDriverSession extends AbstractSessionTool
-        implements DriverSession, SessionTool {
+public abstract class AbstractRdbmsDriverSession implements DriverSession, SessionTool {
 
     private static final String CREATE_SCHEMA = "CREATE DATABASE %s";
 
     protected final DataSource dataSource;
 
     public AbstractRdbmsDriverSession(DataSource dataSource) {
-        super(dataSource);
         this.dataSource = dataSource;
+    }
+
+    @Override
+    public SchemaSetter schemaSetter() {
+        return isSchema(dataSource) ?
+                (connection, schema) -> {
+                    if (!StringUtils.isEmpty(schema)) {
+                        connection.setSchema(schema);
+                    }
+                } :
+                (connection, schema) -> {
+                    if (!StringUtils.isEmpty(schema)) {
+                        connection.setCatalog(schema);
+                    }
+                };
+    }
+
+    @Override
+    public SchemaExtractor schemaExtractor() {
+        return isSchema(dataSource) ? DatabaseMetaData::getSchemas : DatabaseMetaData::getCatalogs;
+    }
+
+    @Override
+    public TableExtractor tableExtractor() {
+        return isSchema(dataSource) ?
+                (metaData, schema, types) ->
+                        metaData.getTables(null, schema, "%", types) :
+                (metaData, schema, types) ->
+                        metaData.getTables(schema, null, "%", types);
+
+    }
+
+    @Override
+    public TablePkExtractor tablePkExtractor() {
+        return isSchema(dataSource) ?
+                (metaData, schema, table) ->
+                        metaData.getPrimaryKeys(null, schema, table) :
+                (metaData, schema, table) ->
+                        metaData.getPrimaryKeys(schema, null, table);
+    }
+
+    @Override
+    public TableIndexExtractor tableIndexExtractor() {
+        return isSchema(dataSource) ?
+                (metaData, schema, table) ->
+                        metaData.getIndexInfo(null, schema, table, false, false) :
+                (metaData, schema, table) ->
+                        metaData.getIndexInfo(schema, null, table, false, false);
+    }
+
+    @Override
+    public TableStructureExtractor tableStructureExtractor() {
+        return isSchema(dataSource) ?
+                (metaData, schema, table) ->
+                        metaData.getColumns(null, schema, table, "%") :
+                (metaData, schema, table) ->
+                        metaData.getColumns(schema, null, table, "%");
+    }
+
+    /**
+     * 判断数据源是schema还是catalog类型
+     *
+     * @param dataSource DataSource
+     * @return true/false
+     */
+    private boolean isSchema(DataSource dataSource) {
+        try (Connection connection = dataSource.getConnection()) {
+            String productName = connection.getMetaData().getDatabaseProductName().toUpperCase();
+            // 只有mysql比较特殊是catalog型的，其余都是schema型
+            return !productName.contains(DataSourceTypeConstant.Jdbc.MYSQL);
+        } catch (SQLException e) {
+            throw new DriverException("getDatabaseProductName error", e);
+        }
     }
 
     //============================================
     //====================schema==================
     //============================================
 
+    @SuppressWarnings("unchecked")
     @Override
-    @SuppressWarnings("all")
     public List<String> schemaList() {
         try {
             return (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, databaseMetaData -> {
@@ -178,7 +252,6 @@ public abstract class AbstractRdbmsDriverSession extends AbstractSessionTool
     }
 
     @Override
-    @SuppressWarnings("all")
     public Long queryCount(String schema, String sql) {
         long count = 0L;
         Connection connection = null;
@@ -189,7 +262,7 @@ public abstract class AbstractRdbmsDriverSession extends AbstractSessionTool
             // 设置schema
             schemaSetter().setSchema(connection, schema);
             // 查询
-            final String countSql = "SELECT COUNT(1) FROM (" + sql + ") t";
+            final String countSql = String.format("SELECT COUNT(1) FROM (%s) t", sql);
             log.debug("count sql [{}]", countSql);
             ps = connection.prepareStatement(countSql);
             rs = ps.executeQuery();
@@ -230,8 +303,9 @@ public abstract class AbstractRdbmsDriverSession extends AbstractSessionTool
     //============================================
     //====================table==================
     //============================================
+
+    @SuppressWarnings("unchecked")
     @Override
-    @SuppressWarnings("all")
     public List<String> tableList(String schema) {
         try {
             return (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, databaseMetaData -> {
@@ -255,8 +329,8 @@ public abstract class AbstractRdbmsDriverSession extends AbstractSessionTool
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    @SuppressWarnings("all")
     public List<Map<String, Object>> tableStructure(String schema, String table) {
         try {
             return (List<Map<String, Object>>) JdbcUtils.extractDatabaseMetaData(this.dataSource, databaseMetaData -> {
@@ -309,7 +383,7 @@ public abstract class AbstractRdbmsDriverSession extends AbstractSessionTool
                         .typeName(metaData.getColumnTypeName(i))
                         .colSize(metaData.getColumnDisplaySize(i))
                         .accuracy(metaData.getPrecision(i))
-                        .nullAble(metaData.isNullable(i) == 1 ? "YES" : "NO")
+                        .nullAble(metaData.isNullable(i) == ResultSetMetaData.columnNullable ? "YES" : "NO")
                         .isAutoIncrement(metaData.isAutoIncrement(i))
                         .build();
                 columns.add(column);
@@ -355,7 +429,7 @@ public abstract class AbstractRdbmsDriverSession extends AbstractSessionTool
 
     @Override
     public List<Map<String, Object>> tableQuery(String schema, String table) {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
