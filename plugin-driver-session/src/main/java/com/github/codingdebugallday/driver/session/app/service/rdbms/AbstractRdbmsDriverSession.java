@@ -375,4 +375,6 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     public MetaDataInfo tableMetaData(String schema, String tableName) {
         return null;
     }
+
+
 }

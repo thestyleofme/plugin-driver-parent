@@ -5,7 +5,7 @@ import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.datasource.context.PluginDataSourceHolder;
 import com.github.codingdebugallday.driver.session.app.service.DriverSessionService;
-import com.github.codingdebugallday.driver.session.app.service.rdbms.DefaultRdbmsDriverSession;
+import com.github.codingdebugallday.driver.session.app.service.rdbms.RdbmsDriverSession;
 import com.github.codingdebugallday.driver.session.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.session.app.service.session.DriverSessionFunction;
 import com.github.codingdebugallday.integration.application.PluginApplication;
@@ -70,7 +70,7 @@ public class DriverSessionServiceImpl implements DriverSessionService {
         }
         // 本地服务
         log.debug("use default datasource...");
-        return new DefaultRdbmsDriverSession(jdbcTemplate.getDataSource());
+        return new RdbmsDriverSession(jdbcTemplate.getDataSource());
     }
 
 }
