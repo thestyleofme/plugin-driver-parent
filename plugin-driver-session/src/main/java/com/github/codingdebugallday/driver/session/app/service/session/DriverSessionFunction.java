@@ -8,7 +8,7 @@ package com.github.codingdebugallday.driver.session.app.service.session;
  * @author isaac 2020/7/9 16:52
  * @since 1.0
  */
-public interface DriverSessionFunction<R> extends DriverSession {
+public interface DriverSessionFunction<R> {
 
     /**
      * 获取数据源的类类型
@@ -23,4 +23,11 @@ public interface DriverSessionFunction<R> extends DriverSession {
      * @param r 数据源
      */
     void setDataSource(R r);
+
+    /**
+     * 获取Session
+     *
+     * @return DriverSession
+     */
+    DriverSession getDriverSession();
 }

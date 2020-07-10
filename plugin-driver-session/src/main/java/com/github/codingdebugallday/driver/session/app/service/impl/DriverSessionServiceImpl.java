@@ -1,7 +1,5 @@
 package com.github.codingdebugallday.driver.session.app.service.impl;
 
-import javax.validation.constraints.NotBlank;
-
 import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
@@ -16,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import javax.validation.constraints.NotBlank;
 
 
 /**
@@ -60,8 +60,8 @@ public class DriverSessionServiceImpl implements DriverSessionService {
                 Class<?> clazz = driverSessionFunction.getDataSource();
                 Object dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasource, clazz);
                 driverSessionFunction.setDataSource(dataSource);
-                log.debug("use plugin[{}] datasource...",pluginDatasource.getDatasourcePluginId());
-                return driverSessionFunction;
+                log.debug("use plugin[{}] datasource...", pluginDatasource.getDatasourcePluginId());
+                return driverSessionFunction.getDriverSession();
             } catch (Exception e) {
                 throw new DriverException(e);
             } finally {
