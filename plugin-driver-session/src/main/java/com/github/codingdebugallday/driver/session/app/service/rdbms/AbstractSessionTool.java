@@ -95,7 +95,7 @@ public abstract class AbstractSessionTool implements SessionTool {
         try (Connection connection = dataSource.getConnection()) {
             String productName = connection.getMetaData().getDatabaseProductName().toUpperCase();
             // 只有mysql比较特殊是catalog型的，其余都是schema型
-            return productName.contains(DataSourceTypeConstant.Jdbc.MYSQL);
+            return !productName.contains(DataSourceTypeConstant.Jdbc.MYSQL);
         } catch (SQLException e) {
             throw new DriverException("getDatabaseProductName error", e);
         }
