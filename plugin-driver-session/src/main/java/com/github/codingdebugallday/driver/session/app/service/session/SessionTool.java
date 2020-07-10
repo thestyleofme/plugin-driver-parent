@@ -2,9 +2,6 @@ package com.github.codingdebugallday.driver.session.app.service.session;
 
 import com.github.codingdebugallday.driver.session.infra.funcations.extractor.*;
 import com.github.codingdebugallday.driver.session.infra.funcations.setter.SchemaSetter;
-import org.springframework.util.StringUtils;
-
-import java.sql.DatabaseMetaData;
 
 /**
  * <p>
@@ -23,13 +20,7 @@ public interface SessionTool {
      *
      * @return SchemaSetter
      */
-    default SchemaSetter schemaSetter() {
-        return (connection, schema) -> {
-            if (!StringUtils.isEmpty(schema)) {
-                connection.setSchema(schema);
-            }
-        };
-    }
+    SchemaSetter schemaSetter();
 
     // 提取器
 
@@ -38,45 +29,35 @@ public interface SessionTool {
      *
      * @return SchemaExtractor
      */
-    default SchemaExtractor schemaExtractor() {
-        return DatabaseMetaData::getSchemas;
-    }
+    SchemaExtractor schemaExtractor();
 
     /**
      * 表提取
      *
      * @return TableExtractor
      */
-    default TableExtractor tableExtractor() {
-        return (metaData, schema, types) -> metaData.getTables(null, schema, "%", types);
-    }
+    TableExtractor tableExtractor();
 
     /**
      * 表主键提取
      *
      * @return tableIndexExtractor
      */
-    default TablePkExtractor tablePkExtractor() {
-        return (metaData, schema, table) -> metaData.getPrimaryKeys(null, schema, table);
-    }
+    TablePkExtractor tablePkExtractor();
 
     /**
      * 表索引提取
      *
      * @return tableIndexExtractor
      */
-    default TableIndexExtractor tableIndexExtractor() {
-        return (metaData, schema, table) -> metaData.getIndexInfo(null, schema, table, false, false);
-    }
+    TableIndexExtractor tableIndexExtractor();
 
     /**
      * 表结构提取
      *
      * @return TableStructureExtractor
      */
-    default TableStructureExtractor tableStructureExtractor() {
-        return (metaData, schema, table) -> metaData.getColumns(null, schema, table, "%");
-    }
+    TableStructureExtractor tableStructureExtractor();
 
     // other
     /**
