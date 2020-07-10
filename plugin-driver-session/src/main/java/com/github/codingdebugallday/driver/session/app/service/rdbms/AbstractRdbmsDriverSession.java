@@ -9,6 +9,7 @@ import com.github.codingdebugallday.driver.session.domian.entity.TableColumn;
 import com.github.codingdebugallday.driver.session.domian.entity.Tuple;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -31,7 +32,10 @@ import java.util.*;
 @Slf4j
 public abstract class AbstractRdbmsDriverSession implements DriverSession, SessionTool {
 
-    private static final String CREATE_SCHEMA = "CREATE DATABASE %s";
+    private static final String DEFAULT_CREATE_SCHEMA = "CREATE DATABASE IF NOT EXISTS %s";
+    private static final String DEFAULT_PAGE_SQL = "%s LIMIT %d, %d";
+    private static final String COUNT_FLAG = "COUNT(";
+    private static final String COUNT_SQL_FORMAT = "SELECT COUNT(1) FROM ( %s )";
 
     protected final DataSource dataSource;
 
@@ -70,19 +74,8 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public boolean schemaCreate(String schema) {
-        Connection connection = null;
-        Statement statement = null;
-        try {
-            connection = dataSource.getConnection();
-            String sql = String.format(CREATE_SCHEMA, schema);
-            statement = connection.createStatement();
-            return statement.executeUpdate(sql) >= 0;
-        } catch (SQLException e) {
-            log.error("create {} error", schema);
-            throw new DriverException("create schema error", e);
-        } finally {
-            CloseUtil.close(statement, connection);
-        }
+        String createSchemaSql = String.format(DEFAULT_CREATE_SCHEMA, schema);
+        return this.executeStatement(schema, createSchemaSql);
     }
 
     @Override
@@ -140,7 +133,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public List<Map<String, Object>> queryStatement(String schema, String sql) {
-        log.info("查询sql为：{}", sql);
+        log.debug("查询sql为：{}", sql);
         List<Map<String, Object>> rows = new ArrayList<>();
         Connection connection = null;
         PreparedStatement ps = null;
@@ -171,40 +164,36 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public Page<Map<String, Object>> queryStatement(String schema, String sql, Pageable pageable) {
-        // TODO
-        return null;
-    }
-
-    @Override
-    @SuppressWarnings("all")
-    public Long queryCount(String schema, String sql) {
-        long count = 0L;
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            connection = this.dataSource.getConnection();
-            // 设置schema
-            schemaSetter().setSchema(connection, schema);
-            // 查询
-            final String countSql = "SELECT COUNT(1) FROM (" + sql + ") t";
-            log.debug("count sql [{}]", countSql);
-            ps = connection.prepareStatement(countSql);
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                count = rs.getLong(1);
+        Long total;
+        String querySql = sql;
+        // 包含COUNT_FLAG 认为是查数量，不需要分页
+        if (!sql.toUpperCase().contains(COUNT_FLAG)) {
+            total = this.queryCount(schema, sql);
+            // 没有数据则直接返回
+            if (total == 0) {
+                return new PageImpl<>(Collections.emptyList(), pageable, total);
             }
-        } catch (SQLException e) {
-            log.error("sql [{}] count error", sql);
-            throw new DriverException("sql count error", e);
-        } finally {
-            CloseUtil.close(rs, ps, connection);
+            // 分页查询
+            querySql = pageSqlExtractor().extract(this.getPageFormat(), sql, pageable);
+        } else {
+            total = 1L;
         }
-        return count;
+        List<Map<String, Object>> content = this.queryStatement(schema, querySql);
+        return new PageImpl<>(content, pageable, total);
     }
 
     @Override
-    @SuppressWarnings("all")
+    public Long queryCount(String schema, String sql) {
+        // TODO 去除末尾;
+        final String countSql = String.format(COUNT_SQL_FORMAT, sql);
+        return (Long) this.queryStatement(schema, countSql)
+                .get(0).values().stream()
+                .findFirst()
+                .orElseThrow(() -> new DriverException("query count err")
+                );
+    }
+
+    @Override
     public List<Map<String, Object>> callProcedure(String schema, String sql, Object... args) {
         Connection connection = null;
         try {
@@ -376,5 +365,9 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         return null;
     }
 
+    //
+    protected String getPageFormat(){
+        return DEFAULT_PAGE_SQL;
+    }
 
 }

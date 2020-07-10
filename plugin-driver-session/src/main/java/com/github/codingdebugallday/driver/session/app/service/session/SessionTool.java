@@ -78,4 +78,18 @@ public interface SessionTool {
         return (metaData, schema, table) -> metaData.getColumns(null, schema, table, "%");
     }
 
+    // other
+    /**
+     * 分页提取
+     * @return PageSqlExtractor
+     */
+    default PageSqlExtractor pageSqlExtractor() {
+        return (pageFormat, sql, pageable) -> {
+            long page = pageable.getPageNumber();
+            long size = pageable.getPageSize();
+            long offset = page * size;
+            return String.format(pageFormat, sql, offset, size);
+        };
+    }
+
 }

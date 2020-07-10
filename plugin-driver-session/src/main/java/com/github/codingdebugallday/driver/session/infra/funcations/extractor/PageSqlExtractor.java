@@ -15,10 +15,11 @@ public interface PageSqlExtractor {
     /**
      * 分页SQL
      *
+     * @param pageFormat 分页SQL 格式
      * @param sql      原始SQL
      * @param pageable 分页信息
      * @return 分页SQL
      */
-    String extract(String sql, Pageable pageable);
+    String extract(String pageFormat, String sql, Pageable pageable);
 
 }
