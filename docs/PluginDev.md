@@ -189,4 +189,7 @@ public class MysqlDriverSession extends AbstractRdbmsDriverSession {
 
 详情可见[driver-session-mysql](https://github.com/codingdebugallday/plugin-driver-parent/tree/develop/plugins/driver-session-mysql)
 
-#### 
+## 打包运行
+
+在`plugin-driver-parent`下`mvn clean package -DskipTests` 后会根据`driver-plugin-parent`的[pom](https://github.com/codingdebugallday/plugin-driver-parent/blob/develop/plugins/pom.xml)中配置的`outputDirectory`带包到../out，加载插件会从application默认配置的plugin.pluginPath目录下引入插件jar。
+
