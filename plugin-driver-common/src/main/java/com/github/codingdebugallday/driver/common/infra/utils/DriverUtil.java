@@ -28,7 +28,7 @@ public class DriverUtil {
         }
         CommonDatasourceSettingInfo commonDatasourceSettingInfo =
                 JsonUtil.toObj(settingsInfo, CommonDatasourceSettingInfo.class);
-        // TODO 校验必须参数。如果没有根据类型走默认
+        // TODO 校验必需参数，如果没有根据类型走默认
         return new HikariDataSource(genHikariConfig(commonDatasourceSettingInfo));
     }
 

@@ -1,8 +1,8 @@
 package com.github.codingdebugallday.driver.session.app.service.session;
 
-import com.github.codingdebugallday.driver.session.domian.entity.MetaDataInfo;
-import com.github.codingdebugallday.driver.session.domian.entity.TableColumn;
-import com.github.codingdebugallday.driver.session.domian.entity.Tuple;
+import com.github.codingdebugallday.driver.session.domain.entity.MetaDataInfo;
+import com.github.codingdebugallday.driver.session.domain.entity.TableColumn;
+import com.github.codingdebugallday.driver.session.domain.entity.Tuple;
 
 import java.util.List;
 import java.util.Map;

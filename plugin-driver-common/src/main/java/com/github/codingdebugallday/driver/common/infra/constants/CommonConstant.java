@@ -11,7 +11,7 @@ package com.github.codingdebugallday.driver.common.infra.constants;
 public class CommonConstant {
 
     private CommonConstant() {
-        throw new IllegalStateException("constant class");
+        throw new IllegalStateException();
     }
 
     public static final String REDIS_PLUGIN_DATASOURCE_INSTANCE_KEY = "plugin:datasource:instances";
@@ -29,7 +29,7 @@ public class CommonConstant {
     public static class Symbol {
 
         private Symbol() {
-            throw new IllegalStateException("constant class");
+            throw new IllegalStateException();
         }
 
         public static final String SIGH = "!";
@@ -64,7 +64,7 @@ public class CommonConstant {
 
     public static class Pattern {
         private Pattern() {
-            throw new IllegalStateException("constant class");
+            throw new IllegalStateException();
         }
 
         public static final String DATE = "yyyy-MM-dd";

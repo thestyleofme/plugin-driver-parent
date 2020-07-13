@@ -8,9 +8,9 @@ import com.github.codingdebugallday.driver.common.infra.exceptions.DriverExcepti
 import com.github.codingdebugallday.driver.common.infra.utils.CloseUtil;
 import com.github.codingdebugallday.driver.session.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.session.app.service.session.SessionTool;
-import com.github.codingdebugallday.driver.session.domian.entity.MetaDataInfo;
-import com.github.codingdebugallday.driver.session.domian.entity.TableColumn;
-import com.github.codingdebugallday.driver.session.domian.entity.Tuple;
+import com.github.codingdebugallday.driver.session.domain.entity.MetaDataInfo;
+import com.github.codingdebugallday.driver.session.domain.entity.TableColumn;
+import com.github.codingdebugallday.driver.session.domain.entity.Tuple;
 import com.github.codingdebugallday.driver.session.infra.constants.DataSourceTypeConstant;
 import com.github.codingdebugallday.driver.session.infra.funcations.extractor.*;
 import com.github.codingdebugallday.driver.session.infra.funcations.setter.SchemaSetter;

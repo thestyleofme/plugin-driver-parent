@@ -9,7 +9,7 @@ import java.util.Objects;
 
 /**
  * <p>
- * 表plugin_datasource映射类
+ * 插件数据源映射类
  * </p>
  *
  * @author isaac 2020/7/1 16:10

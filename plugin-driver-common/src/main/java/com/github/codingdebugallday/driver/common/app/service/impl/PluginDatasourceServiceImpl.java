@@ -1,24 +1,24 @@
 package com.github.codingdebugallday.driver.common.app.service.impl;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotBlank;
+
 import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceService;
+import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.common.infra.repository.PluginDatasourceRepository;
 import com.github.codingdebugallday.driver.common.infra.utils.JsonUtil;
 import com.github.codingdebugallday.driver.common.infra.utils.Preconditions;
-import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotBlank;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -104,10 +104,11 @@ public class PluginDatasourceServiceImpl implements PluginDatasourceService {
         List<PluginDatasource> dtoList = JsonUtil.toArray(content, PluginDatasource.class);
         // -1 时原封不动导入，不是-1则更新租户ID
         if (CommonConstant.ALL_TENANT.equals(tenantId)) {
-            dtoList = dtoList.stream().peek(ds -> ds.setTenantId(tenantId)).collect(Collectors.toList());
+            dtoList.forEach(ds -> ds.setTenantId(tenantId));
         }
-        pluginDatasourceRepository.batchCreate(tenantId, dtoList.stream().collect(Collectors.toMap(PluginDatasource::getDatasourceCode,
-                JsonUtil::toJson)));
+        pluginDatasourceRepository.batchCreate(tenantId,
+                dtoList.stream().collect(
+                        Collectors.toMap(PluginDatasource::getDatasourceCode, JsonUtil::toJson)));
     }
 
 }

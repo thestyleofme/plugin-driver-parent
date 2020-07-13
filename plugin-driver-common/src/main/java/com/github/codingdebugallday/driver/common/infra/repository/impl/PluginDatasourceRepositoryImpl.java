@@ -1,7 +1,7 @@
 package com.github.codingdebugallday.driver.common.infra.repository.impl;
 
-import com.github.codingdebugallday.driver.common.infra.repository.PluginDatasourceRepository;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
+import com.github.codingdebugallday.driver.common.infra.repository.PluginDatasourceRepository;
 import org.springframework.stereotype.Component;
 
 /**

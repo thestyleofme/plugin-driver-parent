@@ -6,7 +6,7 @@ import lombok.*;
 
 /**
  * <p>
- * DatasourceSettingInfo配置映射类
+ * 数据源通用配置映射类
  * </p>
  *
  * @author isacc 2020/6/11 14:46

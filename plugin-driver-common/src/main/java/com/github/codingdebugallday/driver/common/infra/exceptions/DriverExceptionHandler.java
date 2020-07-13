@@ -27,7 +27,6 @@ public class DriverExceptionHandler {
         return Err.of(getMessage(e));
     }
 
-
     @ExceptionHandler(PluginException.class)
     public Err handlePluginException(PluginException e) {
         log.error("PluginException", e);

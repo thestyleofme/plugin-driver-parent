@@ -1,7 +1,7 @@
 package com.github.codingdebugallday.driver.session.app.service.session;
 
 
-import com.github.codingdebugallday.driver.session.domian.entity.MetaDataInfo;
+import com.github.codingdebugallday.driver.session.domain.entity.MetaDataInfo;
 
 import java.util.Map;
 
@@ -22,7 +22,7 @@ public interface MetaDataSession {
      * @param tableName hive表名
      * @return java.util.Map<java.lang.String, java.lang.Object>
      */
-    Map<String, Object> parseMetastore(String schema, String tableName);
+    Map<String, Object> parseMetaStore(String schema, String tableName);
 
     /**
      * 查询元数据
