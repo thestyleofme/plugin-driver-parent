@@ -8,7 +8,7 @@
 
 ### 1.2 项目简介
 
-plugin-driver基于此需求下而开发，采用插件架构，可适配上述各种数据源，可直接返回datasource（这里的datasource是个统称，可代表```javax.sql.DataSource```、```Jedis```等操作具体数据源的对象）给下游服务，下游服务可基于此datasource进行操作，如获取connection进行db的ddl/dml等操作。我们也提供了常用大部分的接口（table/schema/元数据/分区等），可直接使用。
+plugin-driver基于此需求下而开发，采用插件架构，可适配上述各种数据源，可直接返回datasource（这里的datasource是个统称，可代表```javax.sql.DataSource```、```Jedis```等操作具体数据源的对象）给下游服务，下游服务可基于此datasource进行操作，如获取connection进行db的ddl/dml等操作。我们也提供了常用接口（如table/schema/元数据/分区等），可直接使用。
 
 当然，plugin-driver高度扩展，可根据需求自行开发插件。
 
@@ -38,7 +38,9 @@ plugin-driver-parent
 1. plugin-driver-common是插件的通用管理，如插件的安装卸载停止等操作、数据源的curd以及一些工具类异常等处理。
 2. plugin-driver-datasource是根据数据源信息获取datasource，可获取该服务的本身数据源，即配置的spring.datasouce，也可获取插件定义的datasource。
 3. plugin-driver-session是基于plugin-driver-datasource得到的datasource进行常用操作，统一接口，适配多种数据源。
-4. plugins是插件目录，里面可以有插件的配置文件以及插件jar等，启动时会去加载这些jar，也可通过配置disabled.txt/enabled.txt去选择加载的插件jar。
+4. plugin-driver-runner可以本地启动，集成swagger，方便接口测试。
+5. plugins是插件模块，包含datasource/session插件。
+6. plugins/out是插件jar的打包目录，里面有插件的配置文件以及插件jar等，启动时会去加载这些jar，也可通过配置disabled.txt/enabled.txt去选择加载的插件jar。
 
 ## 2. 项目架构
 
