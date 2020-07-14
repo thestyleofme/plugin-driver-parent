@@ -1,11 +1,11 @@
 package com.github.codingdebugallday.driver.datasource.mysql;
 
-import javax.sql.DataSource;
-
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.common.infra.utils.DriverUtil;
+import com.github.codingdebugallday.driver.datasource.ds.hikari.HikariDataSourceFactory;
 import com.github.codingdebugallday.driver.datasource.function.DriverDataSourceFunction;
 import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
 
 /**
  * <p>
@@ -21,6 +21,7 @@ public class MysqlDataSourceFunction implements DriverDataSourceFunction<PluginD
 
     @Override
     public DataSource createDataSource(PluginDatasource pluginDatasource) {
-        return DriverUtil.createHikariDataSource(pluginDatasource);
+        return new HikariDataSourceFactory().create(pluginDatasource);
     }
+
 }

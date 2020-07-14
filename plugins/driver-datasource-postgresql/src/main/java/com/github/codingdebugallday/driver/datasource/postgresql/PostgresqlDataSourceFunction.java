@@ -1,12 +1,12 @@
 package com.github.codingdebugallday.driver.datasource.postgresql;
 
-import javax.sql.DataSource;
-
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.common.infra.utils.DriverUtil;
+import com.github.codingdebugallday.driver.datasource.ds.druid.DruidDataSourceFactory;
 import com.github.codingdebugallday.driver.datasource.function.DriverDataSourceFunction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
 
 /**
  * <p>
@@ -23,6 +23,6 @@ public class PostgresqlDataSourceFunction implements DriverDataSourceFunction<Pl
 
     @Override
     public DataSource createDataSource(PluginDatasource pluginDatasource) {
-        return DriverUtil.createHikariDataSource(pluginDatasource);
+        return new DruidDataSourceFactory().create(pluginDatasource);
     }
 }

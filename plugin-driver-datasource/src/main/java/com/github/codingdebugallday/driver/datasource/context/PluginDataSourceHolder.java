@@ -1,11 +1,5 @@
 package com.github.codingdebugallday.driver.datasource.context;
 
-import java.sql.Driver;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import javax.validation.constraints.NotBlank;
-
 import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.common.domain.entity.CommonDatasourceSettingInfo;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
@@ -16,6 +10,12 @@ import com.github.codingdebugallday.driver.datasource.function.DriverDataSourceF
 import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.user.PluginUser;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.validation.constraints.NotBlank;
+import java.sql.Driver;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -74,7 +74,6 @@ public class PluginDataSourceHolder {
                 Object object = PLUGIN_USER
                         .getPluginBean(datasourcePluginId, DriverDataSourceFunction.class)
                         .createDataSource(pluginDatasource);
-                Thread.currentThread().setContextClassLoader(oldClassLoader);
                 T t = clazz.cast(object);
                 PLUGIN_DATASOURCE_MAP.put(key, t);
                 return t;
