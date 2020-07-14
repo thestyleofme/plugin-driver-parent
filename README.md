@@ -21,5 +21,3 @@ swagger地址，查看是否有controller那些接口。
 ### 文档地址
  
 [https://github.com/codingdebugallday/plugin-driver-parent/tree/develop/docs/README.md](https://github.com/codingdebugallday/plugin-driver-parent/tree/develop/docs/README.md)
-
-[https://github.com/codingdebugallday/plugin-driver-parent/blob/develop/docs/PluginDev.md](https://github.com/codingdebugallday/plugin-driver-parent/blob/develop/docs/PluginDev.md)
