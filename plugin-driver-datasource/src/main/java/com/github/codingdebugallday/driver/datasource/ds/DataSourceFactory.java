@@ -10,13 +10,26 @@ import java.util.Map;
 
 /**
  * <p>
- * description
+ * 连接池数据源创建接口
  * </p>
  *
  * @author JupiterMouse 2020/07/14
  * @since 1.0
  */
 public interface DataSourceFactory {
+
+    /**
+     * 连接URL
+     */
+    String JDBC_URL = "jdbcUrl";
+    /**
+     * 用户名
+     */
+    String USERNAME = "username";
+    /**
+     * 密码
+     */
+    String PASSWORD = "password";
 
     /**
      * 创建数据源
@@ -49,13 +62,13 @@ public interface DataSourceFactory {
      * @param prop 配置信息
      */
     default void verifyConfig(Map<String, String> prop) {
-        if (StringUtils.isEmpty(prop.get("jdbcUrl"))) {
+        if (StringUtils.isEmpty(prop.get(JDBC_URL))) {
             throw new DriverException("jdbcUrl need not null");
         }
-        if (StringUtils.isEmpty(prop.get("username"))) {
+        if (StringUtils.isEmpty(prop.get(PASSWORD))) {
             throw new DriverException("username need not null");
         }
-        if (StringUtils.isEmpty(prop.get("password"))) {
+        if (StringUtils.isEmpty(prop.get(PASSWORD))) {
             throw new DriverException("password need not null");
         }
     }
