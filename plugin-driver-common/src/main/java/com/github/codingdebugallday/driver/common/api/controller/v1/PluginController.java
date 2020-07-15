@@ -1,5 +1,10 @@
 package com.github.codingdebugallday.driver.common.api.controller.v1;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Set;
+
 import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.operator.PluginOperator;
 import com.github.codingdebugallday.integration.operator.module.PluginInfo;
@@ -10,11 +15,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Set;
-
 /**
  * <p>
  * 操作插件jar包
@@ -23,8 +23,8 @@ import java.util.Set;
  * @author isaac 2020/6/16 17:34
  * @since 1.0
  */
-@RestController("pluginController")
-@RequestMapping("/plugin")
+@RestController("pluginController.v1")
+@RequestMapping("/v1/plugin")
 @Slf4j
 public class PluginController {
 
@@ -127,8 +127,9 @@ public class PluginController {
      * @return 返回操作结果
      */
     @PostMapping("/uninstall/{pluginId}")
-    public String uninstall(@PathVariable String pluginId) {
-        if (pluginOperator.uninstall(pluginId, true)) {
+    public String uninstall(@PathVariable String pluginId,
+                            @RequestParam(required = false, defaultValue = "false") boolean isBackup) {
+        if (pluginOperator.uninstall(pluginId, isBackup)) {
             return String.format("plugin [%s] uninstall success", pluginId);
         } else {
             return String.format("plugin [%s] uninstall failure", pluginId);

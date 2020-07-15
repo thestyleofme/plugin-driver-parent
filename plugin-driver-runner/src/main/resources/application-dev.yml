@@ -47,9 +47,9 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 plugin:
-  runMode: dev
-  pluginPath: plugins
-  pluginConfigFilePath:
+  run-mode: dev
+  plugin-path: plugins
+  plugin-config-file-path:
 
 logging:
   level:

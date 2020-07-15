@@ -1,10 +1,16 @@
 package com.github.codingdebugallday.driver.common.infra.exceptions;
 
+import java.util.Objects;
+import javax.validation.ConstraintViolationException;
+import javax.xml.bind.ValidationException;
+
 import com.github.codingdebugallday.driver.common.domain.entity.Err;
 import com.github.codingdebugallday.exceptions.PluginException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -42,6 +48,26 @@ public class DriverExceptionHandler {
     @ExceptionHandler(UnsupportedOperationException.class)
     public Err handleUnsupportedOperationException(UnsupportedOperationException e) {
         log.error("UnsupportedOperationException", e);
+        return Err.of(getMessage(e));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Err handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        FieldError fieldError = Objects.requireNonNull(e.getBindingResult().getFieldError());
+        String message = String.format(Objects.requireNonNull(fieldError.getDefaultMessage()), fieldError.getRejectedValue());
+        log.error("MethodArgumentNotValidException, {}", message);
+        return Err.of(message);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public Err handleValidationException(ValidationException e) {
+        log.error("ValidationException", e);
+        return Err.of(getMessage(e));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public Err handleConstraintViolationException(ConstraintViolationException e) {
+        log.error("ConstraintViolationException", e);
         return Err.of(getMessage(e));
     }
 

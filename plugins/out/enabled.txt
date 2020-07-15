@@ -1,7 +1,7 @@
 ########################################
 # - 启用的插件
 ########################################
-#driver-session-mysql
-#driver-datasource-mysql
-#driver-datasource-postgresql
-#driver-session-postgresql
+driver-session-mysql
+driver-datasource-mysql
+driver-datasource-postgresql
+driver-session-postgresql

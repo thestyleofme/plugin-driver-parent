@@ -1,11 +1,12 @@
 package com.github.codingdebugallday.driver.common.domain.entity;
 
-import lombok.*;
-
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+
+import com.github.codingdebugallday.driver.common.infra.annotations.PluginIdCheck;
+import lombok.*;
 
 /**
  * <p>
@@ -23,6 +24,8 @@ import java.util.Objects;
 @EqualsAndHashCode(callSuper = false)
 public class PluginDatasource implements Serializable {
 
+    private static final long serialVersionUID = 3106933368424452675L;
+
     @NotBlank
     private String datasourceCode;
     private String datasourceDescription;
@@ -31,12 +34,16 @@ public class PluginDatasource implements Serializable {
     @NotBlank
     private String datasourceClass;
     @NotBlank
+    @PluginIdCheck
     private String datasourcePluginId;
+    @PluginIdCheck
     private String sessionPluginId;
     private String settingsInfo;
-    private Integer enabledFlag;
-    private Long tenantId;
 
+    @Builder.Default
+    private Integer enabledFlag = 1;
+    @Builder.Default
+    private Long tenantId = 0L;
     private LocalDateTime lastUpdateDate;
 
     /**

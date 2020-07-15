@@ -1,5 +1,8 @@
 package com.github.codingdebugallday.driver.common.api.controller.v1;
 
+import java.util.List;
+import javax.servlet.http.HttpServletResponse;
+
 import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import io.swagger.annotations.ApiImplicitParam;
@@ -8,12 +11,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.List;
 
 /**
  * <p>
@@ -25,7 +25,7 @@ import java.util.List;
  * @since 1.0
  */
 @RestController("pluginDatasourceController.v1")
-@RequestMapping("/driver/v1/{organizationId}/plugin-datasource")
+@RequestMapping("/v1/{organizationId}/plugin-datasource")
 @Slf4j
 public class PluginDatasourceController {
 
@@ -50,7 +50,7 @@ public class PluginDatasourceController {
     @ApiOperation(value = "创建数据源")
     @PostMapping
     public ResponseEntity<PluginDatasource> create(@PathVariable(name = "organizationId") Long tenantId,
-                                                   @RequestBody @Valid PluginDatasource pluginDatasource) {
+                                                   @RequestBody @Validated PluginDatasource pluginDatasource) {
         pluginDatasource.setTenantId(tenantId);
         return ResponseEntity.ok(pluginDatasourceService.create(pluginDatasource));
     }
@@ -58,7 +58,7 @@ public class PluginDatasourceController {
     @ApiOperation(value = "更新数据源")
     @PutMapping
     public ResponseEntity<PluginDatasource> update(@PathVariable(name = "organizationId") Long tenantId,
-                                                   @RequestBody @Valid PluginDatasource pluginDatasource) {
+                                                   @RequestBody @Validated PluginDatasource pluginDatasource) {
         pluginDatasource.setTenantId(tenantId);
         return ResponseEntity.ok(pluginDatasourceService.update(pluginDatasource));
     }

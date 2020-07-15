@@ -20,7 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
 /**
  * <p>
  * description
@@ -53,6 +52,7 @@ public class PluginDatasourceServiceImpl implements PluginDatasourceService {
 
     @Override
     public PluginDatasource create(PluginDatasource pluginDatasource) {
+        // 参数检验 pluginId必须存在
         Long tenantId = pluginDatasource.getTenantId();
         @NotBlank String datasourceCode = pluginDatasource.getDatasourceCode();
         pluginDatasourceRepository.create(tenantId, datasourceCode, pluginDatasource);

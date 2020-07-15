@@ -1,19 +1,40 @@
 {
   "properties": [
     {
-      "name": "plugin.runMode",
+      "name": "plugin.run-mode",
       "type": "java.lang.String",
       "defaultValue": "dev",
       "description": "plugin run mode dev/development/prod/deployment."
     },
     {
-      "name": "plugin.pluginPath",
+      "name": "plugin.store-type",
+      "type": "java.lang.String",
+      "defaultValue": "local",
+      "description": "plugin file store type local/minio."
+    },
+    {
+      "name": "plugin.minio.endpoint",
+      "type": "java.lang.String",
+      "description": "when plugin.store-type=minio, minio.endpoint."
+    },
+    {
+      "name": "plugin.minio.access-key",
+      "type": "java.lang.String",
+      "description": "when plugin.store-type=minio, minio.accessKey."
+    },
+    {
+      "name": "plugin.minio.secret-key",
+      "type": "java.lang.String",
+      "description": "when plugin.store-type=minio, minio.secretKey."
+    },
+    {
+      "name": "plugin.plugin-path",
       "type": "java.lang.String",
       "defaultValue": "plugins",
       "description": "plugin path."
     },
     {
-      "name": "plugin.pluginConfigFilePath",
+      "name": "plugin.plugin-config-file-path",
       "type": "java.lang.String",
       "defaultValue": "pluginConfigs",
       "description": "plugin config file path."
