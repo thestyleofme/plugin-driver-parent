@@ -40,14 +40,14 @@ public class PluginDatasourceServiceImpl implements PluginDatasourceService {
 
     @Override
     public List<PluginDatasource> fetchDatasource(Long tenantId, PluginDatasource pluginDatasource) {
-        return this.pluginDatasourceRepository.getAll(tenantId).stream()
+        return this.pluginDatasourceRepository.hashGetAll(tenantId).stream()
                 .filter(ds -> Preconditions.pluginDatasourceFilter(ds, pluginDatasource))
                 .collect(Collectors.toList());
     }
 
     @Override
     public PluginDatasource getDatasourceByCode(Long tenantId, String datasourceCode) {
-        return pluginDatasourceRepository.getByKey(tenantId, datasourceCode);
+        return pluginDatasourceRepository.hashGetByKey(tenantId, datasourceCode);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class PluginDatasourceServiceImpl implements PluginDatasourceService {
         // 参数检验 pluginId必须存在
         Long tenantId = pluginDatasource.getTenantId();
         @NotBlank String datasourceCode = pluginDatasource.getDatasourceCode();
-        pluginDatasourceRepository.create(tenantId, datasourceCode, pluginDatasource);
+        pluginDatasourceRepository.hashCreate(tenantId, datasourceCode, pluginDatasource);
         return this.getDatasourceByCode(tenantId, datasourceCode);
     }
 
@@ -63,13 +63,13 @@ public class PluginDatasourceServiceImpl implements PluginDatasourceService {
     public PluginDatasource update(PluginDatasource pluginDatasource) {
         Long tenantId = pluginDatasource.getTenantId();
         @NotBlank String datasourceCode = pluginDatasource.getDatasourceCode();
-        pluginDatasourceRepository.update(tenantId, datasourceCode, pluginDatasource);
+        pluginDatasourceRepository.hashUpdate(tenantId, datasourceCode, pluginDatasource);
         return this.getDatasourceByCode(tenantId, datasourceCode);
     }
 
     @Override
     public void delete(Long tenantId, String datasourceCode) {
-        pluginDatasourceRepository.delete(tenantId, datasourceCode);
+        pluginDatasourceRepository.hashDelete(tenantId, datasourceCode);
     }
 
     @Override
@@ -82,9 +82,9 @@ public class PluginDatasourceServiceImpl implements PluginDatasourceService {
         try (ServletOutputStream out = response.getOutputStream(); BufferedOutputStream buff = new BufferedOutputStream(out)) {
             if (CommonConstant.ALL_TENANT.equals(tenantId)) {
                 // 取出所有
-                buff.write(JsonUtil.toJson(pluginDatasourceRepository.getAll()).getBytes(StandardCharsets.UTF_8));
+                buff.write(JsonUtil.toJson(pluginDatasourceRepository.hashGetAll()).getBytes(StandardCharsets.UTF_8));
             } else {
-                buff.write(JsonUtil.toJson(pluginDatasourceRepository.getAll(tenantId)).getBytes(StandardCharsets.UTF_8));
+                buff.write(JsonUtil.toJson(pluginDatasourceRepository.hashGetAll(tenantId)).getBytes(StandardCharsets.UTF_8));
             }
             buff.flush();
         } catch (IOException e) {
@@ -106,7 +106,7 @@ public class PluginDatasourceServiceImpl implements PluginDatasourceService {
         if (CommonConstant.ALL_TENANT.equals(tenantId)) {
             dtoList.forEach(ds -> ds.setTenantId(tenantId));
         }
-        pluginDatasourceRepository.batchCreate(tenantId,
+        pluginDatasourceRepository.hashBatchCreate(tenantId,
                 dtoList.stream().collect(
                         Collectors.toMap(PluginDatasource::getDatasourceCode, JsonUtil::toJson)));
     }

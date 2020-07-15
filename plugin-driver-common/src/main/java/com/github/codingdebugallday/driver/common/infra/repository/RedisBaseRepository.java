@@ -17,7 +17,7 @@ public interface RedisBaseRepository<T> {
      * @param tenantId 租户ID
      * @return key
      */
-    default String getKey(Long tenantId) {
+    default String hashGetKey(Long tenantId) {
         return null;
     }
 
@@ -28,7 +28,7 @@ public interface RedisBaseRepository<T> {
      * @param key      Redis key
      * @return List<T>
      */
-    T getByKey(Long tenantId, String key);
+    T hashGetByKey(Long tenantId, String key);
 
     /**
      * 获取租户下所有的实体
@@ -36,14 +36,14 @@ public interface RedisBaseRepository<T> {
      * @param tenantId 租户ID
      * @return List<T>
      */
-    List<T> getAll(Long tenantId);
+    List<T> hashGetAll(Long tenantId);
 
     /**
      * 获取所有租户下的实体
      *
      * @return List<T>
      */
-    List<T> getAll();
+    List<T> hashGetAll();
 
     /**
      * 创建实体
@@ -52,7 +52,7 @@ public interface RedisBaseRepository<T> {
      * @param key      redis key
      * @param entity   实体
      */
-    void create(Long tenantId, String key, T entity);
+    void hashCreate(Long tenantId, String key, T entity);
 
     /**
      * 批量创建实体
@@ -60,7 +60,7 @@ public interface RedisBaseRepository<T> {
      * @param tenantId 租户ID
      * @param map      <key , entity>
      */
-    void batchCreate(Long tenantId, Map<String, String> map);
+    void hashBatchCreate(Long tenantId, Map<String, String> map);
 
     /**
      * 更改实体
@@ -69,7 +69,7 @@ public interface RedisBaseRepository<T> {
      * @param key      redis key
      * @param entity   实体
      */
-    void update(Long tenantId, String key, T entity);
+    void hashUpdate(Long tenantId, String key, T entity);
 
     /**
      * 批量更新实体
@@ -77,7 +77,7 @@ public interface RedisBaseRepository<T> {
      * @param tenantId 租户ID
      * @param map      <key , entity>
      */
-    void batchUpdate(Long tenantId, Map<String, String> map);
+    void hashBatchUpdate(Long tenantId, Map<String, String> map);
 
     /**
      * 通过key删除
@@ -85,7 +85,7 @@ public interface RedisBaseRepository<T> {
      * @param tenantId 租户ID
      * @param key      key
      */
-    void delete(Long tenantId, String key);
+    void hashDelete(Long tenantId, String key);
 
     /**
      * 通过keys批量删除
@@ -93,14 +93,14 @@ public interface RedisBaseRepository<T> {
      * @param tenantId 租户ID
      * @param keys     keys
      */
-    void batchDelete(Long tenantId, Object... keys);
+    void hashBatchDelete(Long tenantId, Object... keys);
 
     /**
      * 删除租户下所有数据
      *
      * @param tenantId 租户ID
      */
-    void clear(Long tenantId);
+    void hashClear(Long tenantId);
 
     /**
      * 判断是否存在
@@ -109,6 +109,6 @@ public interface RedisBaseRepository<T> {
      * @param key      redis key
      * @return true|false
      */
-    Boolean isExist(Long tenantId, String key);
+    Boolean hashIsExist(Long tenantId, String key);
 
 }
