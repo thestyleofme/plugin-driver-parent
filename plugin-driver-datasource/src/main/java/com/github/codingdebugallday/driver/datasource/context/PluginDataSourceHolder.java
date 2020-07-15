@@ -1,21 +1,22 @@
 package com.github.codingdebugallday.driver.datasource.context;
 
-import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceService;
-import com.github.codingdebugallday.driver.common.domain.entity.CommonDatasourceSettingInfo;
-import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
-import com.github.codingdebugallday.driver.common.infra.utils.ApplicationContextHelper;
-import com.github.codingdebugallday.driver.common.infra.utils.JsonUtil;
-import com.github.codingdebugallday.driver.datasource.function.DriverDataSourceFunction;
-import com.github.codingdebugallday.integration.application.PluginApplication;
-import com.github.codingdebugallday.integration.user.PluginUser;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.validation.constraints.NotBlank;
 import java.sql.Driver;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.validation.constraints.NotBlank;
+
+import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceService;
+import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
+import com.github.codingdebugallday.driver.common.domain.entity.PluginDriver;
+import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
+import com.github.codingdebugallday.driver.common.infra.repository.PluginDriverSiteRepository;
+import com.github.codingdebugallday.driver.common.infra.utils.ApplicationContextHelper;
+import com.github.codingdebugallday.driver.datasource.function.DriverDataSourceFunction;
+import com.github.codingdebugallday.integration.application.PluginApplication;
+import com.github.codingdebugallday.integration.user.PluginUser;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 
 /**
  * <p>
@@ -35,12 +36,15 @@ public class PluginDataSourceHolder {
     private static final Map<String, Object> PLUGIN_DATASOURCE_MAP;
     private static final PluginUser PLUGIN_USER;
     private static final PluginDatasourceService PLUGIN_DATASOURCE_SERVICE;
+    private static final PluginDriverSiteRepository PLUGIN_DRIVER_SITE_REPOSITORY;
 
     static {
         PLUGIN_DATASOURCE_MAP = new ConcurrentHashMap<>(4);
-        PluginApplication pluginApplication = ApplicationContextHelper.getContext().getBean(PluginApplication.class);
+        ApplicationContext context = ApplicationContextHelper.getContext();
+        PluginApplication pluginApplication = context.getBean(PluginApplication.class);
         PLUGIN_USER = pluginApplication.getPluginUser();
-        PLUGIN_DATASOURCE_SERVICE = ApplicationContextHelper.getContext().getBean(PluginDatasourceService.class);
+        PLUGIN_DATASOURCE_SERVICE = context.getBean(PluginDatasourceService.class);
+        PLUGIN_DRIVER_SITE_REPOSITORY = context.getBean(PluginDriverSiteRepository.class);
     }
 
     /**
@@ -61,15 +65,16 @@ public class PluginDataSourceHolder {
                     .getPluginClassLoader(datasourcePluginId);
             Thread.currentThread().setContextClassLoader(pluginClassLoader);
             try {
-                CommonDatasourceSettingInfo settingInfo =
-                        JsonUtil.toObj(pluginDatasource.getSettingsInfo(), CommonDatasourceSettingInfo.class);
+                // 获取driverClassName
+                PluginDriver pluginDriver = PLUGIN_DRIVER_SITE_REPOSITORY.hashGetByKey(pluginDatasource.getDatasourcePluginId());
+                String driverClassName = pluginDriver.getDriverClass();
                 Driver driver = (Driver) Thread.currentThread()
                         .getContextClassLoader()
-                        .loadClass(settingInfo.getDriverClassName())
+                        .loadClass(driverClassName)
                         .getDeclaredConstructor()
                         .newInstance();
                 log.debug(">>>>>>>>> class loader class:{}", pluginClassLoader.getClass().getName());
-                log.debug(">>>>>>>>> driverClassName:{}", pluginDatasource.getDatasourceClass());
+                log.debug(">>>>>>>>> driverClassName:{}", driverClassName);
                 log.debug(">>>>>>>>> driver version:{}", driver.getMajorVersion() + "." + driver.getMinorVersion());
                 Object object = PLUGIN_USER
                         .getPluginBean(datasourcePluginId, DriverDataSourceFunction.class)
