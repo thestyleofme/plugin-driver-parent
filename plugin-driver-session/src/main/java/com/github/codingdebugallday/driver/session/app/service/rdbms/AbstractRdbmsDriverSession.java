@@ -43,8 +43,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     private static final String DEFAULT_CREATE_SCHEMA = "CREATE DATABASE IF NOT EXISTS %s";
     private static final String DEFAULT_PAGE_SQL = "%s LIMIT %d, %d";
-    private static final String COUNT_FLAG = "COUNT(";
-    private static final String COUNT_SQL_FORMAT = "SELECT COUNT(1) FROM ( %s )";
+    private static final String COUNT_SQL_FORMAT = "SELECT COUNT(1) FROM ( %s ) t";
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_SIZE = 10;
 
@@ -214,7 +213,6 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
             // false if it is an update count or there are no results
             for (String sql : sqlList) {
                 List<Map<String, Object>> rows = new ArrayList<>();
-                Map<String, Object> row = new LinkedHashMap<>();
                 Long total = 0L;
                 // 如果pageAble不为null,拦截SQL，查看是否符合select * from xxx的分页形式。
                 if (resultFlag
@@ -231,6 +229,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
                 if (execute && resultFlag) {
                     ResultSet resultSet = ps.getResultSet();
                     while (resultSet.next()) {
+                        Map<String, Object> row = new LinkedHashMap<>();
                         this.transformMap(resultSet, row);
                         rows.add(row);
                     }
@@ -354,12 +353,31 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public Long queryCount(String schema, String sql) {
-        return (Long) this.executeOneQuery(schema, String.format(COUNT_SQL_FORMAT, sql))
-                .get(0)
-                .values()
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> new DriverException("query count err"));
+        long count = 0L;
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = this.dataSource.getConnection();
+            // 设置schema
+            schemaSetter().setSchema(connection, schema);
+            String trimSql = sql.trim();
+            if (trimSql.endsWith(StringPool.SEMICOLON)){
+                sql = trimSql.substring(0, trimSql.length() - 1);
+            }
+            // 查询
+            final String countSql = String.format(COUNT_SQL_FORMAT, sql);
+            ps = connection.prepareStatement(countSql);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getLong(1);
+            }
+        } catch (SQLException e) {
+            throw new DriverException("sql count error", e);
+        } finally {
+            CloseUtil.close(rs, ps, connection);
+        }
+        return count;
     }
 
     @Override

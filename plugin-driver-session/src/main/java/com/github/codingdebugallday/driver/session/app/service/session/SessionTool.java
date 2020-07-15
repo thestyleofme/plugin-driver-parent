@@ -1,5 +1,6 @@
 package com.github.codingdebugallday.driver.session.app.service.session;
 
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.github.codingdebugallday.driver.session.infra.funcations.extractor.*;
 import com.github.codingdebugallday.driver.session.infra.funcations.setter.SchemaSetter;
 
@@ -69,6 +70,10 @@ public interface SessionTool {
             long page = pageable.getPageNumber();
             long size = pageable.getPageSize();
             long offset = page * size;
+            String trimSql = sql.trim();
+            if (trimSql.endsWith(StringPool.SEMICOLON)){
+                sql = trimSql.substring(0, trimSql.length() - 1);
+            }
             return String.format(pageFormat, sql, offset, size);
         };
     }
