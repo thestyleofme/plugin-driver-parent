@@ -1,16 +1,16 @@
 package com.github.codingdebugallday.driver.common.infra.utils;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.function.Consumer;
+
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * <p>
@@ -45,6 +45,17 @@ public class DriverRedisHelper {
     public static final long NOT_EXPIRE = -1;
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+    /**
+     * 生成自增序列号
+     *
+     * @param key key
+     * @return Long
+     */
+    public Long getAutoIncrementNumber(String key) {
+        Long increment = redisTemplate.opsForValue().increment(key, 1);
+        return Long.valueOf(String.format("%06d", increment));
+    }
 
     /**
      * scan 实现

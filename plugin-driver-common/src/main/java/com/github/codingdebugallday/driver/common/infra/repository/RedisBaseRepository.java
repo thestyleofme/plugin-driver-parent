@@ -12,6 +12,14 @@ import java.util.Map;
 public interface RedisBaseRepository<T> {
 
     /**
+     * 生成自增序列号
+     *
+     * @param key key
+     * @return Long
+     */
+    Long getAutoIncrementNumber(String key);
+
+    /**
      * 获取redis 的key
      *
      * @param tenantId 租户ID

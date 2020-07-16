@@ -34,6 +34,11 @@ public class RedisBaseRepositoryImpl<T> implements RedisBaseRepository<T> {
     }
 
     @Override
+    public Long getAutoIncrementNumber(String key) {
+        return driverRedisHelper.getAutoIncrementNumber(key);
+    }
+
+    @Override
     public T hashGetByKey(Long tenantId, String key) {
         return JsonUtil.toObj(this.driverRedisHelper.hashGet(this.hashGetKey(tenantId), key), entityClass);
     }

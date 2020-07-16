@@ -83,7 +83,9 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
         pluginDriver.setObjectName(objectName);
         // 启动插件并记录指纹
         handlePluginCreate(pluginDriver, multipartFile);
-        @Null Long driverId = pluginDriver.getDriverId();
+        // 使用redis自增生成driverId
+        Long driverId = pluginDriverSiteRepository.getAutoIncrementNumber(CommonConstant.PLUGIN_PRIMARY_KEY);
+        pluginDriver.setDriverId(driverId);
         pluginDriverSiteRepository.hashCreate(String.valueOf(driverId), pluginDriver);
         return this.getDriverByCode(driverId);
     }

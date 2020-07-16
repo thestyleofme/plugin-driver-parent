@@ -17,6 +17,8 @@ public class CommonConstant {
     public static final String REDIS_PLUGIN_DATASOURCE_INSTANCE_KEY = "plugin:datasource:instances";
     public static final String REDIS_PLUGIN_DATASOURCE_PREFIX = "plugin:datasource";
     public static final String REDIS_PLUGIN_DRIVER_PREFIX = "plugin:driver";
+    public static final String PLUGIN_PRIMARY_KEY = "plugin:driver:primary";
+
     /**
      * 数据源储存到redis的key格式，如plugin:datasource::${tenantId}
      * :: 用于区分租户，全局匹配。
