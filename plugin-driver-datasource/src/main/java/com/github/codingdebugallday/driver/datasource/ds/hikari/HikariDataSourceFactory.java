@@ -1,6 +1,5 @@
 package com.github.codingdebugallday.driver.datasource.ds.hikari;
 
-import java.util.Map;
 import java.util.Properties;
 import javax.sql.DataSource;
 
@@ -28,26 +27,16 @@ public class HikariDataSourceFactory implements DataSourceFactory {
 
     @Override
     public DataSource create(PluginDatasource pluginDatasource) {
-        final Properties properties = new Properties();
-        Map<String, String> configMap = this.parsingSetting(pluginDatasource);
-        configMap.forEach(properties::put);
+        final Properties properties = parseDsSetting2Properties(pluginDatasource);
         // 转换参数
         this.transform(properties);
         HikariConfig hikariConfig = new HikariConfig();
         // 基本信息
-        String jdbcUrl = configMap.get(CommonConstant.JdbcProperties.JDBC_URL);
-        String driverClassName = configMap.get(CommonConstant.JdbcProperties.DRIVER_CLASS_NAME);
-        if (StringUtils.isEmpty(driverClassName)) {
-            driverClassName = pluginDatasource.getDatasourceDriver().getDriverClass();
-        }
-        String username = configMap.get(CommonConstant.JdbcProperties.USERNAME);
-        String password = configMap.get(CommonConstant.JdbcProperties.PASSWORD);
-        hikariConfig.setJdbcUrl(jdbcUrl);
-        hikariConfig.setDriverClassName(driverClassName);
-        hikariConfig.setUsername(username);
-        hikariConfig.setPassword(password);
+        configCommonDataSource(hikariConfig, pluginDatasource);
+        hikariConfig.setConnectionTimeout(1000L);
         PropertyElf.setTargetFromProperties(hikariConfig, properties);
         HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);
+        // 设置数据源监控
         this.setMetricsTrackerFactory(hikariDataSource, pluginDatasource);
         return hikariDataSource;
     }

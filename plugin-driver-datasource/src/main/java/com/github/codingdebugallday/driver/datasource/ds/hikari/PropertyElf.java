@@ -1,29 +1,15 @@
-/*
- * Copyright (C) 2013 Brett Wooldridge
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.github.codingdebugallday.driver.datasource.ds.hikari;
 
-import com.zaxxer.hikari.HikariConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
+import com.zaxxer.hikari.HikariConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class that reflectively sets bean properties on a target object.
@@ -33,19 +19,24 @@ import java.util.regex.Pattern;
  * @author Brett Wooldridge
  */
 public final class PropertyElf {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyElf.class);
 
+    private PropertyElf() {
+        throw new IllegalStateException();
+    }
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyElf.class);
     private static final Pattern GETTER_PATTERN = Pattern.compile("(get|is)[A-Z].+");
+    private static final String CLASS_CONTAINS_DATASOURCE = "dataSource.";
 
     public static void setTargetFromProperties(final Object target, final Properties properties) {
         if (target == null || properties == null) {
             return;
         }
-
         List<Method> methods = Arrays.asList(target.getClass().getMethods());
         properties.forEach((key, value) -> {
-            if (target instanceof HikariConfig && key.toString().startsWith("dataSource.")) {
-                ((HikariConfig) target).addDataSourceProperty(key.toString().substring("dataSource.".length()), value);
+            if (target instanceof HikariConfig && key.toString().startsWith(CLASS_CONTAINS_DATASOURCE)) {
+                ((HikariConfig) target).addDataSourceProperty(key.toString()
+                        .substring(CLASS_CONTAINS_DATASOURCE.length()), value);
             } else {
                 setProperty(target, key.toString(), value, methods);
             }
@@ -66,16 +57,13 @@ public final class PropertyElf {
             if (method.getParameterTypes().length == 0 && matcher.reset(name).matches()) {
                 name = name.replaceFirst("(get|is)", "");
                 try {
-                    if (targetClass.getMethod("set" + name, method.getReturnType()) != null) {
-                        name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
-                        set.add(name);
-                    }
+                    name = Character.toLowerCase(name.charAt(0)) + name.substring(1);
+                    set.add(name);
                 } catch (Exception e) {
                     // ignore
                 }
             }
         }
-
         return set;
     }
 
@@ -131,9 +119,9 @@ public final class PropertyElf {
             } else {
                 writeMethod.invoke(target, propValue);
             }
-        } catch (Exception e) {
-            LOGGER.error("Failed to set property {} on target {}", propName, target.getClass(), e);
-            throw new RuntimeException(e);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            LOGGER.error("Failed to set property {} on target {}", propName, target.getClass());
+            throw new DriverException(e);
         }
     }
 }

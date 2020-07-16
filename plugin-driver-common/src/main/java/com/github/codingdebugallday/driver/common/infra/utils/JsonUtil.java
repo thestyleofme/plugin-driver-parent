@@ -1,15 +1,16 @@
 package com.github.codingdebugallday.driver.common.infra.utils;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.common.infra.exceptions.JsonException;
 import org.springframework.context.ApplicationContext;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * <p>
@@ -36,6 +37,14 @@ public class JsonUtil {
     public static <T> T toObj(String json, Class<T> clazz) {
         try {
             return OBJECT_MAPPER.readValue(json, clazz);
+        } catch (IOException e) {
+            throw new JsonException("error.jackson.read", e);
+        }
+    }
+
+    public static <T> T toObj(String json, TypeReference<T> typeReference) {
+        try {
+            return OBJECT_MAPPER.readValue(json, typeReference);
         } catch (IOException e) {
             throw new JsonException("error.jackson.read", e);
         }

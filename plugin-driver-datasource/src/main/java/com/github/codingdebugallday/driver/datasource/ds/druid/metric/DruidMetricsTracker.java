@@ -55,7 +55,15 @@ public class DruidMetricsTracker implements IMetricsTracker {
     @SuppressWarnings({"FieldCanBeLocal", "unused"})
     private final Gauge minConnectionGauge;
 
-    public DruidMetricsTracker(final String poolName, final DruidDataSource druidDataSource, final MeterRegistry meterRegistry) {
+    public static void newInstance(final String poolName,
+                                   final DruidDataSource druidDataSource,
+                                   final MeterRegistry meterRegistry) {
+        new DruidMetricsTracker(poolName, druidDataSource, meterRegistry);
+    }
+
+    private DruidMetricsTracker(final String poolName,
+                                final DruidDataSource druidDataSource,
+                                final MeterRegistry meterRegistry) {
         this.connectionObtainTimer = Timer.builder(METRIC_NAME_WAIT)
                 .description("Connection acquire time")
                 .tags(METRIC_CATEGORY, poolName)
