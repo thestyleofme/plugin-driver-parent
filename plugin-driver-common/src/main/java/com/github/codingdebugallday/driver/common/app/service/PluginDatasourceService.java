@@ -26,7 +26,7 @@ public interface PluginDatasourceService {
     List<PluginDatasource> fetchDatasource(Long tenantId, PluginDatasource pluginDatasource);
 
     /**
-     * 通过数据源编码获取数据源
+     * 通过数据源编码获取数据源以及驱动信息
      *
      * @param tenantId       租户id
      * @param datasourceCode 数据源编码

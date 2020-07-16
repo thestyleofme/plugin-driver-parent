@@ -40,6 +40,11 @@ public class PluginDatasource implements Serializable {
     @DriverId
     private Long sessionDriverId;
     private String settingsInfo;
+    /**
+     * 主要是查询时带出来
+     */
+    private PluginDriver sessionDriver;
+    private PluginDriver datasourceDriver;
 
     @Builder.Default
     private Integer enabledFlag = 1;

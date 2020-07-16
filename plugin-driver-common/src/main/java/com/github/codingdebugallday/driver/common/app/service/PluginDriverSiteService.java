@@ -41,12 +41,20 @@ public interface PluginDriverSiteService {
     PluginDriver create(PluginDriver pluginDriver, MultipartFile multipartFile);
 
     /**
-     * 加载driver
+     * 安装插件
      *
      * @param driverId driverId
      * @return true/false
      */
     Boolean install(Long driverId);
+
+    /**
+     * 卸载插件
+     *
+     * @param driverId driverId
+     * @return true/false
+     */
+    boolean uninstall(Long driverId);
 
     /**
      * 更新驱动

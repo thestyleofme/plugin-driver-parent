@@ -47,6 +47,13 @@ public class PluginDatasourceController {
         return ResponseEntity.ok(pluginDatasourceService.fetchDatasource(tenantId, pluginDatasource));
     }
 
+    @ApiOperation(value = "数据源详情")
+    @GetMapping("/{datasourceCode}")
+    public ResponseEntity<PluginDatasource> detail(@PathVariable(name = "organizationId") Long tenantId,
+                                                   @PathVariable String datasourceCode) {
+        return ResponseEntity.ok(pluginDatasourceService.getDatasourceByCode(tenantId, datasourceCode));
+    }
+
     @ApiOperation(value = "创建数据源")
     @PostMapping
     public ResponseEntity<PluginDatasource> create(@PathVariable(name = "organizationId") Long tenantId,

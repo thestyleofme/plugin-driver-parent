@@ -10,7 +10,6 @@ import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceSe
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDriver;
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
-import com.github.codingdebugallday.driver.common.infra.repository.PluginDriverSiteRepository;
 import com.github.codingdebugallday.driver.common.infra.utils.ApplicationContextHelper;
 import com.github.codingdebugallday.driver.datasource.function.DriverDataSourceFunction;
 import com.github.codingdebugallday.integration.application.PluginApplication;
@@ -36,7 +35,6 @@ public class PluginDataSourceHolder {
     private static final Map<String, Object> PLUGIN_DATASOURCE_MAP;
     private static final PluginUser PLUGIN_USER;
     private static final PluginDatasourceService PLUGIN_DATASOURCE_SERVICE;
-    private static final PluginDriverSiteRepository PLUGIN_DRIVER_SITE_REPOSITORY;
 
     static {
         PLUGIN_DATASOURCE_MAP = new ConcurrentHashMap<>(4);
@@ -44,7 +42,6 @@ public class PluginDataSourceHolder {
         PluginApplication pluginApplication = context.getBean(PluginApplication.class);
         PLUGIN_USER = pluginApplication.getPluginUser();
         PLUGIN_DATASOURCE_SERVICE = context.getBean(PluginDatasourceService.class);
-        PLUGIN_DRIVER_SITE_REPOSITORY = context.getBean(PluginDriverSiteRepository.class);
     }
 
     /**
@@ -57,8 +54,7 @@ public class PluginDataSourceHolder {
      */
     @SuppressWarnings({"unchecked"})
     public static <T> T getOrCreate(PluginDatasource pluginDatasource, Class<T> clazz) {
-        @NotBlank Long datasourceDriverId = pluginDatasource.getDatasourceDriverId();
-        PluginDriver datasourceDriver = PLUGIN_DRIVER_SITE_REPOSITORY.hashGetByKey(String.valueOf(datasourceDriverId));
+        PluginDriver datasourceDriver = pluginDatasource.getDatasourceDriver();
         @NotBlank String datasourcePluginId = datasourceDriver.getDriverCode();
         String key = pluginDatasource.getTenantId() + "_" + datasourcePluginId;
         if (Objects.isNull(PLUGIN_DATASOURCE_MAP.get(key))) {

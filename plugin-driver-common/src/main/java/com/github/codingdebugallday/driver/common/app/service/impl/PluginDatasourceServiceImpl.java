@@ -3,6 +3,7 @@ package com.github.codingdebugallday.driver.common.app.service.impl;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceSe
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.common.infra.repository.PluginDatasourceRepository;
+import com.github.codingdebugallday.driver.common.infra.repository.PluginDriverSiteRepository;
 import com.github.codingdebugallday.driver.common.infra.utils.JsonUtil;
 import com.github.codingdebugallday.driver.common.infra.utils.Preconditions;
 import lombok.extern.slf4j.Slf4j;
@@ -33,9 +35,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class PluginDatasourceServiceImpl implements PluginDatasourceService {
 
     private final PluginDatasourceRepository pluginDatasourceRepository;
+    private final PluginDriverSiteRepository pluginDriverSiteRepository;
 
-    public PluginDatasourceServiceImpl(PluginDatasourceRepository pluginDatasourceRepository) {
+    public PluginDatasourceServiceImpl(PluginDatasourceRepository pluginDatasourceRepository,
+                                       PluginDriverSiteRepository pluginDriverSiteRepository) {
         this.pluginDatasourceRepository = pluginDatasourceRepository;
+        this.pluginDriverSiteRepository = pluginDriverSiteRepository;
     }
 
     @Override
@@ -47,7 +52,14 @@ public class PluginDatasourceServiceImpl implements PluginDatasourceService {
 
     @Override
     public PluginDatasource getDatasourceByCode(Long tenantId, String datasourceCode) {
-        return pluginDatasourceRepository.hashGetByKey(tenantId, datasourceCode);
+        PluginDatasource pluginDatasource =
+                pluginDatasourceRepository.hashGetByKey(tenantId, datasourceCode);
+        pluginDatasource.setDatasourceDriver(pluginDriverSiteRepository.hashGetByKey(
+                String.valueOf(pluginDatasource.getDatasourceDriverId())));
+        Optional.ofNullable(pluginDatasource.getSessionDriverId()).ifPresent(sessionDriverId ->
+                pluginDatasource.setSessionDriver(pluginDriverSiteRepository.hashGetByKey(
+                        String.valueOf(pluginDatasource.getSessionDriverId()))));
+        return pluginDatasource;
     }
 
     @Override

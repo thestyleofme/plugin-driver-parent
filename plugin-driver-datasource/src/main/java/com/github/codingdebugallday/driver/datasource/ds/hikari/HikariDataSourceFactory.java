@@ -5,16 +5,13 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.common.domain.entity.PluginDriver;
+import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.common.infra.metrics.RedisMeterRegistry;
-import com.github.codingdebugallday.driver.common.infra.repository.PluginDriverSiteRepository;
-import com.github.codingdebugallday.driver.common.infra.utils.ApplicationContextHelper;
 import com.github.codingdebugallday.driver.common.infra.utils.DefaultThreadFactory;
 import com.github.codingdebugallday.driver.datasource.ds.DataSourceFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.metrics.micrometer.MicrometerMetricsTrackerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,12 +25,6 @@ import org.springframework.util.StringUtils;
 public class HikariDataSourceFactory implements DataSourceFactory {
 
     private static final String THREAD_NAME_PREFIX = "metricPublisher";
-    private static final PluginDriverSiteRepository PLUGIN_DRIVER_SITE_REPOSITORY;
-
-    static {
-        ApplicationContext context = ApplicationContextHelper.getContext();
-        PLUGIN_DRIVER_SITE_REPOSITORY = context.getBean(PluginDriverSiteRepository.class);
-    }
 
     @Override
     public DataSource create(PluginDatasource pluginDatasource) {
@@ -44,15 +35,13 @@ public class HikariDataSourceFactory implements DataSourceFactory {
         this.transform(properties);
         HikariConfig hikariConfig = new HikariConfig();
         // 基本信息
-        String jdbcUrl = configMap.get("jdbcUrl");
-        String driverClassName = configMap.get("driverClassName");
-        if(StringUtils.isEmpty(driverClassName)){
-            PluginDriver pluginDriver = PLUGIN_DRIVER_SITE_REPOSITORY.hashGetByKey(
-                    String.valueOf(pluginDatasource.getDatasourceDriverId()));
-            driverClassName = pluginDriver.getDriverClass();
+        String jdbcUrl = configMap.get(CommonConstant.JdbcProperties.JDBC_URL);
+        String driverClassName = configMap.get(CommonConstant.JdbcProperties.DRIVER_CLASS_NAME);
+        if (StringUtils.isEmpty(driverClassName)) {
+            driverClassName = pluginDatasource.getDatasourceDriver().getDriverClass();
         }
-        String username = configMap.get("username");
-        String password = configMap.get("password");
+        String username = configMap.get(CommonConstant.JdbcProperties.USERNAME);
+        String password = configMap.get(CommonConstant.JdbcProperties.PASSWORD);
         hikariConfig.setJdbcUrl(jdbcUrl);
         hikariConfig.setDriverClassName(driverClassName);
         hikariConfig.setUsername(username);
@@ -64,9 +53,9 @@ public class HikariDataSourceFactory implements DataSourceFactory {
     }
 
     protected void transform(Properties prop) {
-        String defaultDatabase = prop.getProperty("defaultDatabase");
+        String defaultDatabase = prop.getProperty(CommonConstant.JdbcProperties.DEFAULT_DATABASE);
         if (!StringUtils.isEmpty(defaultDatabase)) {
-            prop.put("catalog", defaultDatabase);
+            prop.put(CommonConstant.JdbcProperties.CATALOG, defaultDatabase);
         }
     }
 

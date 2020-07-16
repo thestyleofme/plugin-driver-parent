@@ -36,6 +36,20 @@ public class CommonConstant {
     public static final String PLUGIN_MINIO_BUCKET = "plugin.driver";
     public static final String TEMP_DIC = "temp/";
 
+    public static class JdbcProperties {
+
+        private JdbcProperties() {
+            throw new IllegalStateException();
+        }
+
+        public static final String JDBC_URL = "jdbcUrl";
+        public static final String USERNAME = "username";
+        public static final String DRIVER_CLASS_NAME = "driverClassName";
+        public static final String PASSWORD = "password";
+        public static final String DEFAULT_DATABASE = "defaultDatabase";
+        public static final String CATALOG = "catalog";
+    }
+
     public static class Symbol {
 
         private Symbol() {

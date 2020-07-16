@@ -1,12 +1,13 @@
 package com.github.codingdebugallday.driver.datasource.ds;
 
+import java.util.Map;
+import javax.sql.DataSource;
+
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
+import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.common.infra.utils.JsonUtil;
 import org.springframework.util.StringUtils;
-
-import javax.sql.DataSource;
-import java.util.Map;
 
 /**
  * <p>
@@ -17,19 +18,6 @@ import java.util.Map;
  * @since 1.0
  */
 public interface DataSourceFactory {
-
-    /**
-     * 连接URL
-     */
-    String JDBC_URL = "jdbcUrl";
-    /**
-     * 用户名
-     */
-    String USERNAME = "username";
-    /**
-     * 密码
-     */
-    String PASSWORD = "password";
 
     /**
      * 创建数据源
@@ -62,13 +50,13 @@ public interface DataSourceFactory {
      * @param prop 配置信息
      */
     default void verifyConfig(Map<String, String> prop) {
-        if (StringUtils.isEmpty(prop.get(JDBC_URL))) {
+        if (StringUtils.isEmpty(prop.get(CommonConstant.JdbcProperties.JDBC_URL))) {
             throw new DriverException("jdbcUrl need not null");
         }
-        if (StringUtils.isEmpty(prop.get(PASSWORD))) {
+        if (StringUtils.isEmpty(prop.get(CommonConstant.JdbcProperties.USERNAME))) {
             throw new DriverException("username need not null");
         }
-        if (StringUtils.isEmpty(prop.get(PASSWORD))) {
+        if (StringUtils.isEmpty(prop.get(CommonConstant.JdbcProperties.PASSWORD))) {
             throw new DriverException("password need not null");
         }
     }

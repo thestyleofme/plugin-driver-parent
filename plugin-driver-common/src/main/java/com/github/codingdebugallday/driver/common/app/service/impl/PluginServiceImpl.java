@@ -1,7 +1,6 @@
 package com.github.codingdebugallday.driver.common.app.service.impl;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import com.github.codingdebugallday.driver.common.app.service.PluginService;
 import com.github.codingdebugallday.integration.application.PluginApplication;

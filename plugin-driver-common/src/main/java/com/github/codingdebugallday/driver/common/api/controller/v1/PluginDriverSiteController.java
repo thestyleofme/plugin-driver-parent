@@ -46,9 +46,15 @@ public class PluginDriverSiteController {
     }
 
     @ApiOperation(value = "加载驱动")
-    @GetMapping("/{driverId}")
+    @GetMapping("/install/{driverId}")
     public ResponseEntity<Boolean> install(@PathVariable Long driverId) {
         return ResponseEntity.ok(pluginDriverSiteService.install(driverId));
+    }
+
+    @ApiOperation(value = "卸载驱动")
+    @GetMapping("/uninstall/{driverId}")
+    public ResponseEntity<Boolean> uninstall(@PathVariable Long driverId) {
+        return ResponseEntity.ok(pluginDriverSiteService.uninstall(driverId));
     }
 
     @ApiOperation(value = "更新驱动")

@@ -53,11 +53,10 @@ public class DriverSessionServiceImpl implements DriverSessionService {
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         if (!StringUtils.isEmpty(datasourceCode)) {
             try {
-                PluginDatasource pluginDatasource = pluginDatasourceService.getDatasourceByCode(tenantId, datasourceCode);
-                PluginDriver sessionDriver = pluginDriverSiteRepository.hashGetByKey(
-                        String.valueOf(pluginDatasource.getSessionDriverId()));
-                PluginDriver datasourceDriver = pluginDriverSiteRepository.hashGetByKey(
-                        String.valueOf(pluginDatasource.getDatasourceDriverId()));
+                PluginDatasource pluginDatasource =
+                        pluginDatasourceService.getDatasourceByCode(tenantId, datasourceCode);
+                PluginDriver sessionDriver = pluginDatasource.getSessionDriver();
+                PluginDriver datasourceDriver = pluginDatasource.getDatasourceDriver();
                 @NotBlank String sessionPluginId = sessionDriver.getDriverCode();
                 ClassLoader pluginClassLoader = pluginUser.getPluginManager()
                         .getPluginClassLoader(sessionPluginId);

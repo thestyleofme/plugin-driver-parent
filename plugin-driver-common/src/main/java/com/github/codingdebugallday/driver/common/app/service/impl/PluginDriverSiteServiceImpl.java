@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
-import javax.validation.constraints.Null;
 
 import com.github.codingdebugallday.driver.common.app.service.PluginDriverSiteService;
 import com.github.codingdebugallday.driver.common.app.service.PluginMinioService;
@@ -116,6 +115,16 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
     }
 
     @Override
+    public boolean uninstall(Long driverId) {
+        PluginDriver pluginDriver = pluginDriverSiteRepository.hashGetByKey(String.valueOf(driverId));
+        // 卸载插件
+        if (Objects.nonNull(pluginService.getPluginInfo(pluginDriver.getDriverCode()))) {
+            pluginService.uninstall(pluginDriver.getDriverCode(), false);
+        }
+        return true;
+    }
+
+    @Override
     public PluginDriver update(PluginDriver pluginDriver, MultipartFile multipartFile) {
         // 更新校验
         PluginDriver oldPluginDriver = pluginDriverSiteRepository.hashGetByKey(String.valueOf(pluginDriver.getDriverId()));
@@ -141,7 +150,7 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
         PluginDriver pluginDriver = pluginDriverSiteRepository.hashGetByKey(String.valueOf(driverId));
         pluginMinioService.removeObject(CommonConstant.PLUGIN_MINIO_BUCKET, pluginDriver.getObjectName());
         // 卸载驱动
-        pluginService.uninstall(pluginDriver.getDriverCode(),false);
+        pluginService.uninstall(pluginDriver.getDriverCode(), false);
         // 删除redis
         pluginDriverSiteRepository.hashDelete(String.valueOf(driverId));
     }
