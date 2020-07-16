@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RedisMeterRegistry extends StepMeterRegistry {
 
-    private static final String KEY_FMT = "plugin:driver:metric:%s:%s";
+    private static final String KEY_FMT = "plugin:datasource:metric:%s:%s";
 
     private static final Long EXPIRED_SECONDS = 10L;
 
