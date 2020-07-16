@@ -1,8 +1,12 @@
 package com.github.codingdebugallday.driver.session.app.service.impl;
 
+import javax.validation.constraints.NotBlank;
+
 import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
+import com.github.codingdebugallday.driver.common.domain.entity.PluginDriver;
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
+import com.github.codingdebugallday.driver.common.infra.repository.PluginDriverSiteRepository;
 import com.github.codingdebugallday.driver.datasource.context.PluginDataSourceHolder;
 import com.github.codingdebugallday.driver.session.app.service.DriverSessionService;
 import com.github.codingdebugallday.driver.session.app.service.rdbms.RdbmsDriverSession;
@@ -14,9 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import javax.validation.constraints.NotBlank;
-
 
 /**
  * <p>
@@ -32,14 +33,17 @@ public class DriverSessionServiceImpl implements DriverSessionService {
 
     private final PluginUser pluginUser;
     private final PluginDatasourceService pluginDatasourceService;
+    private final PluginDriverSiteRepository pluginDriverSiteRepository;
 
     private final JdbcTemplate jdbcTemplate;
 
     public DriverSessionServiceImpl(PluginApplication pluginApplication,
                                     PluginDatasourceService pluginDatasourceService,
+                                    PluginDriverSiteRepository pluginDriverSiteRepository,
                                     JdbcTemplate jdbcTemplate) {
         this.pluginUser = pluginApplication.getPluginUser();
         this.pluginDatasourceService = pluginDatasourceService;
+        this.pluginDriverSiteRepository = pluginDriverSiteRepository;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -50,7 +54,11 @@ public class DriverSessionServiceImpl implements DriverSessionService {
         if (!StringUtils.isEmpty(datasourceCode)) {
             try {
                 PluginDatasource pluginDatasource = pluginDatasourceService.getDatasourceByCode(tenantId, datasourceCode);
-                @NotBlank String sessionPluginId = pluginDatasource.getSessionPluginId();
+                PluginDriver sessionDriver = pluginDriverSiteRepository.hashGetByKey(
+                        String.valueOf(pluginDatasource.getSessionDriverId()));
+                PluginDriver datasourceDriver = pluginDriverSiteRepository.hashGetByKey(
+                        String.valueOf(pluginDatasource.getDatasourceDriverId()));
+                @NotBlank String sessionPluginId = sessionDriver.getDriverCode();
                 ClassLoader pluginClassLoader = pluginUser.getPluginManager()
                         .getPluginClassLoader(sessionPluginId);
                 // 使用插件的classloader
@@ -60,7 +68,7 @@ public class DriverSessionServiceImpl implements DriverSessionService {
                 Class<?> clazz = driverSessionFunction.getDataSource();
                 Object dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasource, clazz);
                 driverSessionFunction.setDataSource(dataSource);
-                log.debug("use plugin[{}] datasource...", pluginDatasource.getDatasourcePluginId());
+                log.debug("use plugin[{}] datasource...", datasourceDriver.getDriverCode());
                 return driverSessionFunction.getDriverSession();
             } catch (Exception e) {
                 throw new DriverException(e);

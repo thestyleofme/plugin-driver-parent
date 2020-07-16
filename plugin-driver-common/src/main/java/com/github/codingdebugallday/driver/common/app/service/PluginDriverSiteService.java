@@ -24,12 +24,12 @@ public interface PluginDriverSiteService {
     List<PluginDriver> fetchDriver(PluginDriver pluginDriver);
 
     /**
-     * 通过驱动编码获取驱动
+     * 通过驱动id获取驱动
      *
-     * @param driverCode 驱动编码
+     * @param driverId 驱动id
      * @return PluginDriver
      */
-    PluginDriver getDriverByCode(String driverCode);
+    PluginDriver getDriverByCode(Long driverId);
 
     /**
      * 创建驱动
@@ -39,6 +39,14 @@ public interface PluginDriverSiteService {
      * @return PluginDatasource
      */
     PluginDriver create(PluginDriver pluginDriver, MultipartFile multipartFile);
+
+    /**
+     * 加载driver
+     *
+     * @param driverId driverId
+     * @return true/false
+     */
+    Boolean install(Long driverId);
 
     /**
      * 更新驱动
@@ -52,8 +60,7 @@ public interface PluginDriverSiteService {
     /**
      * 删除驱动
      *
-     * @param driverCode 驱动编码
+     * @param driverId driverId
      */
-    void delete(String driverCode);
-
+    void delete(Long driverId);
 }

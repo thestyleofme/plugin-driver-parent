@@ -32,6 +32,7 @@ public class CommonConstant {
      * minio
      */
     public static final String PLUGIN_MINIO_BUCKET = "plugin.driver";
+    public static final String TEMP_DIC = "temp/";
 
     public static class Symbol {
 

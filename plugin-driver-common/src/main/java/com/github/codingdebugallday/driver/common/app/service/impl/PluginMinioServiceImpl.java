@@ -2,6 +2,7 @@ package com.github.codingdebugallday.driver.common.app.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import com.github.codingdebugallday.driver.common.app.service.PluginMinioService;
 import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
@@ -67,6 +68,17 @@ public class PluginMinioServiceImpl implements PluginMinioService {
         } catch (Exception e) {
             log.error("createBucketAndUploadObject error");
             throw new DriverException("createBucketAndUploadObject error", e);
+        }
+    }
+
+    @Override
+    public InputStream getObject(String bucketName, String objectName) {
+        try {
+            return pluginMinioClient.getObject(GetObjectArgs.builder()
+                    .bucket(bucketName).object(objectName).build());
+        } catch (Exception e) {
+            log.error("getObject error");
+            throw new DriverException("getObject error", e);
         }
     }
 

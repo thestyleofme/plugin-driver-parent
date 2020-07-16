@@ -1,15 +1,20 @@
 package com.github.codingdebugallday.driver.datasource.ds.druid;
 
+import java.util.Map;
+import java.util.Properties;
+import javax.sql.DataSource;
+
 import com.alibaba.druid.pool.DruidDataSource;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
+import com.github.codingdebugallday.driver.common.domain.entity.PluginDriver;
 import com.github.codingdebugallday.driver.common.infra.metrics.RedisMeterRegistry;
+import com.github.codingdebugallday.driver.common.infra.repository.PluginDriverSiteRepository;
+import com.github.codingdebugallday.driver.common.infra.utils.ApplicationContextHelper;
 import com.github.codingdebugallday.driver.common.infra.utils.DefaultThreadFactory;
 import com.github.codingdebugallday.driver.datasource.ds.DataSourceFactory;
 import com.github.codingdebugallday.driver.datasource.ds.druid.metric.DruidMetricsTracker;
-
-import javax.sql.DataSource;
-import java.util.Map;
-import java.util.Properties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 
 /**
  * <p>
@@ -23,14 +28,25 @@ public class DruidDataSourceFactory implements DataSourceFactory {
 
     private static final String THREAD_NAME_PREFIX = "metricPublisher";
 
+    private static final PluginDriverSiteRepository PLUGIN_DRIVER_SITE_REPOSITORY;
+
+    static {
+        ApplicationContext context = ApplicationContextHelper.getContext();
+        PLUGIN_DRIVER_SITE_REPOSITORY = context.getBean(PluginDriverSiteRepository.class);
+    }
+
     @Override
     public DataSource create(PluginDatasource pluginDatasource) {
         Map<String, String> configMap = this.parsingSetting(pluginDatasource);
         final DruidDataSource ds = new DruidDataSource();
-
         // 基本信息
         String jdbcUrl = configMap.get("jdbcUrl");
         String driverClassName = configMap.get("driverClassName");
+        if (StringUtils.isEmpty(driverClassName)) {
+            PluginDriver pluginDriver = PLUGIN_DRIVER_SITE_REPOSITORY.hashGetByKey(
+                    String.valueOf(pluginDatasource.getDatasourceDriverId()));
+            driverClassName = pluginDriver.getDriverClass();
+        }
         String username = configMap.get("username");
         String password = configMap.get("password");
         ds.setUrl(jdbcUrl);

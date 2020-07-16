@@ -45,6 +45,12 @@ public class PluginDriverSiteController {
         return ResponseEntity.ok(pluginDriverSiteService.create(pluginDriver, multipartFile));
     }
 
+    @ApiOperation(value = "加载驱动")
+    @GetMapping("/{driverId}")
+    public ResponseEntity<Boolean> install(@PathVariable Long driverId) {
+        return ResponseEntity.ok(pluginDriverSiteService.install(driverId));
+    }
+
     @ApiOperation(value = "更新驱动")
     @PutMapping
     public ResponseEntity<PluginDriver> update(@RequestPart @Validated(value = ValidGroup.Update.class) PluginDriver pluginDriver,
@@ -53,9 +59,9 @@ public class PluginDriverSiteController {
     }
 
     @ApiOperation(value = "删除驱动")
-    @DeleteMapping
-    public ResponseEntity<Void> delete(String driverCode) {
-        pluginDriverSiteService.delete(driverCode);
+    @DeleteMapping("/{driverId}")
+    public ResponseEntity<Void> delete(@PathVariable Long driverId) {
+        pluginDriverSiteService.delete(driverId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

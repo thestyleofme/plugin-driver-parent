@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 
+import com.github.codingdebugallday.driver.common.app.service.PluginService;
 import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.operator.PluginOperator;
 import com.github.codingdebugallday.integration.operator.module.PluginInfo;
@@ -30,10 +31,14 @@ public class PluginController {
 
     private static final String DEFAULT_SIGN = "bak";
     private final PluginOperator pluginOperator;
+    private final PluginService pluginService;
+
 
     @Autowired
-    public PluginController(PluginApplication pluginApplication) {
+    public PluginController(PluginApplication pluginApplication,
+                            PluginService pluginService) {
         this.pluginOperator = pluginApplication.getPluginOperator();
+        this.pluginService = pluginService;
     }
 
     /**
@@ -53,7 +58,7 @@ public class PluginController {
      */
     @GetMapping("/{pluginId}")
     public PluginInfo getPluginInfo(@PathVariable String pluginId) {
-        return pluginOperator.getPluginInfo(pluginId);
+        return pluginService.getPluginInfo(pluginId);
     }
 
     /**
@@ -119,33 +124,19 @@ public class PluginController {
         }
     }
 
-
-    /**
-     * 根据插件id卸载插件
-     *
-     * @param pluginId 插件id
-     * @return 返回操作结果
-     */
     @PostMapping("/uninstall/{pluginId}")
     public String uninstall(@PathVariable String pluginId,
                             @RequestParam(required = false, defaultValue = "false") boolean isBackup) {
-        if (pluginOperator.uninstall(pluginId, isBackup)) {
+        if (pluginService.uninstall(pluginId, isBackup)) {
             return String.format("plugin [%s] uninstall success", pluginId);
         } else {
             return String.format("plugin [%s] uninstall failure", pluginId);
         }
     }
 
-
-    /**
-     * 根据插件路径安装插件。该插件jar必须在服务器上存在。注意: 该操作只适用于生产环境
-     *
-     * @param path 插件路径名称
-     * @return 操作结果
-     */
     @PostMapping("/install-by-path")
     public String install(@RequestParam String path) {
-        if (pluginOperator.install(Paths.get(path))) {
+        if (pluginService.install(Paths.get(path))) {
             return "installByPath success";
         } else {
             return "installByPath failure";

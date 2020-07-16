@@ -35,12 +35,12 @@ public class Preconditions {
                 !right.getDatasourceCode().equals(left.getDatasourceCode())) {
             return false;
         }
-        if (!StringUtils.isEmpty(right.getDatasourcePluginId()) &&
-                !right.getDatasourcePluginId().equals(left.getDatasourcePluginId())) {
+        if (!StringUtils.isEmpty(right.getDatasourceDriverId()) &&
+                !right.getDatasourceDriverId().equals(left.getDatasourceDriverId())) {
             return false;
         }
-        if (!StringUtils.isEmpty(right.getSessionPluginId()) &&
-                !right.getSessionPluginId().equals(left.getSessionPluginId())) {
+        if (!StringUtils.isEmpty(right.getSessionDriverId()) &&
+                !right.getSessionDriverId().equals(left.getSessionDriverId())) {
             return false;
         }
         if (!StringUtils.isEmpty(right.getDatasourceClass()) &&
@@ -67,6 +67,10 @@ public class Preconditions {
         if (Objects.isNull(right)) {
             return true;
         }
+        if (!StringUtils.isEmpty(right.getDriverId()) &&
+                !right.getDriverId().equals(left.getDriverId())) {
+            return false;
+        }
         if (!StringUtils.isEmpty(right.getDriverCode()) &&
                 !right.getDriverCode().equals(left.getDriverCode())) {
             return false;
@@ -75,12 +79,8 @@ public class Preconditions {
                 !right.getDriverType().equalsIgnoreCase(left.getDriverType())) {
             return false;
         }
-        if (!StringUtils.isEmpty(right.getDriverFingerprint()) &&
-                !right.getDriverFingerprint().equals(left.getDriverFingerprint())) {
-            return false;
-        }
         // 暂时只比较这些
-        return !Objects.nonNull(right.getEnabledFlag()) ||
-                right.getEnabledFlag().equals(left.getEnabledFlag());
+        return StringUtils.isEmpty(right.getDriverFingerprint()) ||
+                right.getDriverFingerprint().equals(left.getDriverFingerprint());
     }
 }

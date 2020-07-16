@@ -57,7 +57,9 @@ public class PluginDataSourceHolder {
      */
     @SuppressWarnings({"unchecked"})
     public static <T> T getOrCreate(PluginDatasource pluginDatasource, Class<T> clazz) {
-        @NotBlank String datasourcePluginId = pluginDatasource.getDatasourcePluginId();
+        @NotBlank Long datasourceDriverId = pluginDatasource.getDatasourceDriverId();
+        PluginDriver datasourceDriver = PLUGIN_DRIVER_SITE_REPOSITORY.hashGetByKey(String.valueOf(datasourceDriverId));
+        @NotBlank String datasourcePluginId = datasourceDriver.getDriverCode();
         String key = pluginDatasource.getTenantId() + "_" + datasourcePluginId;
         if (Objects.isNull(PLUGIN_DATASOURCE_MAP.get(key))) {
             ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
@@ -66,8 +68,7 @@ public class PluginDataSourceHolder {
             Thread.currentThread().setContextClassLoader(pluginClassLoader);
             try {
                 // 获取driverClassName
-                PluginDriver pluginDriver = PLUGIN_DRIVER_SITE_REPOSITORY.hashGetByKey(pluginDatasource.getDatasourcePluginId());
-                String driverClassName = pluginDriver.getDriverClass();
+                String driverClassName = datasourceDriver.getDriverClass();
                 Driver driver = (Driver) Thread.currentThread()
                         .getContextClassLoader()
                         .loadClass(driverClassName)

@@ -1,22 +1,25 @@
 package com.github.codingdebugallday.driver.common.app.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
 
 import com.github.codingdebugallday.driver.common.app.service.PluginDriverSiteService;
 import com.github.codingdebugallday.driver.common.app.service.PluginMinioService;
+import com.github.codingdebugallday.driver.common.app.service.PluginService;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDriver;
 import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.common.infra.repository.PluginDriverSiteRepository;
 import com.github.codingdebugallday.driver.common.infra.utils.Md5Util;
 import com.github.codingdebugallday.driver.common.infra.utils.Preconditions;
-import com.github.codingdebugallday.integration.application.PluginApplication;
-import com.github.codingdebugallday.integration.operator.PluginOperator;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,16 +47,16 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
     private String pluginStoreType;
 
     private final PluginDriverSiteRepository pluginDriverSiteRepository;
-    private final PluginOperator pluginOperator;
     private final PluginMinioService pluginMinioService;
+    private final PluginService pluginService;
     private final ReentrantLock lock = new ReentrantLock(true);
 
     public PluginDriverSiteServiceImpl(PluginDriverSiteRepository pluginDriverSiteRepository,
-                                       PluginApplication pluginApplication,
-                                       @Autowired(required = false) PluginMinioService pluginMinioService) {
+                                       @Autowired(required = false) PluginMinioService pluginMinioService,
+                                       PluginService pluginService) {
         this.pluginDriverSiteRepository = pluginDriverSiteRepository;
-        this.pluginOperator = pluginApplication.getPluginOperator();
         this.pluginMinioService = pluginMinioService;
+        this.pluginService = pluginService;
     }
 
     @Override
@@ -64,8 +67,8 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
     }
 
     @Override
-    public PluginDriver getDriverByCode(String driverCode) {
-        return pluginDriverSiteRepository.hashGetByKey(driverCode);
+    public PluginDriver getDriverByCode(Long driverId) {
+        return pluginDriverSiteRepository.hashGetByKey(String.valueOf(driverId));
     }
 
     @Override
@@ -74,27 +77,71 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
         if (pluginDriver.getDriverType().equalsIgnoreCase(PluginDriver.DRIVER_TYPE_DATASOURCE)) {
             Assert.hasText(pluginDriver.getDriverClass(), "When the driverType is datasource, please set the driverClass, for example, [com.mysql.jdbc.Driver]");
         }
+        String originalFilename = multipartFile.getOriginalFilename();
+        String suffix = Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf("."));
+        String objectName = pluginDriver.getDriverCode() + "@" + pluginDriver.getDriverVersion() + suffix;
+        pluginDriver.setObjectName(objectName);
         // 启动插件并记录指纹
         handlePluginCreate(pluginDriver, multipartFile);
-        @NotBlank String driverCode = pluginDriver.getDriverCode();
-        pluginDriverSiteRepository.hashCreate(driverCode, pluginDriver);
-        return this.getDriverByCode(driverCode);
+        @Null Long driverId = pluginDriver.getDriverId();
+        pluginDriverSiteRepository.hashCreate(String.valueOf(driverId), pluginDriver);
+        return this.getDriverByCode(driverId);
+    }
+
+    @Override
+    public Boolean install(Long driverId) {
+        // 获取插件路径
+        PluginDriver pluginDriver = pluginDriverSiteRepository.hashGetByKey(String.valueOf(driverId));
+        InputStream inputStream = pluginMinioService.getObject(CommonConstant.PLUGIN_MINIO_BUCKET, pluginDriver.getObjectName());
+        File temp = new File(CommonConstant.TEMP_DIC + pluginDriver.getObjectName());
+        try {
+            FileUtils.copyInputStreamToFile(inputStream, temp);
+            // 插件安装
+            if (!pluginService.install(temp.toPath())) {
+                throw new DriverException(String.format("install plugin[%s] error", pluginDriver.getDriverCode()));
+            }
+        } catch (IOException e) {
+            log.error("download driver from minio error");
+            throw new DriverException("download driver from minio error", e);
+        } finally {
+            try {
+                FileUtils.forceDelete(temp);
+            } catch (IOException e) {
+                // ignore
+            }
+        }
+        return true;
     }
 
     @Override
     public PluginDriver update(PluginDriver pluginDriver, MultipartFile multipartFile) {
+        // 更新校验
+        PluginDriver oldPluginDriver = pluginDriverSiteRepository.hashGetByKey(String.valueOf(pluginDriver.getDriverId()));
+        if (!oldPluginDriver.getDriverCode().equals(pluginDriver.getDriverCode()) ||
+                !oldPluginDriver.getDriverVersion().equals(pluginDriver.getDriverVersion())) {
+            throw new DriverException("Driver update cannot change the previous driverCode and driverVersion. " +
+                    "If you want to change, please delete the driver and recreate it");
+        }
+        // 防止篡改objectName
+        pluginDriver.setObjectName(oldPluginDriver.getObjectName());
         if (Objects.nonNull(multipartFile)) {
             // minio处理并重新记录指纹
             handlePluginUpdate(pluginDriver, multipartFile);
         }
-        @NotBlank String driverCode = pluginDriver.getDriverCode();
-        pluginDriverSiteRepository.hashUpdate(driverCode, pluginDriver);
-        return this.getDriverByCode(driverCode);
+        Long driverId = pluginDriver.getDriverId();
+        pluginDriverSiteRepository.hashUpdate(String.valueOf(driverId), pluginDriver);
+        return this.getDriverByCode(driverId);
     }
 
     @Override
-    public void delete(String driverCode) {
-        pluginDriverSiteRepository.hashDelete(driverCode);
+    public void delete(Long driverId) {
+        // 删除minio上的文件
+        PluginDriver pluginDriver = pluginDriverSiteRepository.hashGetByKey(String.valueOf(driverId));
+        pluginMinioService.removeObject(CommonConstant.PLUGIN_MINIO_BUCKET, pluginDriver.getObjectName());
+        // 卸载驱动
+        pluginService.uninstall(pluginDriver.getDriverCode(),false);
+        // 删除redis
+        pluginDriverSiteRepository.hashDelete(String.valueOf(driverId));
     }
 
     private void handlePluginCreate(PluginDriver pluginDriver, MultipartFile multipartFile) {
@@ -106,18 +153,13 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
             // minio模式
             if (pluginStoreType.equalsIgnoreCase(PluginDriver.DRIVER_STORE_TYPE_MINIO)) {
                 // 上传到minio
-                String objectName = pluginDriver.getDriverCode() + "@" + pluginDriver.getDriverVersion();
                 String driverPath = pluginMinioService.createBucketAndUploadObject(CommonConstant.PLUGIN_MINIO_BUCKET,
-                        multipartFile, objectName);
+                        multipartFile, pluginDriver.getObjectName());
                 pluginDriver.setDriverPath(driverPath);
-            }
-            // 插件安装并启动
-            if (!pluginOperator.uploadPluginAndStart(multipartFile)) {
-                throw new DriverException(String.format("install plugin[%s] error", pluginDriver.getDriverCode()));
             }
             // local模式
             if (StringUtils.isEmpty(pluginDriver.getDriverPath())) {
-                pluginDriver.setDriverPath(pluginOperator.getPluginInfo(pluginDriver.getDriverCode()).getPath());
+                pluginDriver.setDriverPath(pluginService.getPluginInfo(pluginDriver.getDriverCode()).getPath());
             }
         } finally {
             lock.unlock();
@@ -130,17 +172,15 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
             // 记录插件指纹
             String driverFingerprint = Md5Util.md5DigestAsHex(multipartFile);
             pluginDriver.setDriverFingerprint(driverFingerprint);
-            // 上传到minio并覆盖
-            String objectName = pluginDriver.getDriverCode() + "@" + pluginDriver.getDriverVersion();
+            // 上传到minio做覆盖
             if (pluginStoreType.equalsIgnoreCase(PluginDriver.DRIVER_STORE_TYPE_MINIO)) {
-                pluginMinioService.createBucketAndUploadObject(CommonConstant.PLUGIN_MINIO_BUCKET,
-                        multipartFile, objectName);
+                String driverPath = pluginMinioService.createBucketAndUploadObject(CommonConstant.PLUGIN_MINIO_BUCKET,
+                        multipartFile, pluginDriver.getObjectName());
+                pluginDriver.setDriverPath(driverPath);
             }
-            // 先卸载插件
-            pluginOperator.uninstall(pluginDriver.getDriverCode(), false);
-            // 插件安装并启动
-            if (!pluginOperator.uploadPluginAndStart(multipartFile)) {
-                throw new DriverException(String.format("install plugin[%s] error", pluginDriver.getDriverCode()));
+            // 若本地存在当前插件，先卸载插件
+            if (Objects.nonNull(pluginService.getPluginInfo(pluginDriver.getDriverCode()))) {
+                pluginService.uninstall(pluginDriver.getDriverCode(), false);
             }
         } finally {
             lock.unlock();

@@ -6,7 +6,7 @@ import javax.validation.Payload;
 
 /**
  * <p>
- * 自定义注解校验pluginId参数是否合法
+ * 自定义注解校验驱动id是否合法
  * </p>
  *
  * @author isaac 2020/7/15 20:05
@@ -15,10 +15,10 @@ import javax.validation.Payload;
 @Documented
 @Target({ElementType.PARAMETER, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PluginIdValidator.class)
-public @interface PluginIdCheck {
+@Constraint(validatedBy = DriverIdValidator.class)
+public @interface DriverId {
 
-    String message() default "The current pluginId[%s] does not exist, please input a valid pluginId!";
+    String message() default "The current pluginId does not exist, please input a valid pluginId!";
 
     Class<?>[] groups() default {};
 

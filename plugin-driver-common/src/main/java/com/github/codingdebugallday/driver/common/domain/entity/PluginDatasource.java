@@ -4,8 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-import com.github.codingdebugallday.driver.common.infra.annotations.PluginIdCheck;
+import com.github.codingdebugallday.driver.common.infra.annotations.DriverId;
 import lombok.*;
 
 /**
@@ -33,11 +34,11 @@ public class PluginDatasource implements Serializable {
     private String datasourceType;
     @NotBlank
     private String datasourceClass;
-    @NotBlank
-    @PluginIdCheck
-    private String datasourcePluginId;
-    @PluginIdCheck
-    private String sessionPluginId;
+    @NotNull
+    @DriverId
+    private Long datasourceDriverId;
+    @DriverId
+    private Long sessionDriverId;
     private String settingsInfo;
 
     @Builder.Default

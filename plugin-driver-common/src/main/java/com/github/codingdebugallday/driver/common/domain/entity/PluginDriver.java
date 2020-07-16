@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.github.codingdebugallday.driver.common.api.dto.ValidGroup;
@@ -31,6 +32,8 @@ public class PluginDriver implements Serializable {
     public static final String DRIVER_TYPE_DATASOURCE = "DATASOURCE";
     public static final String DRIVER_TYPE_SESSION = "SESSION";
 
+    @NotNull(groups = {ValidGroup.Update.class})
+    private Long driverId;
     /**
      * driverCode即是插件id，需保证唯一
      */
@@ -44,10 +47,13 @@ public class PluginDriver implements Serializable {
      * driver类型，取值[datasource/session]
      */
     @NotBlank
-    @Builder.Default
-    private String driverType = DRIVER_TYPE_DATASOURCE;
-    @NotBlank(groups = {ValidGroup.Update.class})
+    private String driverType;
     private String driverPath;
+    /**
+     * driver在minio上的名称
+     */
+    @NotNull(groups = {ValidGroup.Update.class})
+    private String objectName;
     /**
      * 若driverType为datasource，这里给出driverClassName，如com.mysql.jdbc.Driver
      */
@@ -57,14 +63,12 @@ public class PluginDriver implements Serializable {
      */
     private String driverFingerprint;
 
-    @Builder.Default
-    private Integer enabledFlag = 1;
+
     private LocalDateTime lastUpdateDate;
 
     /**
      * 由于未使用mysql储存，直接写到redis，故这里重写setter/getter
      */
-
     public LocalDateTime getLastUpdateDate() {
         return Objects.isNull(lastUpdateDate) ? LocalDateTime.now() : lastUpdateDate;
     }

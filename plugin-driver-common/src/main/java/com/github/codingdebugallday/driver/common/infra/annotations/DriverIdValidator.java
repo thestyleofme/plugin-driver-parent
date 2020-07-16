@@ -12,13 +12,13 @@ import org.springframework.util.StringUtils;
 
 /**
  * <p>
- * 自定义Validator校验pluginId参数是否合法
+ * 自定义Validator校验驱动id参数是否合法
  * </p>
  *
  * @author isaac 2020/7/15 20:09
  * @since 1.0
  */
-public class PluginIdValidator implements ConstraintValidator<PluginIdCheck, String> {
+public class DriverIdValidator implements ConstraintValidator<DriverId, Long> {
 
     private static final PluginDriverSiteRepository PLUGIN_DRIVER_SITE_REPOSITORY;
 
@@ -30,15 +30,15 @@ public class PluginIdValidator implements ConstraintValidator<PluginIdCheck, Str
     }
 
     @Override
-    public boolean isValid(String pluginId, ConstraintValidatorContext constraintValidatorContext) {
-        if (StringUtils.isEmpty(pluginId)) {
+    public boolean isValid(Long driverId, ConstraintValidatorContext constraintValidatorContext) {
+        if (StringUtils.isEmpty(driverId)) {
             return true;
         }
-        return PLUGIN_DRIVER_SITE_REPOSITORY.hashIsExist(pluginId);
+        return PLUGIN_DRIVER_SITE_REPOSITORY.hashIsExist(String.valueOf(driverId));
     }
 
     @Override
-    public void initialize(PluginIdCheck constraintAnnotation) {
+    public void initialize(DriverId constraintAnnotation) {
         //
     }
 }

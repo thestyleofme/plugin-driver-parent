@@ -54,7 +54,8 @@ public class DriverExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Err handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         FieldError fieldError = Objects.requireNonNull(e.getBindingResult().getFieldError());
-        String message = String.format(Objects.requireNonNull(fieldError.getDefaultMessage()), fieldError.getRejectedValue());
+        String message = String.format("the field[%s] valid error, message: %s, current value: %s",
+                fieldError.getField(), fieldError.getDefaultMessage(), fieldError.getRejectedValue());
         log.error("MethodArgumentNotValidException, {}", message);
         return Err.of(message);
     }

@@ -1,6 +1,7 @@
 package com.github.codingdebugallday.driver.common.app.service;
 
 import java.io.File;
+import java.io.InputStream;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,10 +40,20 @@ public interface PluginMinioService {
                                        String objectName);
 
     /**
+     * 获取minio的object
+     *
+     * @param bucketName bucket
+     * @param objectName object
+     * @return Returned InputStream must be closed after use to release network resources.
+     */
+    InputStream getObject(String bucketName, String objectName);
+
+    /**
      * 删除minio的object
      *
      * @param bucketName bucket
      * @param objectName object
      */
     void removeObject(String bucketName, String objectName);
+
 }
