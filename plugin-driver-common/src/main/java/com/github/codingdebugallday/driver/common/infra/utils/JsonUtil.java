@@ -38,7 +38,7 @@ public class JsonUtil {
         try {
             return OBJECT_MAPPER.readValue(json, clazz);
         } catch (IOException e) {
-            throw new JsonException("error.jackson.read", e);
+            throw new JsonException(e);
         }
     }
 
@@ -46,7 +46,7 @@ public class JsonUtil {
         try {
             return OBJECT_MAPPER.readValue(json, typeReference);
         } catch (IOException e) {
-            throw new JsonException("error.jackson.read", e);
+            throw new JsonException(e);
         }
     }
 
@@ -55,7 +55,7 @@ public class JsonUtil {
             CollectionType type = OBJECT_MAPPER.getTypeFactory().constructCollectionType(ArrayList.class, clazz);
             return OBJECT_MAPPER.readValue(json, type);
         } catch (IOException e) {
-            throw new JsonException("error.jackson.read", e);
+            throw new JsonException(e);
         }
     }
 
@@ -63,7 +63,7 @@ public class JsonUtil {
         try {
             return OBJECT_MAPPER.writeValueAsString(obj);
         } catch (IOException e) {
-            throw new JsonException("error.jackson.write", e);
+            throw new JsonException(e);
         }
     }
 }

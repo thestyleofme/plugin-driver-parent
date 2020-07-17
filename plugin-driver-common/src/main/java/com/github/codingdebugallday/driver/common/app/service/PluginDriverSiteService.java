@@ -49,6 +49,14 @@ public interface PluginDriverSiteService {
     Boolean install(Long driverId);
 
     /**
+     * 安装插件
+     *
+     * @param pluginDriver PluginDriver
+     * @return true/false
+     */
+    Boolean install(PluginDriver pluginDriver);
+
+    /**
      * 卸载插件
      *
      * @param driverId driverId

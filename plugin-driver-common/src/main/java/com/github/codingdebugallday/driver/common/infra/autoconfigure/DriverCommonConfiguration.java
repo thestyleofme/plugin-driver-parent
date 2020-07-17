@@ -31,7 +31,7 @@ import java.util.Date;
 @ComponentScan(basePackages = {
         "com.github.codingdebugallday.driver"
 })
-public class DriverCommonAutoConfigure {
+public class DriverCommonConfiguration {
 
     /**
      * 注册ObjectMapper

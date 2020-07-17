@@ -93,6 +93,11 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
     public Boolean install(Long driverId) {
         // 获取插件路径
         PluginDriver pluginDriver = pluginDriverSiteRepository.hashGetByKey(String.valueOf(driverId));
+        return install(pluginDriver);
+    }
+
+    @Override
+    public Boolean install(PluginDriver pluginDriver) {
         InputStream inputStream = pluginMinioService.getObject(CommonConstant.PLUGIN_MINIO_BUCKET, pluginDriver.getObjectName());
         File temp = new File(CommonConstant.TEMP_DIC + pluginDriver.getObjectName());
         try {

@@ -3,6 +3,7 @@ package com.github.codingdebugallday.driver.common.infra.autoconfigure;
 import com.github.codingdebugallday.driver.common.app.service.PluginMinioService;
 import com.github.codingdebugallday.driver.common.app.service.impl.PluginMinioServiceImpl;
 import io.minio.MinioClient;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * <p>
- * description
+ * 只在生产环境下有效，初始化minio
  * </p>
  *
  * @author isaac 2020/7/14 13:49
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties(MinioProperties.class)
+@ConditionalOnExpression("'${plugin.runMode}'.equalsIgnoreCase('prod') || '${plugin.runMode}'.equalsIgnoreCase('deployment')")
 public class MinioConfiguration {
 
     private final MinioProperties minioProperties;

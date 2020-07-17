@@ -38,6 +38,11 @@
       "type": "java.lang.String",
       "defaultValue": "pluginConfigs",
       "description": "plugin config file path."
+    },
+    {
+      "name": "plugin.plugin-init-load",
+      "type": "java.lang.String",
+      "description": "plugin init load, Fuzzy matching, if '*', load all, also can user pluginId@version Specified version, default use max version."
     }
   ]
 }

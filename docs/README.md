@@ -50,7 +50,14 @@ plugin-driver-parent
 
 在[springboot-plugin-framework](https://github.com/codingdebugallday/springboot-plugin-framework-parent)上，开发了plugin-driver-datasource，数据源插件化，可获取多种数据源；开发了plugin-driver-session，数据源接口插件化，一套接口可适配多种数据源，屏蔽底层实现细节。
 
-## 3. 使用
+## 3. 数据源驱动使用
 
-[https://github.com/codingdebugallday/plugin-driver-parent/blob/develop/docs/PluginDev.md](https://github.com/codingdebugallday/plugin-driver-parent/blob/develop/docs/PluginDev.md)
+todo
 
+## 4. 数据源插件开发
+
+详情请看[插件开发指导](PluginDev.md)
+
+## 5. 数据源监控
+
+todo

@@ -55,6 +55,8 @@ plugin:
     secret-key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
   plugin-path: plugins/out
   plugin-config-file-path: pluginConfig
+  # 可模糊匹配
+  plugin-init-load: mysql,postgresql
 
 logging:
   level:
