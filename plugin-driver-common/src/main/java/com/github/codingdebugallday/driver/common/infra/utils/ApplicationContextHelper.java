@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @author isaac 2020/7/1 15:11
  * @since 1.0.0
  */
-@Component
+@Component("pluginApplicationContextHelper")
 public class ApplicationContextHelper implements ApplicationContextAware {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ApplicationContextHelper.class);

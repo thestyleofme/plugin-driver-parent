@@ -13,8 +13,12 @@ import com.github.codingdebugallday.driver.common.domain.entity.PluginDriver;
 import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.common.infra.exceptions.JsonException;
 import com.github.codingdebugallday.driver.common.infra.utils.DriverRedisHelper;
+import com.github.codingdebugallday.integration.application.PluginApplication;
+import com.github.codingdebugallday.integration.operator.PluginOperator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.util.CollectionUtils;
@@ -29,31 +33,40 @@ import org.springframework.util.StringUtils;
  * @author isaac 2020/7/17 9:49
  * @since 1.0.0
  */
+@Slf4j
 @Configuration
 @ConditionalOnExpression("'${plugin.runMode}'.equalsIgnoreCase('prod') || '${plugin.runMode}'.equalsIgnoreCase('deployment')")
-public class PluginInitLoadConfiguration {
+public class PluginLoadConfiguration {
 
     private final PluginDriverSiteService pluginDriverSiteService;
     private final DriverRedisHelper driverRedisHelper;
     private final ObjectMapper objectMapper;
     private final Environment environment;
+    private final PluginApplication pluginApplication;
 
-
-    public PluginInitLoadConfiguration(PluginDriverSiteService pluginDriverSiteService,
-                                       DriverRedisHelper driverRedisHelper,
-                                       ObjectMapper objectMapper,
-                                       Environment environment) {
+    public PluginLoadConfiguration(PluginDriverSiteService pluginDriverSiteService,
+                                   DriverRedisHelper driverRedisHelper,
+                                   ObjectMapper objectMapper,
+                                   Environment environment,
+                                   PluginApplication pluginApplication) {
         this.pluginDriverSiteService = pluginDriverSiteService;
         this.driverRedisHelper = driverRedisHelper;
         this.objectMapper = objectMapper;
         this.environment = environment;
+        this.pluginApplication = pluginApplication;
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "plugin", name = "stop-with-clear", havingValue = "true", matchIfMissing = true)
+    public DriverContextClosedLister pluginDestroy(PluginApplication pluginApplication) {
+        return new DriverContextClosedLister(pluginApplication);
     }
 
     @PostConstruct
     @ConditionalOnProperty(prefix = "plugin", name = "store-type", havingValue = "minio")
     public void pluginInitLoad() {
         String property = environment.getProperty("plugin.plugin-init-load");
-        if(StringUtils.isEmpty(property)){
+        if (StringUtils.isEmpty(property)) {
             return;
         }
         List<String> initPluginList = new ArrayList<>(Arrays.asList(property.trim().split(",")));
@@ -105,9 +118,20 @@ public class PluginInitLoadConfiguration {
     }
 
     private void pluginLoad(Map<String, PluginDriver> map) {
-        map.forEach((pluginId, pluginDriver) ->
-                pluginDriverSiteService.install(pluginDriver)
-        );
+        map.forEach(this::doLoad);
+    }
+
+    private void doLoad(String pluginId, PluginDriver pluginDriver) {
+        // 已经加载过了就不加载了
+        PluginOperator pluginOperator = pluginApplication.getPluginOperator();
+        boolean isLoaded = pluginOperator.getPluginInfo()
+                .stream().anyMatch(pluginInfo ->
+                        pluginInfo.getPluginDescriptor().getPluginId().contains(pluginId));
+        if (isLoaded) {
+            log.debug("plugin[{}] is already loaded, skip...", pluginId);
+            return;
+        }
+        pluginDriverSiteService.install(pluginDriver);
     }
 
     private Map<String, PluginDriver> fetchMaxVersionPlugin(List<PluginDriver> list) {

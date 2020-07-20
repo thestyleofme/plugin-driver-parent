@@ -13,6 +13,12 @@
       "description": "plugin file store type local/minio."
     },
     {
+      "name": "plugin.stop-with-clear",
+      "type": "java.lang.Boolean",
+      "defaultValue": "true",
+      "description": "when stop application, clear plugin root path."
+    },
+    {
       "name": "plugin.minio.endpoint",
       "type": "java.lang.String",
       "description": "when plugin.store-type=minio, minio.endpoint."

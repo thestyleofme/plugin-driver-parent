@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -172,10 +171,6 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
                 String driverPath = pluginMinioService.createBucketAndUploadObject(CommonConstant.PLUGIN_MINIO_BUCKET,
                         multipartFile, pluginDriver.getObjectName());
                 pluginDriver.setDriverPath(driverPath);
-            }
-            // local模式
-            if (StringUtils.isEmpty(pluginDriver.getDriverPath())) {
-                pluginDriver.setDriverPath(pluginService.getPluginInfo(pluginDriver.getDriverCode()).getPath());
             }
         } finally {
             lock.unlock();

@@ -1,5 +1,15 @@
 server:
   port: 9898
+management:
+  server:
+    port: 9899
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    shutdown:
+      enabled: true
 
 spring:
   application:
