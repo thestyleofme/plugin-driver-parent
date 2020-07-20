@@ -6,7 +6,7 @@ package com.github.codingdebugallday.driver.session.app.service.session;
  * </p>
  *
  * @author isaac 2020/7/9 16:52
- * @since 1.0
+ * @since 1.0.0
  */
 public interface DriverSessionFunction<R> {
 

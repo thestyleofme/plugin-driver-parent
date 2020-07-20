@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
  * </p>
  *
  * @author isaac 2020/7/14 15:54
- * @since 1.0
+ * @since 1.0.0
  */
 public interface PluginMinioService {
 

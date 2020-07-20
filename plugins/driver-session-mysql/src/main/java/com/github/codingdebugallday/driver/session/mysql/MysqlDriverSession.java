@@ -10,7 +10,7 @@ import com.github.codingdebugallday.driver.session.app.service.rdbms.AbstractRdb
  * </p>
  *
  * @author JupiterMouse 2020/07/10
- * @since 1.0
+ * @since 1.0.0
  */
 public class MysqlDriverSession extends AbstractRdbmsDriverSession {
 

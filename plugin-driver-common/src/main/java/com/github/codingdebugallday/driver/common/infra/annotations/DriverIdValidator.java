@@ -16,7 +16,7 @@ import org.springframework.util.StringUtils;
  * </p>
  *
  * @author isaac 2020/7/15 20:09
- * @since 1.0
+ * @since 1.0.0
  */
 public class DriverIdValidator implements ConstraintValidator<DriverId, Long> {
 

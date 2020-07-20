@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author isaac 2020/7/16 14:08
- * @since 1.0
+ * @since 1.0.0
  */
 @Service
 public class PluginServiceImpl implements PluginService {

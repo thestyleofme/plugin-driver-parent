@@ -11,7 +11,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author isaac 2020/6/29 15:24
- * @since 1.0
+ * @since 1.0.0
  */
 @Getter
 @Setter

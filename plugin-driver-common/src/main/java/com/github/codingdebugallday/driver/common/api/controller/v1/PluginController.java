@@ -22,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
  * </p>
  *
  * @author isaac 2020/6/16 17:34
- * @since 1.0
+ * @since 1.0.0
  */
 @RestController("pluginController.v1")
 @RequestMapping("/v1/plugin")

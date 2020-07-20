@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * </p>
  *
  * @author JupiterMouse 2020/07/14
- * @since 1.0
+ * @since 1.0.0
  */
 @Slf4j
 public class RedisMeterRegistry extends StepMeterRegistry {

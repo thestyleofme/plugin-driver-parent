@@ -10,7 +10,7 @@ import com.github.codingdebugallday.integration.operator.module.PluginInfo;
  * </p>
  *
  * @author isaac 2020/7/16 14:07
- * @since 1.0
+ * @since 1.0.0
  */
 public interface PluginService {
 

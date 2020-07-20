@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * </p>
  *
  * @author isaac 2020/7/1 15:11
- * @since 1.0
+ * @since 1.0.0
  */
 @Component
 public class ApplicationContextHelper implements ApplicationContextAware {

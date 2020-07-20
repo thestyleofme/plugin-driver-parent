@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * </p>
  *
  * @author JupiterMouse 2020/07/14
- * @since 1.0
+ * @since 1.0.0
  */
 public class DefaultThreadFactory implements ThreadFactory {
 

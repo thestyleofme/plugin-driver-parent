@@ -10,7 +10,7 @@ import javax.sql.DataSource;
  * </p>
  *
  * @author JupiterMouse 2020/07/10
- * @since 1.0
+ * @since 1.0.0
  */
 public class PostgresqlDriverSession extends AbstractRdbmsDriverSession {
 

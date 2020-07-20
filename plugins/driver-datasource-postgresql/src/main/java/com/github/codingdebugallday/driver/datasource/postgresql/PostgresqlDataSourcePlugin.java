@@ -10,7 +10,7 @@ import org.pf4j.PluginWrapper;
  * </p>
  *
  * @author JupiterMouse 2020/07/07
- * @since 1.0
+ * @since 1.0.0
  */
 @Slf4j
 public class PostgresqlDataSourcePlugin extends BasePlugin {

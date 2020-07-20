@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
  * </p>
  *
  * @author JupiterMouse 2020/07/14
- * @since 1.0
+ * @since 1.0.0
  */
 public interface DataSourceFactory {
 

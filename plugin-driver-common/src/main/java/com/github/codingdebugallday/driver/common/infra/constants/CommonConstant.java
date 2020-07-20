@@ -6,7 +6,7 @@ package com.github.codingdebugallday.driver.common.infra.constants;
  * </p>
  *
  * @author isaac 2020/7/2 16:27
- * @since 1.0
+ * @since 1.0.0
  */
 public class CommonConstant {
 
@@ -72,6 +72,7 @@ public class CommonConstant {
         public static final String PLUS = "+";
         public static final String COLON = ":";
         public static final String SEMICOLON = ";";
+        public static final String EMPTY = "";
         public static final String COMMA = ",";
         public static final String POINT = ".";
         public static final String SLASH = "/";

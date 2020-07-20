@@ -27,7 +27,7 @@ import org.springframework.util.StringUtils;
  * </p>
  *
  * @author isaac 2020/7/17 9:49
- * @since 1.0
+ * @since 1.0.0
  */
 @Configuration
 @ConditionalOnExpression("'${plugin.runMode}'.equalsIgnoreCase('prod') || '${plugin.runMode}'.equalsIgnoreCase('deployment')")

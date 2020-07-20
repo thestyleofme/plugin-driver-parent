@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
  * </p>
  *
  * @author isaac 2020/7/14 17:31
- * @since 1.0
+ * @since 1.0.0
  */
 public class DriverCommonUtil {
 

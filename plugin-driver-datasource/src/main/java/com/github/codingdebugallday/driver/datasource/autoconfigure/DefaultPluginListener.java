@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  *
  * @author isaac 2020/6/16 17:28
- * @since 1.0
+ * @since 1.0.0
  */
 public class DefaultPluginListener implements PluginListener {
 

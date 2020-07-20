@@ -1,6 +1,12 @@
 package com.github.codingdebugallday.driver.session.app.service.rdbms;
 
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import java.io.LineNumberReader;
+import java.io.StringReader;
+import java.sql.*;
+import java.util.*;
+import javax.sql.DataSource;
+
+import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.common.infra.utils.CloseUtil;
 import com.github.codingdebugallday.driver.session.app.service.session.DriverSession;
@@ -24,19 +30,13 @@ import org.springframework.jdbc.support.MetaDataAccessException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.sql.DataSource;
-import java.io.LineNumberReader;
-import java.io.StringReader;
-import java.sql.*;
-import java.util.*;
-
 /**
  * <p>
  * RdbmsDriver抽象实现
  * </p>
  *
  * @author JupiterMouse 2020/07/10
- * @since 1.0
+ * @since 1.0.0
  */
 @Slf4j
 public abstract class AbstractRdbmsDriverSession implements DriverSession, SessionTool {
@@ -362,7 +362,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
             // 设置schema
             schemaSetter().setSchema(connection, schema);
             String trimSql = sql.trim();
-            if (trimSql.endsWith(StringPool.SEMICOLON)){
+            if (trimSql.endsWith(CommonConstant.Symbol.SEMICOLON)) {
                 sql = trimSql.substring(0, trimSql.length() - 1);
             }
             // 查询
@@ -654,7 +654,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
                     .lines()
                     .filter(line -> !line.trim().startsWith("--"))
                     .findFirst()
-                    .orElse(StringPool.EMPTY);
+                    .orElse(CommonConstant.Symbol.EMPTY);
             if (StringUtils.isEmpty(r)) {
                 // 认为全为注释 noting to do
             } else {

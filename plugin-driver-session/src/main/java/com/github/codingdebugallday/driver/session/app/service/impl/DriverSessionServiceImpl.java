@@ -6,7 +6,6 @@ import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceSe
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDriver;
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
-import com.github.codingdebugallday.driver.common.infra.repository.PluginDriverSiteRepository;
 import com.github.codingdebugallday.driver.datasource.context.PluginDataSourceHolder;
 import com.github.codingdebugallday.driver.session.app.service.DriverSessionService;
 import com.github.codingdebugallday.driver.session.app.service.rdbms.RdbmsDriverSession;
@@ -25,7 +24,7 @@ import org.springframework.util.StringUtils;
  * </p>
  *
  * @author JupiterMouse 2020/07/08
- * @since 1.0
+ * @since 1.0.0
  */
 @Service
 @Slf4j
@@ -33,17 +32,14 @@ public class DriverSessionServiceImpl implements DriverSessionService {
 
     private final PluginUser pluginUser;
     private final PluginDatasourceService pluginDatasourceService;
-    private final PluginDriverSiteRepository pluginDriverSiteRepository;
 
     private final JdbcTemplate jdbcTemplate;
 
     public DriverSessionServiceImpl(PluginApplication pluginApplication,
                                     PluginDatasourceService pluginDatasourceService,
-                                    PluginDriverSiteRepository pluginDriverSiteRepository,
                                     JdbcTemplate jdbcTemplate) {
         this.pluginUser = pluginApplication.getPluginUser();
         this.pluginDatasourceService = pluginDatasourceService;
-        this.pluginDriverSiteRepository = pluginDriverSiteRepository;
         this.jdbcTemplate = jdbcTemplate;
     }
 

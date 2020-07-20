@@ -18,7 +18,7 @@ import org.springframework.context.ApplicationContext;
  * </p>
  *
  * @author isaac 2020/7/2 10:17
- * @since 1.0
+ * @since 1.0.0
  */
 public class JsonUtil {
 

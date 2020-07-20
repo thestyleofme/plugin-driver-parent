@@ -14,7 +14,7 @@ import java.util.List;
  * </p>
  *
  * @author isaac 2020/6/30 19:57
- * @since 1.0
+ * @since 1.0.0
  */
 @RestController("driverSessionController.v1")
 @RequestMapping("/driver/v1/{organizationId}/session")

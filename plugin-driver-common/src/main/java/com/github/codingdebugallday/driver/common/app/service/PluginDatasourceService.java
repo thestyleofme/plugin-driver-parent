@@ -12,7 +12,7 @@ import java.util.List;
  * </p>
  *
  * @author isaac 2020/7/1 17:03
- * @since 1.0
+ * @since 1.0.0
  */
 public interface PluginDatasourceService {
 
