@@ -186,7 +186,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public List<Page<Map<String, Object>>> executeAll(String schema, String text, Pageable pageable) {
-        return this.executeAll(schema, text, pageable);
+        return this.executeAll(schema, text, pageable, true, true);
     }
 
     @Override
