@@ -6,7 +6,7 @@ package com.github.codingdebugallday.driver.common.api.dto;
  * </p>
  *
  * @author isaac 2020/7/14 17:22
- * @since 1.0
+ * @since 1.0.0
  */
 public interface ValidGroup {
 

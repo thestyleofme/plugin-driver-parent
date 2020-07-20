@@ -12,7 +12,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * </p>
  *
  * @author isaac 2020/6/29 14:12
- * @since 1.0
+ * @since 1.0.0
  */
 public class ApplicationReadyEventListener implements ApplicationListener<ApplicationReadyEvent> {
 

@@ -9,7 +9,7 @@ import java.util.Map;
  * </p>
  *
  * @author isaac 2020/7/15 19:44
- * @since 1.0
+ * @since 1.0.0
  */
 public interface RedisBaseSiteRepository<T> {
 

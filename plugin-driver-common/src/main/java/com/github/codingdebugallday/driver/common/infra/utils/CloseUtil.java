@@ -6,7 +6,7 @@ package com.github.codingdebugallday.driver.common.infra.utils;
  * </p>
  *
  * @author JupiterMouse 2020/07/08
- * @since 1.0
+ * @since 1.0.0
  */
 public final class CloseUtil {
 

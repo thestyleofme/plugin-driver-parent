@@ -6,7 +6,7 @@ package com.github.codingdebugallday.driver.session.infra.constants;
  * </p>
  *
  * @author isaac 2020/7/10 15:40
- * @since 1.0
+ * @since 1.0.0
  */
 public class DataSourceTypeConstant {
 

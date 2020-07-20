@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * </p>
  *
  * @author isaac 2020/6/29 15:45
- * @since 1.0
+ * @since 1.0.0
  */
 @Slf4j
 @Order(Ordered.LOWEST_PRECEDENCE - 100)

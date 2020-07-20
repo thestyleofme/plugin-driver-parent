@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * </p>
  *
  * @author isaac 2020/7/15 19:48
- * @since 1.0
+ * @since 1.0.0
  */
 public class RedisBaseSiteRepositoryImpl<T> implements RedisBaseSiteRepository<T> {
 

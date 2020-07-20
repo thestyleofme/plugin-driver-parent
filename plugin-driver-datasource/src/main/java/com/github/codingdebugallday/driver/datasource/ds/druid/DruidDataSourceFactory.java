@@ -15,7 +15,7 @@ import com.github.codingdebugallday.driver.datasource.ds.druid.metric.DruidMetri
  * </p>
  *
  * @author JupiterMouse 2020/07/14
- * @since 1.0
+ * @since 1.0.0
  */
 public class DruidDataSourceFactory implements DataSourceFactory {
 

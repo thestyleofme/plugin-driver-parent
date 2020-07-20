@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
  * </p>
  *
  * @author isaac 2020/7/14 16:23
- * @since 1.0
+ * @since 1.0.0
  */
 @Slf4j
 public class Md5Util {

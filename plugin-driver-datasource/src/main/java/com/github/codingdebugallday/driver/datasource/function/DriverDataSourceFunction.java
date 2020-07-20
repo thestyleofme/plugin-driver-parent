@@ -8,7 +8,7 @@ import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource
  * </p>
  *
  * @author isaac 2020/7/7 13:48
- * @since 1.0
+ * @since 1.0.0
  */
 public interface DriverDataSourceFunction<T extends PluginDatasource, R> {
 

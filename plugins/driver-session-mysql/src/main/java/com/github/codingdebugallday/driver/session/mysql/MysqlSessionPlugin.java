@@ -10,7 +10,7 @@ import org.pf4j.PluginWrapper;
  * </p>
  *
  * @author isaac 2020/6/30 13:39
- * @since 1.0
+ * @since 1.0.0
  */
 @Slf4j
 public class MysqlSessionPlugin extends BasePlugin {

@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * </p>
  *
  * @author JupiterMouse 2020/07/15
- * @since 1.0
+ * @since 1.0.0
  */
 public interface PatternConstant {
 

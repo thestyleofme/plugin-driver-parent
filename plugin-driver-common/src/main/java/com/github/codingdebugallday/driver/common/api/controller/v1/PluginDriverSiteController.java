@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
  * </p>
  *
  * @author isaac 2020/7/14 14:40
- * @since 1.0
+ * @since 1.0.0
  */
 @RestController("pluginDriverController.v1")
 @RequestMapping("/v1/plugin-driver")

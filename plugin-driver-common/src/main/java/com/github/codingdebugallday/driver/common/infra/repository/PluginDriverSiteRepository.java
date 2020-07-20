@@ -9,7 +9,7 @@ import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant
  * </p>
  *
  * @author isaac 2020/7/14 14:25
- * @since 1.0
+ * @since 1.0.0
  */
 public interface PluginDriverSiteRepository extends RedisBaseSiteRepository<PluginDriver> {
 

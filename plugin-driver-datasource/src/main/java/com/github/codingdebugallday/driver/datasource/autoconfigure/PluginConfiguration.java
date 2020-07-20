@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * </p>
  *
  * @author isaac 2020/6/16 17:32
- * @since 1.0
+ * @since 1.0.0
  */
 @Component
 @ConfigurationProperties(prefix = "plugin")

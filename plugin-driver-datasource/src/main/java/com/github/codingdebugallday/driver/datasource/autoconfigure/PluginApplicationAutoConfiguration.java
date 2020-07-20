@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * </p>
  *
  * @author isaac 2020/6/16 17:33
- * @since 1.0
+ * @since 1.0.0
  */
 @Configuration
 public class PluginApplicationAutoConfiguration {

@@ -25,7 +25,7 @@ import java.util.Date;
  * </p>
  *
  * @author isaac 2020/6/29 14:13
- * @since 1.0
+ * @since 1.0.0
  */
 @Configuration
 @ComponentScan(basePackages = {

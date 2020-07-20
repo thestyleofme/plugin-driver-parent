@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * </p>
  *
  * @author isaac 2020/6/29 16:10
- * @since 1.0
+ * @since 1.0.0
  */
 @SpringBootApplication
 public class DriverApplication {

@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * </p>
  *
  * @author isaac 2020/7/14 13:40
- * @since 1.0
+ * @since 1.0.0
  */
 @ConfigurationProperties(prefix = "plugin.minio")
 @Data

@@ -1,6 +1,6 @@
 package com.github.codingdebugallday.driver.session.app.service.session;
 
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.session.infra.funcations.extractor.*;
 import com.github.codingdebugallday.driver.session.infra.funcations.setter.SchemaSetter;
 
@@ -10,7 +10,7 @@ import com.github.codingdebugallday.driver.session.infra.funcations.setter.Schem
  * </p>
  *
  * @author JupiterMouse 2020/07/08
- * @since 1.0
+ * @since 1.0.0
  */
 public interface SessionTool {
 
@@ -61,8 +61,10 @@ public interface SessionTool {
     TableStructureExtractor tableStructureExtractor();
 
     // other
+
     /**
      * 分页提取
+     *
      * @return PageSqlExtractor
      */
     default PageSqlExtractor pageSqlExtractor() {
@@ -71,7 +73,7 @@ public interface SessionTool {
             long size = pageable.getPageSize();
             long offset = page * size;
             String trimSql = sql.trim();
-            if (trimSql.endsWith(StringPool.SEMICOLON)){
+            if (trimSql.endsWith(CommonConstant.Symbol.SEMICOLON)) {
                 sql = trimSql.substring(0, trimSql.length() - 1);
             }
             return String.format(pageFormat, sql, offset, size);
