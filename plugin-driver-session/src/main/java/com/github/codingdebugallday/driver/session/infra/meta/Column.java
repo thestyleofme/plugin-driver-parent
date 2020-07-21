@@ -9,9 +9,17 @@ import java.sql.SQLException;
 /**
  * <p>
  * Table column metadata
- * </p>
  *
  * @author JupiterMouse 2020/07/21
+ * @see java.sql.DatabaseMetaData#getColumns
+ * </p>
+ * <p>The COLUMN_SIZE column specifies the column size for the given column.
+ * For numeric data, this is the maximum precision.  For character data, this is the length in characters.
+ * For datetime datatypes, this is the length in characters of the String representation (assuming the
+ * maximum allowed precision of the fractional seconds component). For binary data, this is the length in bytes.  For the ROWID datatype,
+ * this is the length in bytes. Null is returned for data types where the
+ * column size is not applicable.
+ * </p>
  * @since 1.0
  */
 @SuppressWarnings("unused")
@@ -22,93 +30,56 @@ import java.sql.SQLException;
 @AllArgsConstructor
 public class Column implements Serializable, Cloneable {
 
-    /**
-     * schema名
-     */
+    private String tableCat;
     private String tableSchema;
-    /**
-     * 表名
-     */
     private String tableName;
-    /**
-     * 列名
-     */
-    private String name;
-    /**
-     * 类型，对应java.sql.Types中的类型
-     */
-    private Integer type;
-    /**
-     * 类型名称
-     */
+    private String columnName;
+    private Integer dataType;
     private String typeName;
+    private Integer columnSize;
+    private Integer decimalDigits;
+    private Integer numPrecRadix;
+    private Integer nullable;
+    private String remarks;
+    private String columnDef;
+    private String charOctetLength;
     /**
-     * 大小或数据长度
+     * (starting at 1)
      */
-    private Integer size;
-    /**
-     * 精度
-     */
-    private Integer accuracy;
-    /**
-     * 是否为可空
-     */
-    private Boolean isNullable;
-    /**
-     * 注释
-     */
-    private String comment;
-    /**
-     * 默认值
-     */
-    private String defaultValue;
+    private Integer ordinalPosition;
+    private String isNullable;
 
-    // 额外属性字段
-    /**
-     * 是否自增字段
-     */
-    private Boolean isAutoIncrement;
-    /**
-     * 是否索引键
-     */
-    private Boolean isIndexKey;
-    /**
-     * 是否为主键
-     */
-    private Integer keyFlag;
-    /**
-     * 是否为外键
-     */
-    private Integer foreignKeyFlag;
-    /**
-     * 是否为分区键
-     */
-    private boolean partitionKey;
+    private Integer sourceDataType;
+
+    private String isAutoincrement;
+
+    private String isGeneratedcolumn;
+
 
     /**
-     * 初始化
+     * 构造Column
      *
-     * @param tableSchema  schema
-     * @param tableName    表名
-     * @param columnMetaRs 列的meta ResultSet
-     * @throws SQLException SQL执行异常
+     * @param rs ResultSet
+     * @throws SQLException
      */
-    public void init(String tableSchema, String tableName, ResultSet columnMetaRs) throws SQLException {
-        this.tableSchema = tableSchema;
-        this.tableName = tableName;
-        this.name = columnMetaRs.getString("COLUMN_NAME");
-        this.type = columnMetaRs.getInt("DATA_TYPE");
-        this.typeName = columnMetaRs.getString("TYPE_NAME");
-        this.size = columnMetaRs.getInt("COLUMN_SIZE");
-        this.accuracy = columnMetaRs.getInt("TODO");
-        this.isNullable = columnMetaRs.getBoolean("NULLABLE");
-        this.comment = columnMetaRs.getString("REMARKS");
-        this.defaultValue = columnMetaRs.getString("COLUMN_DEF");
-
-        /** 是否索引键 */
-        /** 是否为主键 */
-        /** 是否为外键 */
-        /** 是否为分区键 */
+    public Column(ResultSet rs) throws SQLException {
+        this.tableCat = rs.getString("TABLE_CAT");
+        this.tableSchema = rs.getString("TABLE_SCHEM");
+        this.tableName = rs.getString("TABLE_NAME");
+        this.columnName = rs.getString("COLUMN_NAME");
+        this.dataType = rs.getInt("DATA_TYPE");
+        this.typeName = rs.getString("TYPE_NAME");
+        this.columnSize = rs.getInt("COLUMN_SIZE");
+        this.decimalDigits = rs.getInt("DECIMAL_DIGITS");
+        this.numPrecRadix = rs.getInt("NUM_PREC_RADIX");
+        this.nullable = rs.getInt("NULLABLE");
+        this.remarks = rs.getString("REMARKS");
+        this.columnDef = rs.getString("COLUMN_DEF");
+        this.charOctetLength = rs.getString("CHAR_OCTET_LENGTH");
+        this.isNullable = rs.getString("IS_NULLABLE");
+        this.sourceDataType = rs.getInt("SOURCE_DATA_TYPE");
+        this.isAutoincrement = rs.getString("IS_AUTOINCREMENT");
+        this.isGeneratedcolumn = rs.getString("IS_GENERATEDCOLUMN");
     }
 
 

@@ -1,5 +1,6 @@
 package com.github.codingdebugallday.driver.session.app.service.session;
 
+import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.session.domain.entity.MetaDataInfo;
 import com.github.codingdebugallday.driver.session.domain.entity.TableColumn;
 import com.github.codingdebugallday.driver.session.domain.entity.Tuple;
@@ -140,7 +141,9 @@ public interface TableSession {
      * @param tableName 表名
      * @return List<Column>
      */
-    List<Column> tableColumnMeta(String schema, String tableName);
+    default List<Column> tableColumnMeta(String schema, String tableName){
+        throw new DriverException("Not Supported");
+    }
 
     /**
      * 表元数据
@@ -150,6 +153,8 @@ public interface TableSession {
      * @param tableName tableName
      * @return Table
      */
-    Table tableMetaData(String catelog, String schema, String tableName);
+    default Table tableMetaData(String catelog, String schema, String tableName){
+        throw new DriverException("Not Supported");
+    }
 
 }
