@@ -17,8 +17,6 @@ import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.operator.PluginOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.util.CollectionUtils;
@@ -35,7 +33,7 @@ import org.springframework.util.StringUtils;
  */
 @Slf4j
 @Configuration
-@ConditionalOnExpression("'${plugin.runMode}'.equalsIgnoreCase('prod') || '${plugin.runMode}'.equalsIgnoreCase('deployment')")
+@ConditionalOnExpression("('${plugin.runMode}'.equalsIgnoreCase('prod') || '${plugin.runMode}'.equalsIgnoreCase('deployment')) && '${plugin.store-type}'.equalsIgnoreCase('minio')")
 public class PluginLoadConfiguration {
 
     private final PluginDriverSiteService pluginDriverSiteService;
@@ -56,14 +54,7 @@ public class PluginLoadConfiguration {
         this.pluginApplication = pluginApplication;
     }
 
-    @Bean
-    @ConditionalOnProperty(prefix = "plugin", name = "stop-with-clear", havingValue = "true", matchIfMissing = true)
-    public DriverContextClosedLister pluginDestroy(PluginApplication pluginApplication) {
-        return new DriverContextClosedLister(pluginApplication);
-    }
-
     @PostConstruct
-    @ConditionalOnProperty(prefix = "plugin", name = "store-type", havingValue = "minio")
     public void pluginInitLoad() {
         String property = environment.getProperty("plugin.plugin-init-load");
         if (StringUtils.isEmpty(property)) {

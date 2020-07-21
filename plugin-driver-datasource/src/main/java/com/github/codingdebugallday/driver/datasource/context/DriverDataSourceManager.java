@@ -35,4 +35,8 @@ public class DriverDataSourceManager {
         return PluginDataSourceHolder.getOrCreate(tenantId, datasourceCode, clazz);
     }
 
+    public void clearDataSource(Long tenantId, String datasourceCode) {
+        PluginDataSourceHolder.remove(tenantId, datasourceCode);
+    }
+
 }

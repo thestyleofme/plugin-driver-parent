@@ -36,6 +36,18 @@ public class CommonConstant {
     public static final String PLUGIN_MINIO_BUCKET = "plugin.driver";
     public static final String TEMP_DIC = "temp/";
 
+    public static class DataSourceType {
+
+        private DataSourceType() {
+            throw new IllegalStateException();
+        }
+
+        public static final String RDB = "RDB";
+        public static final String NOSQL = "NOSQL";
+        public static final String HTTP = "HTTP";
+        public static final String MQ = "MQ";
+    }
+
     public static class JdbcProperties {
 
         private JdbcProperties() {

@@ -15,7 +15,7 @@
     {
       "name": "plugin.stop-with-clear",
       "type": "java.lang.Boolean",
-      "defaultValue": "true",
+      "defaultValue": "false",
       "description": "when stop application, clear plugin root path."
     },
     {

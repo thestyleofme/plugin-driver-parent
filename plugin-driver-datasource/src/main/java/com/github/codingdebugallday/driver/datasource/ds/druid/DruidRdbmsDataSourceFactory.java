@@ -1,12 +1,14 @@
 package com.github.codingdebugallday.driver.datasource.ds.druid;
 
+import java.util.Properties;
 import javax.sql.DataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.common.infra.metrics.RedisMeterRegistry;
 import com.github.codingdebugallday.driver.common.infra.utils.DefaultThreadFactory;
-import com.github.codingdebugallday.driver.datasource.ds.DataSourceFactory;
+import com.github.codingdebugallday.driver.common.infra.utils.DriverUtil;
+import com.github.codingdebugallday.driver.datasource.ds.RdbmsDataSourceFactory;
 import com.github.codingdebugallday.driver.datasource.ds.druid.metric.DruidMetricsTracker;
 
 /**
@@ -17,7 +19,7 @@ import com.github.codingdebugallday.driver.datasource.ds.druid.metric.DruidMetri
  * @author JupiterMouse 2020/07/14
  * @since 1.0.0
  */
-public class DruidDataSourceFactory implements DataSourceFactory {
+public class DruidRdbmsDataSourceFactory implements RdbmsDataSourceFactory {
 
     private static final String THREAD_NAME_PREFIX = "metricPublisher";
 
@@ -33,7 +35,9 @@ public class DruidDataSourceFactory implements DataSourceFactory {
         dataSource.setMaxWait(1000L);
         dataSource.setBreakAfterAcquireFailure(true);
         // Druid连接池配置信息
-        dataSource.configFromPropety(parseDsSetting2Properties(pluginDatasource));
+        Properties properties = DriverUtil.parseDsSetting2Properties(pluginDatasource);
+        DriverUtil.verifyConfig(properties);
+        dataSource.configFromPropety(properties);
         // 检查关联配置，在用户未设置某项配置时，
         if (null == dataSource.getValidationQuery()) {
             // 在validationQuery未设置的情况下，以下三项设置都将无效

@@ -9,8 +9,10 @@ import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.github.codingdebugallday.integration.application.PluginApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -65,4 +67,9 @@ public class DriverCommonAutoConfigure {
         return new ApplicationReadyEventListener();
     }
 
+    @Bean
+    @ConditionalOnProperty(prefix = "plugin", name = "stop-with-clear", havingValue = "true")
+    public DriverContextClosedLister pluginDestroy(PluginApplication pluginApplication) {
+        return new DriverContextClosedLister(pluginApplication);
+    }
 }

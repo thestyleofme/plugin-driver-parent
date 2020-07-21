@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>driver-plugin-parent</artifactId>
+        <groupId>com.github.codingdebugallday</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>driver-datasource-es7</artifactId>
+
+    <properties>
+        <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
+        <plugin.id>driver-datasource-es7</plugin.id>
+        <plugin.class>com.github.codingdebugallday.driver.datasource.es.ElasticSearch7DataSourcePlugin</plugin.class>
+        <plugin.version>${project.version}</plugin.version>
+        <plugin.provider>isaac</plugin.provider>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.codingdebugallday</groupId>
+            <artifactId>plugin-driver-datasource</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!--es 6.8.8-->
+        <!--<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>-->
+
+        <!--es 7.6.2-->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-elasticsearch</artifactId>
+            <version>4.0.1.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j-api</artifactId>
+                    <groupId>org.apache.logging.log4j</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
+    </dependencies>
+
+</project>

@@ -52,7 +52,6 @@ public class PluginDriver implements Serializable {
     /**
      * driver在minio上的名称
      */
-    @NotNull(groups = {ValidGroup.Update.class})
     private String objectName;
     /**
      * 若driverType为datasource，这里给出driverClassName，如com.mysql.jdbc.Driver

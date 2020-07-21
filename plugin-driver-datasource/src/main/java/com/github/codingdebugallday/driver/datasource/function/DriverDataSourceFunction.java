@@ -1,6 +1,7 @@
 package com.github.codingdebugallday.driver.datasource.function;
 
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
+import org.pf4j.ExtensionPoint;
 
 /**
  * <p>
@@ -10,7 +11,7 @@ import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource
  * @author isaac 2020/7/7 13:48
  * @since 1.0.0
  */
-public interface DriverDataSourceFunction<T extends PluginDatasource, R> {
+public interface DriverDataSourceFunction<T extends PluginDatasource, R> extends ExtensionPoint {
 
     /**
      * 通过PluginDatasource创建数据源

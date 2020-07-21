@@ -1,5 +1,7 @@
 package com.github.codingdebugallday.driver.session.app.service.session;
 
+import org.pf4j.ExtensionPoint;
+
 /**
  * <p>
  * session插件需实现此类
@@ -8,7 +10,7 @@ package com.github.codingdebugallday.driver.session.app.service.session;
  * @author isaac 2020/7/9 16:52
  * @since 1.0.0
  */
-public interface DriverSessionFunction<R> {
+public interface DriverSessionFunction<R> extends ExtensionPoint {
 
     /**
      * 获取数据源的类类型

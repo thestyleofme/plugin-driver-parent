@@ -41,7 +41,7 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
     /**
      * 默认值是local
      */
-    @Value("${plugin.store-type}")
+    @Value("${plugin.store-type:local}")
     private String pluginStoreType;
 
     private final PluginDriverSiteRepository pluginDriverSiteRepository;
@@ -97,6 +97,9 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
 
     @Override
     public Boolean install(PluginDriver pluginDriver) {
+        // todo minio local
+        Assert.isTrue(pluginStoreType.equalsIgnoreCase(PluginDriver.DRIVER_STORE_TYPE_MINIO),
+                "本地模式暂不支持，请使用Minio进行储存");
         InputStream inputStream = pluginMinioService.getObject(CommonConstant.PLUGIN_MINIO_BUCKET, pluginDriver.getObjectName());
         File temp = new File(CommonConstant.TEMP_DIC + pluginDriver.getObjectName());
         try {
@@ -164,6 +167,7 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
         try {
             // 记录插件指纹
             String driverFingerprint = Md5Util.md5DigestAsHex(multipartFile);
+            // 判断指纹是否重复，重复代表同一个jar包想创建多个driver
             pluginDriver.setDriverFingerprint(driverFingerprint);
             // minio模式
             if (pluginStoreType.equalsIgnoreCase(PluginDriver.DRIVER_STORE_TYPE_MINIO)) {
@@ -172,6 +176,7 @@ public class PluginDriverSiteServiceImpl implements PluginDriverSiteService {
                         multipartFile, pluginDriver.getObjectName());
                 pluginDriver.setDriverPath(driverPath);
             }
+            // todo local模式
         } finally {
             lock.unlock();
         }

@@ -13,10 +13,12 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>driver-session-mysql</module>
         <module>driver-datasource-mysql</module>
+        <module>driver-session-mysql</module>
         <module>driver-datasource-postgresql</module>
         <module>driver-session-postgresql</module>
+        <module>driver-datasource-es7</module>
+        <module>driver-session-es7</module>
     </modules>
 
     <properties>
@@ -25,6 +27,7 @@
         <plugin.class/>
         <plugin.version/>
         <plugin.provider/>
+        <plugin.dependencies/>
 
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -67,6 +70,7 @@
                             <Plugin-Version>${plugin.version}</Plugin-Version>
                             <Plugin-Provider>${plugin.provider}</Plugin-Provider>
                             <Plugin-Class>${plugin.class}</Plugin-Class>
+                            <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
                         </manifestEntries>
                     </archive>
                 </configuration>

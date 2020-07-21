@@ -58,7 +58,7 @@ public class DriverSessionServiceImpl implements DriverSessionService {
                         .getPluginClassLoader(sessionPluginId);
                 // 使用插件的classloader
                 Thread.currentThread().setContextClassLoader(pluginClassLoader);
-                DriverSessionFunction driverSessionFunction = pluginUser.getPluginBean(sessionPluginId, DriverSessionFunction.class);
+                DriverSessionFunction driverSessionFunction = pluginUser.getPluginExtension(DriverSessionFunction.class, sessionPluginId);
                 // 获取该数据源的插件数据源
                 Class<?> clazz = driverSessionFunction.getDataSource();
                 Object dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasource, clazz);

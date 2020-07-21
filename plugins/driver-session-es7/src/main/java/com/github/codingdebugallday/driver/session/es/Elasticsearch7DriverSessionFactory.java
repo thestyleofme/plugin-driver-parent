@@ -1,10 +1,9 @@
-package com.github.codingdebugallday.driver.session.postgresql;
-
-import javax.sql.DataSource;
+package com.github.codingdebugallday.driver.session.es;
 
 import com.github.codingdebugallday.driver.session.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.session.app.service.session.DriverSessionFunction;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.pf4j.Extension;
 
 /**
@@ -12,28 +11,29 @@ import org.pf4j.Extension;
  * 主程序定义SessionService接口的实现类
  * </p>
  *
- * @author JupiterMouse 2020/07/07
+ * @author isaac 2020/6/16 17:54
  * @since 1.0.0
  */
 @SuppressWarnings("unused")
 @Slf4j
 @Extension
-public class PostgresqlDriverSessionFactory implements DriverSessionFunction<DataSource> {
+public class Elasticsearch7DriverSessionFactory implements DriverSessionFunction<RestHighLevelClient> {
 
-    private DataSource dataSource;
+    private RestHighLevelClient dataSource;
 
     @Override
-    public Class<DataSource> getDataSource() {
-        return DataSource.class;
+    public Class<RestHighLevelClient> getDataSource() {
+        return RestHighLevelClient.class;
     }
 
     @Override
-    public void setDataSource(DataSource dataSource) {
+    public void setDataSource(RestHighLevelClient dataSource) {
         this.dataSource = dataSource;
     }
 
     @Override
     public DriverSession getDriverSession() {
-        return new PostgresqlDriverSession(dataSource);
+        return new Elasticsearch7DriverSession(dataSource);
     }
+
 }

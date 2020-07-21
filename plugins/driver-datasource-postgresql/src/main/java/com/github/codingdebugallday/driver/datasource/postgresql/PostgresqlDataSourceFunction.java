@@ -1,12 +1,12 @@
 package com.github.codingdebugallday.driver.datasource.postgresql;
 
+import javax.sql.DataSource;
+
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.datasource.ds.druid.DruidDataSourceFactory;
+import com.github.codingdebugallday.driver.datasource.ds.druid.DruidRdbmsDataSourceFactory;
 import com.github.codingdebugallday.driver.datasource.function.DriverDataSourceFunction;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
-import javax.sql.DataSource;
+import org.pf4j.Extension;
 
 /**
  * <p>
@@ -18,11 +18,11 @@ import javax.sql.DataSource;
  */
 @SuppressWarnings("unused")
 @Slf4j
-@Component("postgresqlDataSourceFunction")
+@Extension
 public class PostgresqlDataSourceFunction implements DriverDataSourceFunction<PluginDatasource, DataSource> {
 
     @Override
     public DataSource createDataSource(PluginDatasource pluginDatasource) {
-        return new DruidDataSourceFactory().create(pluginDatasource);
+        return new DruidRdbmsDataSourceFactory().create(pluginDatasource);
     }
 }

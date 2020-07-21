@@ -26,6 +26,14 @@ spring:
       maximum-pool-size: ${SPRING_DATASOURCE_MAXIMUM_POOL_SIZE:200}
       # 等待连接池分配连接的最大时长（毫秒）
       connection-timeout: ${SPRING_DATASOURCE_CONNECTION_TIMEOUT:30000}
+  servlet:
+    multipart:
+      # 是否支持多部分上传
+      enabled: true
+      # 最大支持文件上传的大小
+      max-file-size: 300MB
+      # 支持请求最大文件上传的大小
+      max-request-size: 300MB
   redis:
     host: ${SPRING_REDIS_HOST:172.23.16.63}
     port: ${SPRING_REDIS_PORT:26379}
@@ -58,7 +66,7 @@ mybatis-plus:
 
 plugin:
   runMode: prod
-  store-type: minio
+  store-type: local
   minio:
     endpoint: http://hdspdev010:9000
     access-key: AKIAIOSFODNN7EXAMPLE
@@ -66,7 +74,7 @@ plugin:
   plugin-path: plugins/out
   plugin-config-file-path: pluginConfig
   # 可模糊匹配
-  plugin-init-load: mysql,postgresql
+  plugin-init-load: mysql,postgresql,es
 
 logging:
   level:

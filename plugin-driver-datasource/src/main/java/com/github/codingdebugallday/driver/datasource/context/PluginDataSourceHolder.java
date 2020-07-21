@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import com.github.codingdebugallday.driver.common.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.common.domain.entity.PluginDriver;
+import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.common.infra.utils.ApplicationContextHelper;
 import com.github.codingdebugallday.driver.datasource.function.DriverDataSourceFunction;
@@ -57,24 +58,27 @@ public class PluginDataSourceHolder {
         PluginDriver datasourceDriver = pluginDatasource.getDatasourceDriver();
         @NotBlank String datasourcePluginId = datasourceDriver.getDriverCode();
         String key = pluginDatasource.getTenantId() + "_" + datasourcePluginId;
+        // todo 修改了数据源信息 需删除key
         if (Objects.isNull(PLUGIN_DATASOURCE_MAP.get(key))) {
             ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
             ClassLoader pluginClassLoader = PLUGIN_USER.getPluginManager()
                     .getPluginClassLoader(datasourcePluginId);
             Thread.currentThread().setContextClassLoader(pluginClassLoader);
             try {
-                // 获取driverClassName
-                String driverClassName = datasourceDriver.getDriverClass();
-                Driver driver = (Driver) Thread.currentThread()
-                        .getContextClassLoader()
-                        .loadClass(driverClassName)
-                        .getDeclaredConstructor()
-                        .newInstance();
-                log.debug(">>>>>>>>> class loader class:{}", pluginClassLoader.getClass().getName());
-                log.debug(">>>>>>>>> driverClassName:{}", driverClassName);
-                log.debug(">>>>>>>>> driver version:{}", driver.getMajorVersion() + "." + driver.getMinorVersion());
+                if (CommonConstant.DataSourceType.RDB.equalsIgnoreCase(pluginDatasource.getDatasourceType())) {
+                    // 获取driverClassName
+                    String driverClassName = datasourceDriver.getDriverClass();
+                    Driver driver = (Driver) Thread.currentThread()
+                            .getContextClassLoader()
+                            .loadClass(driverClassName)
+                            .getDeclaredConstructor()
+                            .newInstance();
+                    log.debug(">>>>>>>>> class loader class:{}", pluginClassLoader.getClass().getName());
+                    log.debug(">>>>>>>>> driverClassName:{}", driverClassName);
+                    log.debug(">>>>>>>>> driver version:{}", driver.getMajorVersion() + "." + driver.getMinorVersion());
+                }
                 Object object = PLUGIN_USER
-                        .getPluginBean(datasourcePluginId, DriverDataSourceFunction.class)
+                        .getPluginExtension(DriverDataSourceFunction.class, datasourcePluginId)
                         .createDataSource(pluginDatasource);
                 T t = clazz.cast(object);
                 PLUGIN_DATASOURCE_MAP.put(key, t);
@@ -91,6 +95,21 @@ public class PluginDataSourceHolder {
     public static <T> T getOrCreate(Long tenantId, String datasourceCode, Class<T> clazz) {
         PluginDatasource pluginDatasource = PLUGIN_DATASOURCE_SERVICE.getDatasourceByCode(tenantId, datasourceCode);
         return getOrCreate(pluginDatasource, clazz);
+    }
+
+    /**
+     * 插件被禁用或卸载需要删除相应数据源
+     *
+     * @param tenantId       租户id
+     * @param datasourceCode 数据源编码
+     */
+    public static void remove(Long tenantId, String datasourceCode) {
+        PluginDatasource pluginDatasource = PLUGIN_DATASOURCE_SERVICE.getDatasourceByCode(tenantId, datasourceCode);
+        PLUGIN_DATASOURCE_MAP.keySet().forEach(key -> {
+            if (key.contains(pluginDatasource.getDatasourceDriver().getDriverCode())) {
+                PLUGIN_DATASOURCE_MAP.remove(key);
+            }
+        });
     }
 
     /**

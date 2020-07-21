@@ -1,11 +1,11 @@
 package com.github.codingdebugallday.driver.session.mysql;
 
+import javax.sql.DataSource;
+
 import com.github.codingdebugallday.driver.session.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.session.app.service.session.DriverSessionFunction;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-
-import javax.sql.DataSource;
+import org.pf4j.Extension;
 
 
 /**
@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  */
 @SuppressWarnings("unused")
 @Slf4j
-@Component("mysqlDriverSession")
+@Extension
 public class MysqlDriverSessionFactory implements DriverSessionFunction<DataSource> {
 
     private DataSource dataSource;

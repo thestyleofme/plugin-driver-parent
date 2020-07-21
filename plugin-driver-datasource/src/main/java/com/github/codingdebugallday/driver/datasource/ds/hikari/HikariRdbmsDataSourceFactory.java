@@ -7,7 +7,8 @@ import com.github.codingdebugallday.driver.common.domain.entity.PluginDatasource
 import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.common.infra.metrics.RedisMeterRegistry;
 import com.github.codingdebugallday.driver.common.infra.utils.DefaultThreadFactory;
-import com.github.codingdebugallday.driver.datasource.ds.DataSourceFactory;
+import com.github.codingdebugallday.driver.common.infra.utils.DriverUtil;
+import com.github.codingdebugallday.driver.datasource.ds.RdbmsDataSourceFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.metrics.micrometer.MicrometerMetricsTrackerFactory;
@@ -21,13 +22,14 @@ import org.springframework.util.StringUtils;
  * @author JupiterMouse 2020/07/14
  * @since 1.0.0
  */
-public class HikariDataSourceFactory implements DataSourceFactory {
+public class HikariRdbmsDataSourceFactory implements RdbmsDataSourceFactory {
 
     private static final String THREAD_NAME_PREFIX = "metricPublisher";
 
     @Override
     public DataSource create(PluginDatasource pluginDatasource) {
-        final Properties properties = parseDsSetting2Properties(pluginDatasource);
+        final Properties properties = DriverUtil.parseDsSetting2Properties(pluginDatasource);
+        DriverUtil.verifyConfig(properties);
         // 转换参数
         this.transform(properties);
         HikariConfig hikariConfig = new HikariConfig();
