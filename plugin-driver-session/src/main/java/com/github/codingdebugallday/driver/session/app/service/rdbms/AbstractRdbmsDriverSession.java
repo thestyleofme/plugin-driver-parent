@@ -1,11 +1,5 @@
 package com.github.codingdebugallday.driver.session.app.service.rdbms;
 
-import java.io.LineNumberReader;
-import java.io.StringReader;
-import java.sql.*;
-import java.util.*;
-import javax.sql.DataSource;
-
 import com.github.codingdebugallday.driver.common.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.common.infra.utils.CloseUtil;
@@ -18,7 +12,9 @@ import com.github.codingdebugallday.driver.session.infra.constants.DataSourceTyp
 import com.github.codingdebugallday.driver.session.infra.constants.PatternConstant;
 import com.github.codingdebugallday.driver.session.infra.funcations.extractor.*;
 import com.github.codingdebugallday.driver.session.infra.funcations.setter.SchemaSetter;
+import com.github.codingdebugallday.driver.session.infra.meta.Table;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.jsqlparser.schema.Column;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +25,12 @@ import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import javax.sql.DataSource;
+import java.io.LineNumberReader;
+import java.io.StringReader;
+import java.sql.*;
+import java.util.*;
 
 /**
  * <p>
@@ -46,7 +48,6 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     private static final String COUNT_SQL_FORMAT = "SELECT COUNT(1) FROM ( %s ) t";
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_SIZE = 10;
-
 
     protected final DataSource dataSource;
 
@@ -558,7 +559,27 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public MetaDataInfo tableMetaData(String schema, String tableName) {
+        Table table = new Table();
         return null;
+    }
+
+    @Override
+    public List<Column> tableColumnMeta(String schema, String tableName) {
+        List<Column> columns = new ArrayList<>();
+        Connection connection = null;
+
+        return null;
+    }
+
+    @Override
+    public Table tableMetaData(String catelog, String schema, String tableName) {
+        Table table = new Table();
+        try {
+            table.init(this.dataSource.getConnection(), catelog, schema, tableName);
+        } catch (SQLException e) {
+            throw new DriverException("table metadata error", e);
+        }
+        return table;
     }
 
     //

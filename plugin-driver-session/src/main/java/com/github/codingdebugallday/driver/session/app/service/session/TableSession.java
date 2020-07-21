@@ -3,6 +3,8 @@ package com.github.codingdebugallday.driver.session.app.service.session;
 import com.github.codingdebugallday.driver.session.domain.entity.MetaDataInfo;
 import com.github.codingdebugallday.driver.session.domain.entity.TableColumn;
 import com.github.codingdebugallday.driver.session.domain.entity.Tuple;
+import com.github.codingdebugallday.driver.session.infra.meta.Table;
+import net.sf.jsqlparser.schema.Column;
 
 import java.util.List;
 import java.util.Map;
@@ -130,4 +132,24 @@ public interface TableSession {
      * @return MetaDataInfo
      */
     MetaDataInfo tableMetaData(String schema, String tableName);
+
+    /**
+     * 查询列元数据
+     *
+     * @param schema    schema
+     * @param tableName 表名
+     * @return List<Column>
+     */
+    List<Column> tableColumnMeta(String schema, String tableName);
+
+    /**
+     * 表元数据
+     *
+     * @param catelog   catelog
+     * @param schema    schema
+     * @param tableName tableName
+     * @return Table
+     */
+    Table tableMetaData(String catelog, String schema, String tableName);
+
 }

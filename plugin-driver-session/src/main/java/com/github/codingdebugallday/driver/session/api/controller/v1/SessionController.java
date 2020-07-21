@@ -35,6 +35,8 @@ public class SessionController {
         // datasourceCode不传 使用服务本身数据源
         List<String> tables = driverSessionService.getDriverSession(tenantId, datasourceCode)
                 .tableList(schema);
+        driverSessionService.getDriverSession(tenantId, datasourceCode).tableMetaData("hdsp_report", "hdsp_report", "xtau_view");
+
         return ResponseEntity.ok(tables);
     }
 
