@@ -17,12 +17,13 @@ public interface TableExtractor {
     /**
      * 表提取
      *
-     * @param metaData 元数据
-     * @param schema   数据库schema
-     * @param types    元数据类型
+     * @param metaData     元数据
+     * @param schema       数据库schema
+     * @param tablePattern 表匹配
+     * @param types        元数据类型
      * @return 结果集
      * @throws SQLException sql异常
      */
-    ResultSet extract(DatabaseMetaData metaData, String schema, String[] types) throws SQLException;
+    ResultSet extract(DatabaseMetaData metaData, String schema, String tablePattern, String[] types) throws SQLException;
 
 }

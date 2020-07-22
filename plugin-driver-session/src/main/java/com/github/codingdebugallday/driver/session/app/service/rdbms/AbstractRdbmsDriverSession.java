@@ -17,8 +17,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.datasource.DataSourceUtils;
-import org.springframework.jdbc.support.JdbcUtils;
-import org.springframework.jdbc.support.MetaDataAccessException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -74,10 +72,10 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     @Override
     public TableExtractor tableExtractor() {
         return isSchema(dataSource) ?
-                (metaData, schema, types) ->
-                        metaData.getTables(null, schema, "%", types) :
-                (metaData, schema, types) ->
-                        metaData.getTables(schema, null, "%", types);
+                (metaData, schema, tablePattern, types) ->
+                        metaData.getTables(null, schema, tablePattern, types) :
+                (metaData, schema, tablePattern, types) ->
+                        metaData.getTables(schema, null, tablePattern, types);
 
     }
 
@@ -315,29 +313,18 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     }
 
 
-    @SuppressWarnings("unchecked")
     @Override
     public List<String> schemaList() {
-        try {
-            return (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, databaseMetaData -> {
-                List<String> schemas = new ArrayList<>();
-                ResultSet rs = null;
-                try {
-                    // schema提取
-                    rs = schemaExtractor().extract(databaseMetaData);
-                    while (rs.next()) {
-                        String schema = rs.getString(1);
-                        schemas.add(schema);
-                    }
-                } finally {
-                    CloseUtil.close(rs);
-                }
-                return schemas;
-            });
-        } catch (MetaDataAccessException e) {
-            log.error("fetch schemas error");
+        List<String> schemaList = new ArrayList<>();
+        try (Connection connection = this.dataSource.getConnection(); ResultSet rs = schemaExtractor().extract(connection.getMetaData())) {
+            while (rs.next()) {
+                String schema = rs.getString(1);
+                schemaList.add(schema);
+            }
+        } catch (SQLException e) {
             throw new DriverException("fetch schemas error", e);
         }
+        return schemaList;
     }
 
     @Override
@@ -403,27 +390,17 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<String> tableList(String schema) {
-        try {
-            return (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, databaseMetaData -> {
-                List<String> tables = new ArrayList<>();
-                ResultSet rs = null;
-                try {
-                    // 表提取
-                    rs = tableExtractor().extract(databaseMetaData, schema, new String[]{"TABLE"});
-                    while (rs.next()) {
-                        String table = rs.getString("TABLE_NAME");
-                        tables.add(table);
-                    }
-                } finally {
-                    CloseUtil.close(rs);
-                }
-                return tables;
-            });
-        } catch (MetaDataAccessException e) {
-            log.error("fetch tables error");
+    public List<String> tableList(String schema, String tablePattern) {
+        List<String> tables = new ArrayList<>();
+        tablePattern = Optional.ofNullable(tablePattern).map(x -> "%" + x + "%s").orElse("%");
+        try (ResultSet rs = tableExtractor().extract(this.dataSource.getConnection().getMetaData(), schema, tablePattern, new String[]{"TABLE"})) {
+            while (rs.next()) {
+                tables.add(rs.getString("TABLE_NAME"));
+            }
+        } catch (SQLException e) {
             throw new DriverException("fetch tables error", e);
         }
+        return tables;
     }
 
     @Override
@@ -431,29 +408,18 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         return false;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public List<String> views(String schema) {
-        try {
-            return (List<String>) JdbcUtils.extractDatabaseMetaData(this.dataSource, databaseMetaData -> {
-                List<String> views = new ArrayList<>();
-                ResultSet rs = null;
-                try {
-                    // 表提取
-                    rs = tableExtractor().extract(databaseMetaData, schema, new String[]{"VIEW"});
-                    while (rs.next()) {
-                        String view = rs.getString("TABLE_NAME");
-                        views.add(view);
-                    }
-                } finally {
-                    CloseUtil.close(rs);
-                }
-                return views;
-            });
-        } catch (MetaDataAccessException e) {
-            log.error("fetch views error");
-            throw new DriverException("fetch views error", e);
+    public List<String> views(String schema, String tablePattern) {
+        List<String> views = new ArrayList<>();
+        tablePattern = Optional.ofNullable(tablePattern).map(x -> "%" + x + "%s").orElse("%");
+        try (ResultSet rs = tableExtractor().extract(this.dataSource.getConnection().getMetaData(), schema, tablePattern, new String[]{"VIEW"})) {
+            while (rs.next()) {
+                views.add(rs.getString("TABLE_NAME"));
+            }
+        } catch (SQLException e) {
+            throw new DriverException("fetch tables error", e);
         }
+        return views;
     }
 
     @Override

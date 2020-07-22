@@ -22,6 +22,16 @@ public interface TableSession {
      * @param schema 数据库，可为空。为空则取当前连接的数据库
      * @return 表名
      */
+    default List<String> tableList(String schema, String tablePattern) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * 获取表名
+     *
+     * @param schema 数据库，可为空。为空则取当前连接的数据库
+     * @return 表名
+     */
     default List<String> tableList(String schema) {
         throw new UnsupportedOperationException("Not Implement");
     }
@@ -68,6 +78,17 @@ public interface TableSession {
      * @return true|false
      */
     default boolean tableExists(String schema, String table) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * schema下视图
+     *
+     * @param schema      schema
+     * @param viewPattern 视图名称模糊查询
+     * @return 视图列表
+     */
+    default List<String> views(String schema, String viewPattern) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
