@@ -1,9 +1,11 @@
 package com.github.codingdebugallday.driver.session.app.service.session;
 
 
-import com.github.codingdebugallday.driver.session.domain.entity.MetaDataInfo;
+import com.github.codingdebugallday.driver.common.infra.exceptions.DriverException;
+import com.github.codingdebugallday.driver.session.infra.meta.Column;
+import com.github.codingdebugallday.driver.session.infra.meta.Table;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * <p>
@@ -16,21 +18,27 @@ import java.util.Map;
 public interface MetaDataSession {
 
     /**
-     * hive解析表的元数据
-     *
-     * @param schema    hive库
-     * @param tableName hive表名
-     * @return java.util.Map<java.lang.String, java.lang.Object>
-     */
-    Map<String, Object> parseMetaStore(String schema, String tableName);
-
-    /**
-     * 查询元数据
+     * 适用RDB
+     * 查询列元数据
      *
      * @param schema    schema
      * @param tableName 表名
-     * @return MetaDataInfo
+     * @return List<Column>
      */
-    MetaDataInfo queryMetaData(String schema, String tableName);
+    default List<Column> columnMetaData(String schema, String tableName) {
+        throw new DriverException("Not Supported");
+    }
+
+    /**
+     * 适用RDB
+     * 表表元数据
+     *
+     * @param schema    schema
+     * @param tableName tableName
+     * @return Table
+     */
+    default Table tableMetaData(String schema, String tableName) {
+        throw new DriverException("Not Supported");
+    }
 
 }

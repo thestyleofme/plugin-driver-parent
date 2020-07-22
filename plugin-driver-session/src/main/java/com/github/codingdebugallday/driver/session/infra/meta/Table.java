@@ -79,6 +79,12 @@ public class Table {
      */
     private final Map<String, Column> columnMap = new LinkedHashMap<>();
 
+    /**
+     * 额外信息，如表是压缩表、列表等
+     */
+    private Map<String, String> extra;
+
+
     public void init(Connection connection, String catalog, String schema, String tableName) {
         // 表信息
         // 获得表元数据（表注释）

@@ -5,16 +5,12 @@ import com.github.codingdebugallday.driver.common.infra.exceptions.DriverExcepti
 import com.github.codingdebugallday.driver.common.infra.utils.CloseUtil;
 import com.github.codingdebugallday.driver.session.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.session.app.service.session.SessionTool;
-import com.github.codingdebugallday.driver.session.domain.entity.MetaDataInfo;
-import com.github.codingdebugallday.driver.session.domain.entity.TableColumn;
-import com.github.codingdebugallday.driver.session.domain.entity.Tuple;
 import com.github.codingdebugallday.driver.session.infra.constants.DataSourceTypeConstant;
 import com.github.codingdebugallday.driver.session.infra.constants.PatternConstant;
 import com.github.codingdebugallday.driver.session.infra.funcations.extractor.*;
 import com.github.codingdebugallday.driver.session.infra.funcations.setter.SchemaSetter;
-import com.github.codingdebugallday.driver.session.infra.meta.Table;
+import com.github.codingdebugallday.driver.session.infra.meta.*;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.jsqlparser.schema.Column;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -393,8 +389,6 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
                     .withProcedureName(sql);
             return Collections.singletonList(call.execute(args));
         } catch (ArrayIndexOutOfBoundsException e) {
-            // 吃掉这个异常
-            log.warn(e.getMessage());
             throw new DriverException("missing procedure args");
         } catch (SQLException e) {
             throw new DriverException("sql call procedure error", e);
@@ -432,74 +426,6 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         }
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Map<String, Object>> tableStructure(String schema, String table) {
-        try {
-            return (List<Map<String, Object>>) JdbcUtils.extractDatabaseMetaData(this.dataSource, databaseMetaData -> {
-                List<Map<String, Object>> tableStructure = new ArrayList<>();
-                ResultSet rs = null;
-                try {
-                    // 表结构提取
-                    rs = tableStructureExtractor().extract(databaseMetaData, schema, table);
-                    // 元数据
-                    ResultSetMetaData metaData = rs.getMetaData();
-                    while (rs.next()) {
-                        int columnCount = metaData.getColumnCount();
-                        Map<String, Object> fieldStructure = new HashMap<>(columnCount);
-                        for (int i = 1; i <= columnCount; i++) {
-                            fieldStructure.put(metaData.getColumnName(i).toUpperCase(), rs.getObject(i));
-                        }
-                        tableStructure.add(fieldStructure);
-                    }
-                } finally {
-                    CloseUtil.close(rs);
-                }
-                return tableStructure;
-            });
-        } catch (MetaDataAccessException e) {
-            log.error("fetch structure error");
-            throw new DriverException("fetch structure error", e);
-        }
-    }
-
-    @Override
-    public List<TableColumn> tableColumns(String schema, String sql) {
-        List<TableColumn> columns = new ArrayList<>();
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            connection = this.dataSource.getConnection();
-            // 设置schema
-            schemaSetter().setSchema(connection, schema);
-            // 查询
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery();
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            for (int i = 1; i <= columnCount; i++) {
-                TableColumn column = TableColumn.builder()
-                        .colIndex(i)
-                        .colName(metaData.getColumnLabel(i))
-                        .columnType(metaData.getColumnType(i))
-                        .typeName(metaData.getColumnTypeName(i))
-                        .colSize(metaData.getColumnDisplaySize(i))
-                        .accuracy(metaData.getPrecision(i))
-                        .nullAble(metaData.isNullable(i) == ResultSetMetaData.columnNullable ? "YES" : "NO")
-                        .isAutoIncrement(metaData.isAutoIncrement(i))
-                        .build();
-                columns.add(column);
-            }
-        } catch (SQLException e) {
-            log.error("sql [{}] query error", sql);
-            throw new DriverException("sql query error", e);
-        } finally {
-            CloseUtil.close(rs, ps, connection);
-        }
-        return columns;
-    }
-
     @Override
     public boolean tableExists(String schema, String table) {
         return false;
@@ -532,57 +458,84 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public List<Map<String, Object>> tableQuery(String schema, String table) {
-        // TODO 查询数据限制
         return this.executeOneQuery(schema, String.format("select * from %s", table));
     }
 
     @Override
-    public boolean tableCreate(String schema, String tableName, List<TableColumn> columns) {
-        // TODO 建表语句生成
-        this.executeOneUpdate(schema, "");
-        return true;
+    public List<PrimaryKey> tablePk(String schema, String tableName) {
+        List<PrimaryKey> primaryKeyList = new ArrayList<>();
+        try (ResultSet rs = this.dataSource.getConnection().getMetaData().getPrimaryKeys(schema, schema, tableName)) {
+            if (null != rs) {
+                while (rs.next()) {
+                    primaryKeyList.add(new PrimaryKey(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DriverException(",[schema:" + schema + "],[table:" + tableName
+                    + "] table primary key error", e);
+        }
+        return primaryKeyList;
     }
 
     @Override
-    public boolean tableInsert(String schema, String table, List<Tuple<String, String>> values) {
-        // TODO 插入语句生成, 按大小分批插入
-        this.executeBatch(schema, Collections.emptyList());
-        return true;
+    public List<ForeignKey> tableFk(String schema, String tableName) {
+        List<ForeignKey> foreignKeyList = new ArrayList<>();
+        try (ResultSet rs = this.dataSource.getConnection().getMetaData().getImportedKeys(schema, schema, tableName)) {
+            if (null != rs) {
+                while (rs.next()) {
+                    foreignKeyList.add(new ForeignKey(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DriverException(",[schema:" + schema + "],[table:" + tableName + "] table foreign key error", e);
+        }
+        return foreignKeyList;
     }
 
     @Override
-    public boolean tableUpdate(String schema, String tableName, List<TableColumn> columns) {
-        // TODO 更新语句生成
-        this.executeBatch(schema, Collections.emptyList());
-        return true;
+    public List<IndexKey> tableIndex(String schema, String table) {
+        List<IndexKey> indexKeyList = new ArrayList<>();
+        // 获取索引
+        try (ResultSet rs = this.dataSource.getConnection().getMetaData().getIndexInfo(schema, schema, table, true, true)) {
+            if (null != rs) {
+                while (rs.next()) {
+                    indexKeyList.add(new IndexKey(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new DriverException("[schema:" + schema + "],[table:" + table + "] table index key error", e);
+        }
+        return indexKeyList;
     }
 
     @Override
-    public MetaDataInfo tableMetaData(String schema, String tableName) {
-        Table table = new Table();
-        return null;
+    public List<Column> columnMetaData(String schema, String tableName) {
+        List<Column> columnList = new ArrayList<>();
+        // 列信息
+        try (ResultSet rs = this.dataSource.getConnection().getMetaData().getColumns(schema, schema, tableName, null)) {
+            if (null != rs) {
+                while (rs.next()) {
+                    Column column = new Column(rs);
+                    columnList.add(column);
+                }
+            }
+        } catch (SQLException e) {
+            throw new DriverException("[schema:" + schema + "],[table:" + tableName + "] table index key error", e);
+        }
+        return columnList;
     }
 
     @Override
-    public List<Column> tableColumnMeta(String schema, String tableName) {
-        List<Column> columns = new ArrayList<>();
-        Connection connection = null;
-
-        return null;
-    }
-
-    @Override
-    public Table tableMetaData(String catelog, String schema, String tableName) {
+    public Table tableMetaData(String schema, String tableName) {
         Table table = new Table();
         try {
-            table.init(this.dataSource.getConnection(), catelog, schema, tableName);
+            table.init(this.dataSource.getConnection(), schema, schema, tableName);
         } catch (SQLException e) {
             throw new DriverException("table metadata error", e);
         }
         return table;
     }
 
-    //
     protected String getPageFormat() {
         return DEFAULT_PAGE_SQL;
     }
