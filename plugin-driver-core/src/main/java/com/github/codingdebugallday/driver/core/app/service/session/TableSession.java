@@ -1,4 +1,8 @@
 package com.github.codingdebugallday.driver.core.app.service.session;
+package com.github.codingdebugallday.driver.session.app.service.session;
+
+import com.github.codingdebugallday.driver.session.domain.entity.Tuple;
+import com.github.codingdebugallday.driver.session.infra.meta.*;
 
 import java.util.List;
 import java.util.Map;
@@ -25,19 +29,18 @@ public interface TableSession {
      * @param schema 数据库，可为空。为空则取当前连接的数据库
      * @return 表名
      */
-    default List<String> tableList(String schema){
-        throw new UnsupportedOperationException();
+    default List<String> tableList(String schema, String tablePattern) {
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * 获取表结构
+     * 获取表名
      *
      * @param schema 数据库，可为空。为空则取当前连接的数据库
-     * @param table  表名
-     * @return 表结构
+     * @return 表名
      */
-    default List<Map<String, Object>> tableStructure(String schema, String table){
-        throw new UnsupportedOperationException();
+    default List<String> tableList(String schema) {
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -47,8 +50,19 @@ public interface TableSession {
      * @param table  表名
      * @return 主键
      */
-    default List<Map<String, Object>> tablePk(String schema, String table) {
-        throw new UnsupportedOperationException();
+    default List<PrimaryKey> tablePk(String schema, String table) {
+        throw new UnsupportedOperationException("SqlSession unsupported!!!");
+    }
+
+    /**
+     * 获取表外键
+     *
+     * @param schema 数据库，可为空。为空则取当前连接的数据库
+     * @param table  表名
+     * @return 主键
+     */
+    default List<ForeignKey> tableFk(String schema, String table) {
+        throw new UnsupportedOperationException("SqlSession unsupported!!!");
     }
 
     /**
@@ -58,20 +72,10 @@ public interface TableSession {
      * @param table  表名
      * @return 表索引
      */
-    default List<Map<String, Object>> tableIndex(String schema, String table) {
+    default List<IndexKey> tableIndex(String schema, String table) {
         throw new UnsupportedOperationException("SqlSession unsupported!!!");
     }
 
-    /**
-     * 获取SQL中的字段信息
-     *
-     * @param schema 数据库，可为空。为空则取当前连接的数据库
-     * @param sql    SQL
-     * @return 字段信息
-     */
-    default List<TableColumn> tableColumns(String schema, String sql){
-        throw new UnsupportedOperationException();
-    }
 
     /**
      * 表是否存在
@@ -80,18 +84,29 @@ public interface TableSession {
      * @param table  table
      * @return true|false
      */
-    default boolean tableExists(String schema, String table){
-        throw new UnsupportedOperationException();
+    default boolean tableExists(String schema, String table) {
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * 表视图
+     * schema下视图
+     *
+     * @param schema      schema
+     * @param viewPattern 视图名称模糊查询
+     * @return 视图列表
+     */
+    default List<String> views(String schema, String viewPattern) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * schema下视图
      *
      * @param schema schema
      * @return 视图列表
      */
-    default List<String> views(String schema){
-        throw new UnsupportedOperationException();
+    default List<String> views(String schema) {
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -101,20 +116,29 @@ public interface TableSession {
      * @param table  表
      * @return 数据
      */
-    default List<Map<String, Object>> tableQuery(String schema, String table){
-        throw new UnsupportedOperationException();
+    default List<Map<String, Object>> tableQuery(String schema, String table) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * 表分区信息
+     *
+     * @param schema schema
+     * @param table  table
+     * @return List<PartitionKey>
+     */
+    default List<PartitionKey> partitionList(String schema, String table) {
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
      * 建表
      *
-     * @param schema    库
-     * @param tableName 表
-     * @param columns   列
+     * @param table 表信息
      * @return 是否创建成功
      */
-    default boolean tableCreate(String schema, String tableName, List<TableColumn> columns){
-        throw new UnsupportedOperationException();
+    default boolean tableCreate(Table table) {
+        throw new UnsupportedOperationException("Not Implement");
     }
 
 
@@ -126,54 +150,19 @@ public interface TableSession {
      * @param values 值 （二元组 <key（列）,value（值）>）
      * @return 是否创建成功
      */
-   default boolean tableInsert(String schema, String table, List<Tuple<String, String>> values){
-       throw new UnsupportedOperationException();
-   }
+    default boolean tableInsert(String schema, String table, List<Tuple<String, String>> values) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
 
     /**
      * 更新表
      *
-     * @param schema    库
-     * @param tableName 表
-     * @param columns   列
+     * @param table 表信息
      * @return 是否更新成功
      */
-   default boolean tableUpdate(String schema, String tableName, List<TableColumn> columns){
-       throw new UnsupportedOperationException();
-   }
-
-    /**
-     * 查询元数据
-     *
-     * @param schema    schema
-     * @param tableName 表名
-     * @return MetaDataInfo
-     */
-    default MetaDataInfo tableMetaData(String schema, String tableName){
-        throw new UnsupportedOperationException();
+    default boolean tableUpdate(Table table) {
+        throw new UnsupportedOperationException("Not Implement");
     }
 
-    /**
-     * 查询列元数据
-     *
-     * @param schema    schema
-     * @param tableName 表名
-     * @return List<Column>
-     */
-    default List<Column> tableColumnMeta(String schema, String tableName){
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * 表元数据
-     *
-     * @param catelog   catelog
-     * @param schema    schema
-     * @param tableName tableName
-     * @return Table
-     */
-    default Table tableMetaData(String catelog, String schema, String tableName) {
-        throw new UnsupportedOperationException();
-    }
 
 }

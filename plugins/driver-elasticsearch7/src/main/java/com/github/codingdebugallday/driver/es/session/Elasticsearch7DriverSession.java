@@ -16,4 +16,8 @@ public class Elasticsearch7DriverSession extends AbstractElasticsearch7DriverSes
         super(dataSource);
     }
 
+    @Override
+    public void executeOneUpdate(String schema, String sql, boolean transactionFlag, boolean resultFlag) {
+
+    }
 }

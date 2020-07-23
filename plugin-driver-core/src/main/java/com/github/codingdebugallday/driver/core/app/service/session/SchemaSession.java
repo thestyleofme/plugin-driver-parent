@@ -27,7 +27,7 @@ public interface SchemaSession {
      * @return List<List < Map < String, Object>>>
      */
     default List<List<Map<String, Object>>> executeAll(String schema, String text, boolean transactionFlag, boolean resultFlag) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -41,7 +41,7 @@ public interface SchemaSession {
      * @return List<List < Map < String, Object>>>
      */
     default List<Page<Map<String, Object>>> executeAll(String schema, String text, Pageable pageable) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -55,7 +55,7 @@ public interface SchemaSession {
      * @return List<List < Map < String, Object>>>
      */
     default List<Page<Map<String, Object>>> executeAll(String schema, String text) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -72,7 +72,7 @@ public interface SchemaSession {
      * @return List<List < Map < String, Object>>>
      */
     default List<Page<Map<String, Object>>> executeAll(String schema, String text, Pageable pageable, boolean transactionFlag, boolean resultFlag) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -83,9 +83,10 @@ public interface SchemaSession {
      * @param transactionFlag 是否事务
      * @param schema          schema
      * @param sql             单条SQL
+     * @return List<List < Map < String, Object>>>
      */
     default void executeOneUpdate(String schema, String sql, boolean transactionFlag, boolean resultFlag) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -94,10 +95,10 @@ public interface SchemaSession {
      * @param schema schema
      * @param sql    sql
      * @return List<Map < String, Object>>
-     * @see com.github.codingdebugallday.driver.core.app.service.session@executeOne
+     * @see com.github.codingdebugallday.driver.session.app.service.session@executeOne
      */
     default List<Map<String, Object>> executeOneQuery(String schema, String sql) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -107,10 +108,10 @@ public interface SchemaSession {
      * @param sql      查询语句
      * @param pageable 分页
      * @return 分页数据
-     * @see com.github.codingdebugallday.driver.core.app.service.session@executeOne
+     * @see com.github.codingdebugallday.driver.session.app.service.session@executeOne
      */
     default Page<Map<String, Object>> executeOneQuery(String schema, String sql, Pageable pageable) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
 
@@ -119,10 +120,12 @@ public interface SchemaSession {
      *
      * @param schema 数据库，可为空。为空则取当前连接的数据库
      * @param sql    查询语句
+     * @return 分页数据
      */
     default void executeOneUpdate(String schema, String sql) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
+
 
     /**
      * 批量更新｜插入｜删除
@@ -131,7 +134,7 @@ public interface SchemaSession {
      * @param sqlList SQL列表
      */
     default void executeBatch(String schema, List<String> sqlList) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -143,7 +146,7 @@ public interface SchemaSession {
      * @return 所有结果
      */
     default List<Map<String, Object>> callProcedure(String schema, String sql, Object... args) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -152,7 +155,7 @@ public interface SchemaSession {
      * @return schemas
      */
     default List<String> schemaList() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -162,7 +165,7 @@ public interface SchemaSession {
      * @return 是否创建成功
      */
     default boolean schemaCreate(String schema) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -173,7 +176,7 @@ public interface SchemaSession {
      * @return 条数
      */
     default Long queryCount(String schema, String sql) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
 }

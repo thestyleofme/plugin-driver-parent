@@ -22,7 +22,7 @@ public interface SessionTool {
      * @return SchemaSetter
      */
     default SchemaSetter schemaSetter() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     // 提取器
@@ -33,7 +33,7 @@ public interface SessionTool {
      * @return SchemaExtractor
      */
     default SchemaExtractor schemaExtractor() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -42,7 +42,7 @@ public interface SessionTool {
      * @return TableExtractor
      */
     default TableExtractor tableExtractor() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -51,7 +51,8 @@ public interface SessionTool {
      * @return tableIndexExtractor
      */
     default TablePkExtractor tablePkExtractor() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
+
     }
 
     /**
@@ -60,7 +61,8 @@ public interface SessionTool {
      * @return tableIndexExtractor
      */
     default TableIndexExtractor tableIndexExtractor() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
+
     }
 
     /**
@@ -69,7 +71,7 @@ public interface SessionTool {
      * @return TableStructureExtractor
      */
     default TableStructureExtractor tableStructureExtractor() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     // other
