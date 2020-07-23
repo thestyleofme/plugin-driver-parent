@@ -3,17 +3,21 @@ package com.github.codingdebugallday.driver.core.api.controller.v1;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.github.codingdebugallday.driver.common.infra.page.PageRequestImpl;
 import com.github.codingdebugallday.driver.common.infra.utils.PageUtil;
 import com.github.codingdebugallday.driver.core.app.service.DriverSessionService;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
+import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
+import com.github.codingdebugallday.driver.core.infra.meta.SchemaBase;
 import com.github.codingdebugallday.driver.core.infra.meta.Table;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -121,8 +125,7 @@ public class SessionController {
                                          @RequestParam(required = false) String schema,
                                          @RequestParam String table) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
-        // TODO
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(driverSession.columnMetaData(schema, table));
     }
 
     @ApiOperation(value = "获取指定csv表信息")
@@ -154,7 +157,7 @@ public class SessionController {
                                                 @RequestParam String tables) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
         List<Table> tableList = new ArrayList<>();
-        Stream.of(tables.split(",")).forEach(table -> {
+        Stream.of(tables.split(CommonConstant.Symbol.COMMA)).forEach(table -> {
             tableList.add(driverSession.tableMetaData(schema, table));
         });
         return ResponseEntity.ok(tableList);
@@ -179,8 +182,7 @@ public class SessionController {
     @GetMapping("/datasource/valid")
     public ResponseEntity<?> testConnection(@PathVariable(name = "organizationId") Long tenantId,
                                             @RequestParam String datasourceCode) {
-        //TODO
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(driverSessionService.getDriverSession(tenantId, datasourceCode).isValid());
     }
 
     @ApiOperation(value = "数据源指标", notes = "datasourceCode")
@@ -191,14 +193,22 @@ public class SessionController {
         return ResponseEntity.ok(null);
     }
 
-    @ApiOperation(value = "获取指定数据库元数据信息")
+    @ApiOperation(value = "获取指定数据库的表和视图")
     @GetMapping("/database/metadata")
-    public ResponseEntity<?> databaseMetadata(@PathVariable(name = "organizationId") Long tenantId,
-                                              @RequestParam String datasourceCode,
-                                              @RequestParam(required = false) String schema) {
+    public ResponseEntity<?> schemaBaseInfo(@PathVariable(name = "organizationId") Long tenantId,
+                                            @RequestParam String datasourceCode,
+                                            @RequestParam(required = false) String schema) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
-        // TODO
-        return ResponseEntity.ok(null);
+        List<SchemaBase> schemaBaseList = new ArrayList<>();
+        List<String> schemaList = driverSession.schemaList();
+        if (!StringUtils.isEmpty(schema)){
+            schemaList = schemaList.stream().filter(s -> s.contains(schema)).collect(Collectors.toList());
+        }
+        for (String sc : schemaList){
+            List<String> tableList = driverSession.tableList(sc);
+            List<String> viewList = driverSession.views(sc);
+            schemaBaseList.add(SchemaBase.builder().tables(tableList).views(viewList).build());
+        }
+        return ResponseEntity.ok(schemaBaseList);
     }
-
 }

@@ -312,6 +312,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         }
     }
 
+
     @Override
     public List<String> schemaList() {
         List<String> schemaList = new ArrayList<>();
@@ -427,6 +428,16 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     }
 
     @Override
+    public List<String> tableList(String schema) {
+        return this.tableList(schema, null);
+    }
+
+    @Override
+    public List<String> views(String schema) {
+        return this.views(schema, null);
+    }
+
+    @Override
     public List<PrimaryKey> tablePk(String schema, String tableName) {
         List<PrimaryKey> primaryKeyList = new ArrayList<>();
         try (ResultSet rs = this.dataSource.getConnection().getMetaData().getPrimaryKeys(schema, schema, tableName)) {
@@ -499,6 +510,15 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
             throw new DriverException("table metadata error", e);
         }
         return table;
+    }
+
+    @Override
+    public boolean isValid() {
+        try(Connection connection = this.dataSource.getConnection()){
+            return connection.isValid(3);
+        }catch (SQLException e){
+            throw new DriverException("connection error", e);
+        }
     }
 
     protected String getPageFormat() {
@@ -648,5 +668,4 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         }
         return obj;
     }
-
 }
