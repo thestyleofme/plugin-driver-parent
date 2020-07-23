@@ -29,6 +29,9 @@ import org.springframework.util.StringUtils;
 /**
  * <p>
  * RdbmsDriver抽象实现
+ * 1. SQL执行器
+ * 2. 支持事务的执行
+ * 3. 元数据信息
  * </p>
  *
  * @author JupiterMouse 2020/07/10

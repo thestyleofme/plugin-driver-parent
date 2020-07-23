@@ -16,18 +16,20 @@ import com.github.codingdebugallday.driver.core.infra.meta.*;
  */
 public interface TableSession {
 
+
     /**
-     * 获取表名
-     *
-     * @param schema 数据库，可为空。为空则取当前连接的数据库
-     * @return 表名
+     * 获取schema下的table列表
+     * tablePattern = %table% 可模糊查询来过滤表
+     * @param schema schema
+     * @param tablePattern tablePattern
+     * @return List<String>
      */
     default List<String> tableList(String schema, String tablePattern) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * 获取表名
+     * 获取schema下的table列表
      *
      * @param schema 数据库，可为空。为空则取当前连接的数据库
      * @return 表名
@@ -38,7 +40,6 @@ public interface TableSession {
 
     /**
      * 获取表主键
-     *
      * @param schema 数据库，可为空。为空则取当前连接的数据库
      * @param table  表名
      * @return 主键
@@ -148,7 +149,7 @@ public interface TableSession {
     }
 
     /**
-     * 更新表
+     * 更新表结构
      *
      * @param table 表信息
      * @return 是否更新成功
