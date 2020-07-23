@@ -35,7 +35,7 @@ public class HikariRdbmsDataSourceFactory implements RdbmsDataSourceFactory {
         HikariConfig hikariConfig = new HikariConfig();
         // 基本信息
         configCommonDataSource(hikariConfig, pluginDatasourceVO);
-        hikariConfig.setConnectionTimeout(1000L);
+        hikariConfig.setConnectionTimeout(3000L);
         PropertyElf.setTargetFromProperties(hikariConfig, properties);
         HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);
         // 设置数据源监控

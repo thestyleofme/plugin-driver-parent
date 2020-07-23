@@ -393,7 +393,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     public List<String> tableList(String schema, String tablePattern) {
         List<String> tables = new ArrayList<>();
         tablePattern = Optional.ofNullable(tablePattern).map(x -> "%" + x + "%s").orElse("%");
-        try (ResultSet rs = tableExtractor().extract(this.dataSource.getConnection().getMetaData(), schema, tablePattern, new String[]{"TABLE"})) {
+        try (ResultSet rs = tableExtractor().extract(this.dataSource.getConnection().getMetaData(), schema, tablePattern, new String[]{TableType.TABLE.value()})) {
             while (rs.next()) {
                 tables.add(rs.getString("TABLE_NAME"));
             }
@@ -412,7 +412,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     public List<String> views(String schema, String tablePattern) {
         List<String> views = new ArrayList<>();
         tablePattern = Optional.ofNullable(tablePattern).map(x -> "%" + x + "%s").orElse("%");
-        try (ResultSet rs = tableExtractor().extract(this.dataSource.getConnection().getMetaData(), schema, tablePattern, new String[]{"VIEW"})) {
+        try (ResultSet rs = tableExtractor().extract(this.dataSource.getConnection().getMetaData(), schema, tablePattern, new String[]{TableType.VIEW.value()})) {
             while (rs.next()) {
                 views.add(rs.getString("TABLE_NAME"));
             }
