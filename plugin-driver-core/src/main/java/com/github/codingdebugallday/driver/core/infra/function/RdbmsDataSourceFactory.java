@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.core.infra.ds;
+package com.github.codingdebugallday.driver.core.infra.function;
 
 import java.util.List;
 import javax.sql.DataSource;

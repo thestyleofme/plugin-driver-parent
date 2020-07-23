@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.session.infra.meta;
+package com.github.codingdebugallday.driver.core.infra.meta;
 
 
 /**

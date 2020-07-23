@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.core.infra.ds.hikari;
+package com.github.codingdebugallday.driver.core.infra.function.hikari;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

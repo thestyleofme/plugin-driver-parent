@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.core.infra.ds.druid.metric;
+package com.github.codingdebugallday.driver.core.infra.function.druid.metric;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.zaxxer.hikari.metrics.IMetricsTracker;

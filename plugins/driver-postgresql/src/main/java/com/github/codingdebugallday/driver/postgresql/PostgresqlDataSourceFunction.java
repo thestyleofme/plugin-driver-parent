@@ -2,8 +2,7 @@ package com.github.codingdebugallday.driver.postgresql;
 
 import javax.sql.DataSource;
 
-import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.core.infra.ds.druid.DruidRdbmsDataSourceFactory;
+import com.github.codingdebugallday.driver.core.infra.function.druid.DruidRdbmsDataSourceFactory;
 import com.github.codingdebugallday.driver.core.infra.function.DriverDataSourceFunction;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import lombok.extern.slf4j.Slf4j;

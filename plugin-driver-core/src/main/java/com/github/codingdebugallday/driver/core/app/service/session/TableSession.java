@@ -1,17 +1,10 @@
 package com.github.codingdebugallday.driver.core.app.service.session;
-package com.github.codingdebugallday.driver.session.app.service.session;
-
-import com.github.codingdebugallday.driver.session.domain.entity.Tuple;
-import com.github.codingdebugallday.driver.session.infra.meta.*;
 
 import java.util.List;
 import java.util.Map;
 
-import com.github.codingdebugallday.driver.core.domain.entity.MetaDataInfo;
-import com.github.codingdebugallday.driver.core.domain.entity.TableColumn;
 import com.github.codingdebugallday.driver.core.domain.entity.Tuple;
-import com.github.codingdebugallday.driver.core.infra.meta.Column;
-import com.github.codingdebugallday.driver.core.infra.meta.Table;
+import com.github.codingdebugallday.driver.core.infra.meta.*;
 
 /**
  * <p>
