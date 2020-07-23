@@ -58,12 +58,6 @@ spring:
     timeZone: GMT+8
     default-property-inclusion: non_null
 
-mybatis-plus:
-  mapperLocations: classpath*:mapper/*.xml
-  configuration:
-    mapUnderscoreToCamelCase: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
 plugin:
   runMode: prod
   store-type: local

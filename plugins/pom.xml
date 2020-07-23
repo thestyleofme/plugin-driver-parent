@@ -13,12 +13,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>driver-datasource-mysql</module>
-        <module>driver-session-mysql</module>
-        <module>driver-datasource-postgresql</module>
-        <module>driver-session-postgresql</module>
-        <module>driver-datasource-es7</module>
-        <module>driver-session-es7</module>
+        <module>driver-mysql5</module>
+        <module>driver-postgresql</module>
+        <module>driver-elasticsearch7</module>
     </modules>
 
     <properties>

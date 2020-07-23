@@ -100,7 +100,7 @@ public class RedisDataSourceFunction implements DriverDataSourceFunction<PluginD
 ```xml
  <properties>
    <plugin.id>driver-datasource-mysql</plugin.id>  -- 插件的唯一标识
-   <plugin.class>com.github.codingdebugallday.driver.datasource.mysql.MysqlDataSourcePlugin</plugin.class>
+   <plugin.class>com.github.codingdebugallday.driver.mysql.Mysql5Plugin</plugin.class>
   -- 插件的启动类      
   <plugin.version>${project.version}</plugin.version> -- 插件的版本号
   <plugin.provider>isaac</plugin.provider>  -- 作者

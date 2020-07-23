@@ -16,13 +16,26 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
+        <druid.version>1.1.23</druid.version>
     </properties>
 
     <dependencies>
+        <!-- scope设置为runtime的原因是mysql jdbc jar由mysql datasource plugin提供-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.48</version>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>com.github.codingdebugallday</groupId>
-            <artifactId>plugin-driver-session</artifactId>
+            <artifactId>plugin-driver-core</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>${druid.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
