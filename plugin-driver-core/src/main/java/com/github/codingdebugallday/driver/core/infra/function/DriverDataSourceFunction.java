@@ -1,6 +1,5 @@
 package com.github.codingdebugallday.driver.core.infra.function;
 
-import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import org.pf4j.ExtensionPoint;
 
@@ -21,4 +20,15 @@ public interface DriverDataSourceFunction<T extends PluginDatasourceVO, R> exten
      * @return R 数据源
      */
     R createDataSource(T t);
+
+    /**
+     * 获取driverClassName
+     * jdbc类型的驱动需要实现该类，即RDB类型
+     * 因为需要使用插件的classloader加载jdbc driver
+     *
+     * @return String
+     */
+    default String getDriverClassName() {
+        throw new UnsupportedOperationException("not need driverClassName, just jdbc type need");
+    }
 }

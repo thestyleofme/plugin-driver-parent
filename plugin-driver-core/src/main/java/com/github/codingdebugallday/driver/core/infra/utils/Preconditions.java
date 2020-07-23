@@ -3,7 +3,6 @@ package com.github.codingdebugallday.driver.core.infra.utils;
 import java.util.Objects;
 
 import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasourceDriver;
 import org.springframework.util.StringUtils;
 
 /**
@@ -46,33 +45,5 @@ public class Preconditions {
         // 暂时只比较这些
         return !Objects.nonNull(right.getEnabledFlag()) ||
                 right.getEnabledFlag().equals(left.getEnabledFlag());
-    }
-
-    /**
-     * 类似sql，只要right的某个属性与left相等即返回true
-     *
-     * @param left  PluginDriver
-     * @param right PluginDriver
-     * @return true/false
-     */
-    public static boolean pluginDriverFilter(PluginDatasourceDriver left, PluginDatasourceDriver right) {
-        if (Objects.isNull(right)) {
-            return true;
-        }
-        if (!StringUtils.isEmpty(right.getDriverId()) &&
-                !right.getDriverId().equals(left.getDriverId())) {
-            return false;
-        }
-        if (!StringUtils.isEmpty(right.getDriverCode()) &&
-                !right.getDriverCode().equals(left.getDriverCode())) {
-            return false;
-        }
-        if (!StringUtils.isEmpty(right.getDatasourceType()) &&
-                !right.getDatasourceType().equalsIgnoreCase(left.getDatasourceType())) {
-            return false;
-        }
-        // 暂时只比较这些
-        return StringUtils.isEmpty(right.getDriverFingerprint()) ||
-                right.getDriverFingerprint().equals(left.getDriverFingerprint());
     }
 }

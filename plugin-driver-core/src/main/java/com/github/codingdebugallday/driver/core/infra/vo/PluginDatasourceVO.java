@@ -1,10 +1,6 @@
 package com.github.codingdebugallday.driver.core.infra.vo;
 
-import java.time.LocalDateTime;
-import javax.validation.constraints.NotBlank;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.annotations.ApiModelProperty;
+import com.github.codingdebugallday.plugin.core.infra.vo.PluginVO;
 import lombok.*;
 
 /**
@@ -26,12 +22,14 @@ public class PluginDatasourceVO {
     private String datasourceDescription;
     private String datasourceType;
     private String datasourceClass;
-    private Long driverId;
     private String settingsInfo;
 
     private Integer enabledFlag;
     private Long tenantId;
 
-    private PluginDatasourceDriverVO datasourceDriver;
+    private PluginVO datasourceDriver;
 
+    // other
+
+    private String driverClassName;
 }

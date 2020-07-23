@@ -2,6 +2,7 @@ package com.github.codingdebugallday.driver.core.infra.repository.impl;
 
 import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRepository;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
+import com.github.codingdebugallday.plugin.core.infra.repository.impl.RedisBaseRepositoryImpl;
 import org.springframework.stereotype.Component;
 
 /**

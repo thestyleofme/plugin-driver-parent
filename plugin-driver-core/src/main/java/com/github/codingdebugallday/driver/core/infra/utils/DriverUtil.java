@@ -8,6 +8,7 @@ import com.github.codingdebugallday.driver.core.domain.entity.CommonDatasourceSe
 import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
+import com.github.codingdebugallday.plugin.core.infra.utils.JsonUtil;
 import org.springframework.util.StringUtils;
 
 /**
@@ -51,7 +52,7 @@ public class DriverUtil {
         list.add(commonDatasourceSettingInfo.getJdbcUrl());
         String driverClassName = commonDatasourceSettingInfo.getDriverClassName();
         if (StringUtils.isEmpty(driverClassName)) {
-            driverClassName = pluginDatasourceVO.getDatasourceDriver().getDriverClassName();
+            driverClassName = pluginDatasourceVO.getDriverClassName();
         }
         list.add(driverClassName);
         list.add(commonDatasourceSettingInfo.getUsername());

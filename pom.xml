@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>plugin-core</module>
         <module>plugin-driver-core</module>
         <module>plugin-driver-runner</module>
         <module>plugins</module>

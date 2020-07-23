@@ -2,7 +2,7 @@ package com.github.codingdebugallday.driver.core.app.service.session;
 
 import com.github.codingdebugallday.driver.core.app.service.funcations.extractor.*;
 import com.github.codingdebugallday.driver.core.app.service.funcations.setter.SchemaSetter;
-import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
+import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
 
 /**
  * <p>
@@ -87,7 +87,7 @@ public interface SessionTool {
             long size = pageable.getPageSize();
             long offset = page * size;
             String trimSql = sql.trim();
-            if (trimSql.endsWith(CommonConstant.Symbol.SEMICOLON)) {
+            if (trimSql.endsWith(BaseConstant.Symbol.SEMICOLON)) {
                 sql = trimSql.substring(0, trimSql.length() - 1);
             }
             return String.format(pageFormat, sql, offset, size);

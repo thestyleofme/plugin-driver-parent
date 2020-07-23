@@ -2,16 +2,13 @@ package com.github.codingdebugallday.driver.core.domain.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.github.codingdebugallday.driver.core.infra.annotations.DriverId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 

@@ -6,6 +6,7 @@ import javax.xml.bind.ValidationException;
 
 import com.github.codingdebugallday.driver.core.domain.entity.Err;
 import com.github.codingdebugallday.exceptions.PluginException;
+import com.github.codingdebugallday.plugin.core.infra.exceptions.JsonException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

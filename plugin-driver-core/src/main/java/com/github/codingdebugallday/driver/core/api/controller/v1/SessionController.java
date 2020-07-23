@@ -7,12 +7,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.github.codingdebugallday.driver.common.infra.page.PageRequestImpl;
-import com.github.codingdebugallday.driver.common.infra.utils.PageUtil;
+import com.github.codingdebugallday.driver.core.infra.utils.PageUtil;
 import com.github.codingdebugallday.driver.core.app.service.DriverSessionService;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
-import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.core.infra.meta.SchemaBase;
 import com.github.codingdebugallday.driver.core.infra.meta.Table;
+import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -157,7 +157,7 @@ public class SessionController {
                                                 @RequestParam String tables) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
         List<Table> tableList = new ArrayList<>();
-        Stream.of(tables.split(CommonConstant.Symbol.COMMA)).forEach(table -> {
+        Stream.of(tables.split(BaseConstant.Symbol.COMMA)).forEach(table -> {
             tableList.add(driverSession.tableMetaData(schema, table));
         });
         return ResponseEntity.ok(tableList);

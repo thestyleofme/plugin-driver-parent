@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
+import com.github.codingdebugallday.plugin.core.domain.repository.RedisBaseRepository;
+import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
 
 /**
  * <p>
@@ -25,6 +27,6 @@ public interface PluginDatasourceRepository extends RedisBaseRepository<PluginDa
     default String hashGetKey(Long tenantId) {
         return Optional.ofNullable(tenantId)
                 .map(t -> String.format(CommonConstant.REDIS_PLUGIN_DATASOURCE_PATTERN, tenantId))
-                .orElse(String.format(CommonConstant.REDIS_PLUGIN_DATASOURCE_PATTERN, CommonConstant.Symbol.STAR));
+                .orElse(String.format(CommonConstant.REDIS_PLUGIN_DATASOURCE_PATTERN, BaseConstant.Symbol.STAR));
     }
 }

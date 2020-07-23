@@ -1,0 +1,36 @@
+{
+  "properties": [
+    {
+      "name": "plugin.store-type",
+      "type": "java.lang.String",
+      "defaultValue": "local",
+      "description": "plugin file store type local/minio."
+    },
+    {
+      "name": "plugin.stop-with-clear",
+      "type": "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "when stop application, clear plugin root path."
+    },
+    {
+      "name": "plugin.minio.endpoint",
+      "type": "java.lang.String",
+      "description": "when plugin.store-type=minio, minio.endpoint."
+    },
+    {
+      "name": "plugin.minio.access-key",
+      "type": "java.lang.String",
+      "description": "when plugin.store-type=minio, minio.accessKey."
+    },
+    {
+      "name": "plugin.minio.secret-key",
+      "type": "java.lang.String",
+      "description": "when plugin.store-type=minio, minio.secretKey."
+    },
+    {
+      "name": "plugin.plugin-init-load",
+      "type": "java.lang.String",
+      "description": "plugin init load, Fuzzy matching, if '*', load all, also can user pluginId@version Specified version, default use max version."
+    }
+  ]
+}

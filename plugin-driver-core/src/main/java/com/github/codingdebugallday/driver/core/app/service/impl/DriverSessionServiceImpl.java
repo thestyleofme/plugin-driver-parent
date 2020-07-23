@@ -9,10 +9,10 @@ import com.github.codingdebugallday.driver.core.infra.context.PluginDataSourceHo
 import com.github.codingdebugallday.driver.core.infra.context.PluginDatasourceHelper;
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.core.infra.function.DriverSessionFunction;
-import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceDriverVO;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.user.PluginUser;
+import com.github.codingdebugallday.plugin.core.infra.vo.PluginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -50,8 +50,8 @@ public class DriverSessionServiceImpl implements DriverSessionService {
         if (!StringUtils.isEmpty(datasourceCode)) {
             try {
                 PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
-                PluginDatasourceDriverVO datasourceDriver = pluginDatasourceVO.getDatasourceDriver();
-                @NotBlank String pluginId = datasourceDriver.getDriverCode();
+                PluginVO pluginVO = pluginDatasourceVO.getDatasourceDriver();
+                @NotBlank String pluginId = pluginVO.getPluginId();
                 ClassLoader pluginClassLoader = pluginUser.getPluginManager()
                         .getPluginClassLoader(pluginId);
                 // 使用插件的classloader
@@ -61,7 +61,7 @@ public class DriverSessionServiceImpl implements DriverSessionService {
                 Class<?> clazz = driverSessionFunction.getDataSource();
                 Object dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasourceVO, clazz);
                 driverSessionFunction.setDataSource(dataSource);
-                log.debug("use plugin[{}] datasource...", datasourceDriver.getDriverCode());
+                log.debug("use plugin[{}] datasource...", pluginId);
                 return driverSessionFunction.getDriverSession();
             } catch (Exception e) {
                 throw new DriverException(e);

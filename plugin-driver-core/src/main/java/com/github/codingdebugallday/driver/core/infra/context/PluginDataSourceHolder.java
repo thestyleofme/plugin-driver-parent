@@ -9,11 +9,11 @@ import javax.validation.constraints.NotBlank;
 import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.core.infra.function.DriverDataSourceFunction;
-import com.github.codingdebugallday.driver.core.infra.utils.ApplicationContextHelper;
-import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceDriverVO;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.user.PluginUser;
+import com.github.codingdebugallday.plugin.core.infra.utils.ApplicationContextHelper;
+import com.github.codingdebugallday.plugin.core.infra.vo.PluginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 
@@ -52,20 +52,23 @@ public class PluginDataSourceHolder {
      * @param <T>                数据源
      * @return T 数据源
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T> T getOrCreate(PluginDatasourceVO pluginDatasourceVO, Class<T> clazz) {
-        PluginDatasourceDriverVO datasourceDriverVO = pluginDatasourceVO.getDatasourceDriver();
-        @NotBlank String datasourcePluginId = datasourceDriverVO.getDriverCode();
-        String key = datasourceDriverVO.getTenantId() + "_" + datasourcePluginId;
+        PluginVO pluginVO = pluginDatasourceVO.getDatasourceDriver();
+        @NotBlank String datasourcePluginId = pluginVO.getPluginId();
+        String key = pluginVO.getTenantId() + "_" + datasourcePluginId;
         if (Objects.isNull(PLUGIN_DATASOURCE_MAP.get(key))) {
             ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
             ClassLoader pluginClassLoader = PLUGIN_USER.getPluginManager()
                     .getPluginClassLoader(datasourcePluginId);
             Thread.currentThread().setContextClassLoader(pluginClassLoader);
             try {
+                final DriverDataSourceFunction driverDataSourceFunction = PLUGIN_USER
+                        .getPluginExtension(DriverDataSourceFunction.class, datasourcePluginId);
                 if (CommonConstant.DataSourceType.RDB.equalsIgnoreCase(pluginDatasourceVO.getDatasourceType())) {
                     // 获取driverClassName
-                    String driverClassName = datasourceDriverVO.getDriverClassName();
+                    String driverClassName = driverDataSourceFunction.getDriverClassName();
+                    pluginDatasourceVO.setDriverClassName(driverClassName);
                     Driver driver = (Driver) Thread.currentThread()
                             .getContextClassLoader()
                             .loadClass(driverClassName)
@@ -75,8 +78,7 @@ public class PluginDataSourceHolder {
                     log.debug(">>>>>>>>> driverClassName:{}", driverClassName);
                     log.debug(">>>>>>>>> driver version:{}", driver.getMajorVersion() + "." + driver.getMinorVersion());
                 }
-                Object object = PLUGIN_USER
-                        .getPluginExtension(DriverDataSourceFunction.class, datasourcePluginId)
+                Object object = driverDataSourceFunction
                         .createDataSource(pluginDatasourceVO);
                 T t = clazz.cast(object);
                 PLUGIN_DATASOURCE_MAP.put(key, t);
@@ -104,7 +106,7 @@ public class PluginDataSourceHolder {
     public static void remove(Long tenantId, String datasourceCode) {
         PluginDatasourceVO pluginDatasourceVO = PLUGIN_DATASOURCE_HELPER.getPluginDatasource(tenantId, datasourceCode);
         PLUGIN_DATASOURCE_MAP.keySet().forEach(key -> {
-            if (key.contains(pluginDatasourceVO.getDatasourceDriver().getDriverCode())) {
+            if (key.contains(pluginDatasourceVO.getDatasourceDriver().getPluginId())) {
                 PLUGIN_DATASOURCE_MAP.remove(key);
             }
         });

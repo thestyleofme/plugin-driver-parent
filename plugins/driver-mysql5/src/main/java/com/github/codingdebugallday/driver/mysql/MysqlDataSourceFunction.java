@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import com.github.codingdebugallday.driver.core.infra.function.hikari.HikariRdbmsDataSourceFactory;
 import com.github.codingdebugallday.driver.core.infra.function.DriverDataSourceFunction;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
+import com.mysql.jdbc.Driver;
 import org.pf4j.Extension;
 
 /**
@@ -24,4 +25,8 @@ public class MysqlDataSourceFunction implements DriverDataSourceFunction<PluginD
         return new HikariRdbmsDataSourceFactory().create(pluginDatasourceVO);
     }
 
+    @Override
+    public String getDriverClassName() {
+        return Driver.class.getName();
+    }
 }

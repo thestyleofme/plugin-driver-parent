@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.github.codingdebugallday.plugin.core.infra.autoconfigure.RedisConfiguration,\
+com.github.codingdebugallday.plugin.core.infra.autoconfigure.Swagger2Configuration,\
+com.github.codingdebugallday.plugin.core.infra.autoconfigure.MinioConfiguration

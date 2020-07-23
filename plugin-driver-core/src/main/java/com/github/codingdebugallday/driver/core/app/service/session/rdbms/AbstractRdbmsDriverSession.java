@@ -10,12 +10,12 @@ import com.github.codingdebugallday.driver.core.app.service.funcations.extractor
 import com.github.codingdebugallday.driver.core.app.service.funcations.setter.SchemaSetter;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.core.app.service.session.SessionTool;
-import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.core.infra.constants.DataSourceTypeConstant;
 import com.github.codingdebugallday.driver.core.infra.constants.PatternConstant;
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.core.infra.meta.*;
 import com.github.codingdebugallday.driver.core.infra.utils.CloseUtil;
+import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -346,7 +346,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
             // 设置schema
             schemaSetter().setSchema(connection, schema);
             String trimSql = sql.trim();
-            if (trimSql.endsWith(CommonConstant.Symbol.SEMICOLON)) {
+            if (trimSql.endsWith(BaseConstant.Symbol.SEMICOLON)) {
                 sql = trimSql.substring(0, trimSql.length() - 1);
             }
             // 查询
@@ -514,9 +514,9 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public boolean isValid() {
-        try(Connection connection = this.dataSource.getConnection()){
+        try (Connection connection = this.dataSource.getConnection()) {
             return connection.isValid(3);
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new DriverException("connection error", e);
         }
     }
@@ -613,11 +613,9 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
                     .lines()
                     .filter(line -> !line.trim().startsWith("--"))
                     .findFirst()
-                    .orElse(CommonConstant.Symbol.EMPTY);
-            if (StringUtils.isEmpty(r)) {
-                // 认为全为注释 noting to do
-            } else {
-                // 否则补充一条SQL
+                    .orElse(BaseConstant.Symbol.EMPTY);
+            if (!StringUtils.isEmpty(r)) {
+                // 全为注释 noting to do 否则补充一条SQL
                 sqlList.add(sqlBuilder.toString());
             }
         }

@@ -7,6 +7,7 @@ import com.github.codingdebugallday.driver.core.infra.function.DriverDataSourceF
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import lombok.extern.slf4j.Slf4j;
 import org.pf4j.Extension;
+import org.postgresql.Driver;
 
 /**
  * <p>
@@ -24,5 +25,10 @@ public class PostgresqlDataSourceFunction implements DriverDataSourceFunction<Pl
     @Override
     public DataSource createDataSource(PluginDatasourceVO pluginDatasourceVO) {
         return new DruidRdbmsDataSourceFactory().create(pluginDatasourceVO);
+    }
+
+    @Override
+    public String getDriverClassName() {
+        return Driver.class.getName();
     }
 }
