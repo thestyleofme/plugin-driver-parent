@@ -63,7 +63,7 @@ public class PluginDataSourceHolder {
                     .getPluginClassLoader(datasourcePluginId);
             Thread.currentThread().setContextClassLoader(pluginClassLoader);
             try {
-                if (CommonConstant.DataSourceType.RDB.equalsIgnoreCase(plTableSessionuginDatasourceVO.getDatasourceType())) {
+                if (CommonConstant.DataSourceType.RDB.equalsIgnoreCase(pluginDatasourceVO.getDatasourceType())) {
                     // 获取driverClassName
                     String driverClassName = datasourceDriverVO.getDriverClassName();
                     Driver driver = (Driver) Thread.currentThread()
