@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.core.domain.entity;
+package com.github.codingdebugallday.driver.core.infra.meta;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

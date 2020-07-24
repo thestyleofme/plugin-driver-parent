@@ -3,7 +3,7 @@ package com.github.codingdebugallday.driver.core.app.service.session;
 import java.util.List;
 import java.util.Map;
 
-import com.github.codingdebugallday.driver.core.domain.entity.Tuple;
+import com.github.codingdebugallday.driver.core.infra.meta.Tuple;
 import com.github.codingdebugallday.driver.core.infra.meta.*;
 
 /**

@@ -80,7 +80,7 @@ public class SessionController {
 
     @ApiOperation(value = "获取指定表主键信息")
     @GetMapping("/table/pk")
-    public ResponseEntity<?> tablePK(@PathVariable(name = "organizationId") Long tenantId,
+    public ResponseEntity<?> tablePk(@PathVariable(name = "organizationId") Long tenantId,
                                      @RequestParam String datasourceCode,
                                      @RequestParam(required = false) String schema,
                                      @RequestParam String table) {
@@ -90,7 +90,7 @@ public class SessionController {
 
     @ApiOperation(value = "获取指定表外键信息")
     @GetMapping("/table/fk")
-    public ResponseEntity<?> tableFK(@PathVariable(name = "organizationId") Long tenantId,
+    public ResponseEntity<?> tableFk(@PathVariable(name = "organizationId") Long tenantId,
                                      @RequestParam String datasourceCode,
                                      @RequestParam(required = false) String schema,
                                      @RequestParam String table) {
