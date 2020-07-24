@@ -1,7 +1,8 @@
-package com.github.codingdebugallday.driver.common.infra.page;
+package com.github.codingdebugallday.driver.core.domain.page;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
@@ -16,14 +17,11 @@ import org.springframework.data.domain.Sort;
  */
 @Data
 @AllArgsConstructor
-public class PageRequestImpl {
+@NoArgsConstructor
+public class PluginPageRequest {
     private int page;
     private int size;
     private Sort sort = Sort.unsorted();
-
-    public PageRequestImpl() {
-
-    }
 
     public Boolean paged() {
         if (size == 0) {

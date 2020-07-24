@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.github.codingdebugallday.driver.common.infra.page.PageRequestImpl;
+import com.github.codingdebugallday.driver.core.domain.page.PluginPageRequest;
 import com.github.codingdebugallday.driver.core.infra.utils.PageUtil;
 import com.github.codingdebugallday.driver.core.app.service.DriverSessionService;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
@@ -54,7 +54,7 @@ public class SessionController {
                                     @RequestParam(required = false) String datasourceCode,
                                     @RequestParam String schema,
                                     @RequestParam(name = "table", required = false) String tablePattern,
-                                    PageRequestImpl pageRequest) {
+                                    PluginPageRequest pageRequest) {
         List<String> tables = driverSessionService.getDriverSession(tenantId, datasourceCode)
                 .tableList(schema, tablePattern);
         if (pageRequest.paged()) {
@@ -69,7 +69,7 @@ public class SessionController {
                                    @RequestParam(required = false) String datasourceCode,
                                    @RequestParam String schema,
                                    @RequestParam(name = "view", required = false) String viewPattern,
-                                   @RequestBody(required = false) PageRequestImpl pageRequest) {
+                                   @RequestBody(required = false) PluginPageRequest pageRequest) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
         List<String> views = driverSession.views(schema, viewPattern);
         if (pageRequest.paged()) {

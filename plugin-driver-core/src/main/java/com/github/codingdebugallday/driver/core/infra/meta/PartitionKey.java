@@ -1,6 +1,8 @@
 package com.github.codingdebugallday.driver.core.infra.meta;
 
 
+import lombok.*;
+
 /**
  * <p>
  * 分区信息
@@ -9,6 +11,11 @@ package com.github.codingdebugallday.driver.core.infra.meta;
  * @author JupiterMouse 2020/07/22
  * @since 1.0
  */
+@Data
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class PartitionKey {
 
     private String tableCat;
