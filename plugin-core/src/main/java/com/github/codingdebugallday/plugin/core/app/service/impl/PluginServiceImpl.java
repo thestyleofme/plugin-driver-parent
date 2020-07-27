@@ -81,7 +81,7 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
         String suffix = Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf("."));
         String objectName = pluginDTO.getPluginId() + "@" + pluginDTO.getPluginVersion() + suffix;
         entity.setObjectName(objectName);
-        // minio模式 启动插件并记录指纹
+        // minio模式
         handlePluginCreate(entity, multipartFile);
         // local模式
         if (StringUtils.isEmpty(entity.getPluginPath())) {
@@ -105,6 +105,31 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
         // 获取插件路径
         Plugin entity = this.getById(id);
         return install(entity);
+    }
+
+    @Override
+    public Boolean install(Plugin entity) {
+        if (pluginStoreType.equalsIgnoreCase(Plugin.PLUGIN_STORE_TYPE_MINIO)) {
+            // minio模式
+            File temp = new File(BaseConstant.TEMP_DIC + entity.getObjectName());
+            try (InputStream inputStream = pluginMinioService.getObject(BaseConstant.PLUGIN_MINIO_BUCKET, entity.getObjectName())) {
+                FileUtils.copyInputStreamToFile(inputStream, temp);
+                return pluginAppService.install(entity.getPluginId(), temp.toPath());
+            } catch (IOException e) {
+                log.error("download plugin from minio error");
+                throw new PluginException("download plugin from minio error", e);
+            } finally {
+                try {
+                    FileUtils.forceDelete(temp);
+                } catch (IOException e) {
+                    // ignore
+                }
+            }
+        } else {
+            // local模式
+            pluginAppService.install(entity.getPluginId(), Paths.get(entity.getPluginPath()));
+        }
+        return true;
     }
 
     @Override
@@ -164,30 +189,6 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
         } finally {
             lock.unlock();
         }
-    }
-
-    private Boolean install(Plugin entity) {
-        if (pluginStoreType.equalsIgnoreCase(Plugin.PLUGIN_STORE_TYPE_MINIO)) {
-            // minio模式
-            File temp = new File(BaseConstant.TEMP_DIC + entity.getObjectName());
-            try (InputStream inputStream = pluginMinioService.getObject(BaseConstant.PLUGIN_MINIO_BUCKET, entity.getObjectName())) {
-                FileUtils.copyInputStreamToFile(inputStream, temp);
-                return pluginAppService.install(entity.getPluginId(), temp.toPath());
-            } catch (IOException e) {
-                log.error("download plugin from minio error");
-                throw new PluginException("download plugin from minio error", e);
-            } finally {
-                try {
-                    FileUtils.forceDelete(temp);
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-        } else {
-            // local模式
-            pluginAppService.install(entity.getPluginId(), Paths.get(entity.getPluginPath()));
-        }
-        return true;
     }
 
     private void handlePluginUpdate(PluginDTO dto, MultipartFile multipartFile) {

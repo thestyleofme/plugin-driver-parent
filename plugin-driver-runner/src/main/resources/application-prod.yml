@@ -58,9 +58,14 @@ spring:
     timeZone: GMT+8
     default-property-inclusion: non_null
 
+mybatis-plus:
+  mapperLocations: classpath*:mapper/*.xml
+  configuration:
+    mapUnderscoreToCamelCase: true
+
 plugin:
   run-mode: prod
-  store-type: local
+  store-type: minio
   minio:
     endpoint: http://hdspdev010:9000
     access-key: AKIAIOSFODNN7EXAMPLE
@@ -68,7 +73,7 @@ plugin:
   plugin-path: plugins/out
   plugin-config-file-path: pluginConfig
   # 可模糊匹配
-  plugin-init-load: mysql,postgresql,es
+#  plugin-init-load: mysql,postgresql,es
 
 logging:
   level:

@@ -54,7 +54,6 @@ mybatis-plus:
   mapperLocations: classpath*:mapper/*.xml
   configuration:
     mapUnderscoreToCamelCase: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 plugin:
   run-mode: dev
