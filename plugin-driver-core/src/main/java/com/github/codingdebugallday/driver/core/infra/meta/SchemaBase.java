@@ -1,7 +1,6 @@
 package com.github.codingdebugallday.driver.core.infra.meta;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
@@ -13,9 +12,12 @@ import java.util.List;
  * @author JupiterMouse 2020/07/23
  * @since 1.0
  */
-@Builder
 @Data
-public class SchemaBase {
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@Builder
+@AllArgsConstructor
+public class SchemaBase extends BaseInfo {
 
     private List<String> tables;
 

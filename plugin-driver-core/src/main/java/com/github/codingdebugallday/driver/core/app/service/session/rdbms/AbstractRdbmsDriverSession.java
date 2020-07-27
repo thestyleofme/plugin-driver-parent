@@ -1,11 +1,5 @@
 package com.github.codingdebugallday.driver.core.app.service.session.rdbms;
 
-import java.io.LineNumberReader;
-import java.io.StringReader;
-import java.sql.*;
-import java.util.*;
-import javax.sql.DataSource;
-
 import com.github.codingdebugallday.driver.core.app.service.funcations.extractor.*;
 import com.github.codingdebugallday.driver.core.app.service.funcations.setter.SchemaSetter;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
@@ -25,6 +19,12 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import javax.sql.DataSource;
+import java.io.LineNumberReader;
+import java.io.StringReader;
+import java.sql.*;
+import java.util.*;
 
 /**
  * <p>
@@ -513,6 +513,11 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
             throw new DriverException("table metadata error", e);
         }
         return table;
+    }
+
+    @Override
+    public Table tableMetaExtra(String schema, String tableName) {
+        return this.tableMetaData(schema, tableName);
     }
 
     @Override
