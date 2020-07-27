@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.core.app.service.funcations.extractor;
+package com.github.codingdebugallday.driver.core.app.service.session.funcations.extractor;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;

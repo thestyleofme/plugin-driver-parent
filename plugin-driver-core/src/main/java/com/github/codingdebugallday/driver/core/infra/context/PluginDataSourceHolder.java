@@ -1,10 +1,7 @@
 package com.github.codingdebugallday.driver.core.infra.context;
 
 import java.sql.Driver;
-import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-import javax.validation.constraints.NotBlank;
 
 import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
@@ -12,10 +9,10 @@ import com.github.codingdebugallday.driver.core.infra.function.DriverDataSourceF
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.user.PluginUser;
-import com.github.codingdebugallday.plugin.core.infra.utils.ApplicationContextHelper;
+import com.github.codingdebugallday.plugin.core.infra.annotations.LazyPlugin;
 import com.github.codingdebugallday.plugin.core.infra.vo.PluginVO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 /**
  * <p>
@@ -26,22 +23,16 @@ import org.springframework.context.ApplicationContext;
  * @since 1.0.0
  */
 @Slf4j
+@Component
 public class PluginDataSourceHolder {
 
-    private PluginDataSourceHolder() {
-        throw new IllegalStateException("context class!");
-    }
+    private final PluginUser pluginUser;
+    private final PluginDatasourceHelper pluginDatasourceHelper;
 
-    private static final Map<String, Object> PLUGIN_DATASOURCE_MAP;
-    private static final PluginUser PLUGIN_USER;
-    private static final PluginDatasourceHelper PLUGIN_DATASOURCE_HELPER;
-
-    static {
-        PLUGIN_DATASOURCE_MAP = new ConcurrentHashMap<>(4);
-        ApplicationContext context = ApplicationContextHelper.getContext();
-        PluginApplication pluginApplication = context.getBean(PluginApplication.class);
-        PLUGIN_USER = pluginApplication.getPluginUser();
-        PLUGIN_DATASOURCE_HELPER = context.getBean(PluginDatasourceHelper.class);
+    public PluginDataSourceHolder(PluginDatasourceHelper pluginDatasourceHelper,
+                                  PluginApplication pluginApplication) {
+        this.pluginDatasourceHelper = pluginDatasourceHelper;
+        this.pluginUser = pluginApplication.getPluginUser();
     }
 
     /**
@@ -53,17 +44,18 @@ public class PluginDataSourceHolder {
      * @return T 数据源
      */
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static <T> T getOrCreate(PluginDatasourceVO pluginDatasourceVO, Class<T> clazz) {
-        PluginVO pluginVO = pluginDatasourceVO.getDatasourceDriver();
-        @NotBlank String datasourcePluginId = pluginVO.getPluginId();
+    public <T> T getOrCreate(PluginDatasourceVO pluginDatasourceVO, Class<T> clazz) {
+        PluginVO pluginVO = getPluginVO(pluginDatasourceVO);
+        // 为了走aop 懒加载插件
+        String datasourcePluginId = pluginVO.getPluginId();
         String key = pluginVO.getTenantId() + "_" + datasourcePluginId;
-        if (Objects.isNull(PLUGIN_DATASOURCE_MAP.get(key))) {
+        if (Objects.isNull(PluginDatasourceContext.get(key))) {
             ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
-            ClassLoader pluginClassLoader = PLUGIN_USER.getPluginManager()
+            ClassLoader pluginClassLoader = pluginUser.getPluginManager()
                     .getPluginClassLoader(datasourcePluginId);
             Thread.currentThread().setContextClassLoader(pluginClassLoader);
             try {
-                final DriverDataSourceFunction driverDataSourceFunction = PLUGIN_USER
+                final DriverDataSourceFunction driverDataSourceFunction = pluginUser
                         .getPluginExtension(DriverDataSourceFunction.class, datasourcePluginId);
                 if (CommonConstant.DataSourceType.RDB.equalsIgnoreCase(pluginDatasourceVO.getDatasourceType())) {
                     // 获取driverClassName
@@ -81,7 +73,7 @@ public class PluginDataSourceHolder {
                 Object object = driverDataSourceFunction
                         .createDataSource(pluginDatasourceVO);
                 T t = clazz.cast(object);
-                PLUGIN_DATASOURCE_MAP.put(key, t);
+                PluginDatasourceContext.put(key, t);
                 return t;
             } catch (Exception e) {
                 throw new DriverException(e);
@@ -89,12 +81,17 @@ public class PluginDataSourceHolder {
                 Thread.currentThread().setContextClassLoader(oldClassLoader);
             }
         }
-        return clazz.cast(PLUGIN_DATASOURCE_MAP.get(key));
+        return clazz.cast(PluginDatasourceContext.get(key));
     }
 
-    public static <T> T getOrCreate(Long tenantId, String datasourceCode, Class<T> clazz) {
-        PluginDatasourceVO pluginDatasourceVO = PLUGIN_DATASOURCE_HELPER.getPluginDatasource(tenantId, datasourceCode);
+    public <T> T getOrCreate(Long tenantId, String datasourceCode, Class<T> clazz) {
+        PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
         return getOrCreate(pluginDatasourceVO, clazz);
+    }
+
+    @LazyPlugin
+    public PluginVO getPluginVO(PluginDatasourceVO pluginDatasourceVO) {
+        return pluginDatasourceVO.getDatasourceDriver();
     }
 
     /**
@@ -103,27 +100,13 @@ public class PluginDataSourceHolder {
      * @param tenantId       租户id
      * @param datasourceCode 数据源编码
      */
-    public static void remove(Long tenantId, String datasourceCode) {
-        PluginDatasourceVO pluginDatasourceVO = PLUGIN_DATASOURCE_HELPER.getPluginDatasource(tenantId, datasourceCode);
-        PLUGIN_DATASOURCE_MAP.keySet().forEach(key -> {
+    public void remove(Long tenantId, String datasourceCode) {
+        PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
+        PluginDatasourceContext.getMap().keySet().forEach(key -> {
             if (key.contains(pluginDatasourceVO.getDatasourceDriver().getPluginId())) {
-                PLUGIN_DATASOURCE_MAP.remove(key);
+                PluginDatasourceContext.remove(key);
             }
         });
     }
-
-    /**
-     * 插件被禁用或卸载需要删除相应数据源
-     *
-     * @param pluginId 插件id
-     */
-    public static void remove(String pluginId) {
-        PLUGIN_DATASOURCE_MAP.keySet().forEach(key -> {
-            if (key.contains(pluginId)) {
-                PLUGIN_DATASOURCE_MAP.remove(key);
-            }
-        });
-    }
-
 
 }

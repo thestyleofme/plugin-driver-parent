@@ -1,6 +1,6 @@
 package com.github.codingdebugallday.driver.core.infra.autoconfigure;
 
-import com.github.codingdebugallday.driver.core.infra.context.PluginDataSourceHolder;
+import com.github.codingdebugallday.driver.core.infra.context.PluginDatasourceContext;
 import com.github.codingdebugallday.integration.listener.PluginListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +25,12 @@ public class DefaultPluginListener implements PluginListener {
     @Override
     public void unregister(String pluginId) {
         logger.info("Listener: unregister pluginId {}", pluginId);
-        PluginDataSourceHolder.remove(pluginId);
+        PluginDatasourceContext.remove(pluginId);
     }
 
     @Override
     public void failure(String pluginId, Throwable throwable) {
-        PluginDataSourceHolder.remove(pluginId);
+        logger.error("Listener: failure pluginId {}", pluginId);
+        PluginDatasourceContext.remove(pluginId);
     }
 }

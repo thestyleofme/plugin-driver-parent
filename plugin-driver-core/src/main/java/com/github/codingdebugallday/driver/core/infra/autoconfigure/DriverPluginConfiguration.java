@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "plugin")
-public class PluginConfiguration extends AbstractIntegrationConfiguration {
+public class DriverPluginConfiguration extends AbstractIntegrationConfiguration {
 
     /**
      * 运行模式

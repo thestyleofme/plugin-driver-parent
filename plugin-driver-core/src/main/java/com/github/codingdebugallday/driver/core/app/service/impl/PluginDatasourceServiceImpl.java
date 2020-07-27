@@ -6,15 +6,15 @@ import java.util.stream.Collectors;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.codingdebugallday.driver.core.api.dto.PluginDatasourceDTO;
-import com.github.codingdebugallday.driver.core.infra.converter.BasePluginDatasourceConvert;
-import com.github.codingdebugallday.plugin.core.app.service.PluginService;
 import com.github.codingdebugallday.driver.core.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
-import com.github.codingdebugallday.plugin.core.domain.entity.Plugin;
 import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRepository;
 import com.github.codingdebugallday.driver.core.infra.context.PluginDataSourceHolder;
+import com.github.codingdebugallday.driver.core.infra.converter.BasePluginDatasourceConvert;
 import com.github.codingdebugallday.driver.core.infra.mapper.PluginDatasourceMapper;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
+import com.github.codingdebugallday.plugin.core.app.service.PluginService;
+import com.github.codingdebugallday.plugin.core.domain.entity.Plugin;
 import com.github.codingdebugallday.plugin.core.infra.converter.BasePluginConvert;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,11 +32,14 @@ public class PluginDatasourceServiceImpl extends ServiceImpl<PluginDatasourceMap
 
     private final PluginService pluginService;
     private final PluginDatasourceRepository pluginDatasourceRepository;
+    private final PluginDataSourceHolder pluginDataSourceHolder;
 
     public PluginDatasourceServiceImpl(PluginService pluginService,
-                                       PluginDatasourceRepository pluginDatasourceRepository) {
+                                       PluginDatasourceRepository pluginDatasourceRepository,
+                                       PluginDataSourceHolder pluginDataSourceHolder1) {
         this.pluginService = pluginService;
         this.pluginDatasourceRepository = pluginDatasourceRepository;
+        this.pluginDataSourceHolder = pluginDataSourceHolder1;
     }
 
     @Override
@@ -81,7 +84,7 @@ public class PluginDatasourceServiceImpl extends ServiceImpl<PluginDatasourceMap
         PluginDatasourceVO pluginDatasourceVO = BasePluginDatasourceConvert.INSTANCE.entityToVO(entity);
         Plugin driver = pluginService.getById(pluginDatasourceDTO.getDriverId());
         // 删除缓存的数据源
-        PluginDataSourceHolder.remove(driver.getTenantId(), driver.getPluginId());
+        pluginDataSourceHolder.remove(driver.getTenantId(), driver.getPluginId());
         pluginDatasourceVO.setDatasourceDriver(BasePluginConvert.INSTANCE.entityToVO(driver));
         pluginDatasourceRepository.hashUpdate(pluginDatasourceDTO.getTenantId(),
                 pluginDatasourceDTO.getDatasourceCode(), pluginDatasourceVO);
