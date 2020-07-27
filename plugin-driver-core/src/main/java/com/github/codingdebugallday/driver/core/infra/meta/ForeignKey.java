@@ -8,9 +8,8 @@ import java.sql.SQLException;
 /**
  * 表外键
  *
- * @see java.sql.DatabaseMetaData#getImportedKeys
- *
  * @author JupiterMouse 2020/07/21
+ * @see java.sql.DatabaseMetaData#getImportedKeys
  * @since 1.0
  */
 @Data
@@ -18,7 +17,7 @@ import java.sql.SQLException;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class ForeignKey {
+public class ForeignKey extends BaseInfo {
     private String tableCat;
     private String tableSchema;
     private String tableName;
@@ -39,6 +38,7 @@ public class ForeignKey {
 
     /**
      * 主键构造方法
+     *
      * @param rs ResultSet
      * @throws SQLException SQLException
      */

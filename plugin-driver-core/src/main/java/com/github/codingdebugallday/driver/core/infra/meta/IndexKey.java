@@ -8,8 +8,8 @@ import java.sql.SQLException;
 /**
  * 表索引
  *
- * @see java.sql.DatabaseMetaData#getIndexInfo
  * @author JupiterMouse 2020/07/21
+ * @see java.sql.DatabaseMetaData#getIndexInfo
  * @since 1.0
  */
 @Data
@@ -17,7 +17,7 @@ import java.sql.SQLException;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class IndexKey {
+public class IndexKey extends BaseInfo {
     private String tableCat;
     private String tableSchema;
     private String tableName;
@@ -34,6 +34,7 @@ public class IndexKey {
 
     /**
      * 主键构造方法
+     *
      * @param rs ResultSet
      * @throws SQLException SQLException
      */
