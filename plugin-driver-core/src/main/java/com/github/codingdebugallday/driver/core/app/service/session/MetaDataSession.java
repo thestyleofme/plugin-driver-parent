@@ -48,7 +48,7 @@ public interface MetaDataSession {
      * @param tableName tableName
      * @return Table
      */
-    default Table tableMetaDetail(String schema, String tableName) {
+    default Table tableMetaExtra(String schema, String tableName) {
         throw new DriverException("Not Supported");
     }
 

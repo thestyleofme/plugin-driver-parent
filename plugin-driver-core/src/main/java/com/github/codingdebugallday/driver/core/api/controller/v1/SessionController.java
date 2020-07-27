@@ -151,12 +151,12 @@ public class SessionController {
 
     @ApiOperation(value = "获取表结构信息(包含自定义额外信息)")
     @GetMapping("/table/metadata-detail")
-    public ResponseEntity<?> tableMetadataDetail(@PathVariable(name = "organizationId") Long tenantId,
-                                                 @RequestParam String datasourceCode,
-                                                 @RequestParam(required = false) String schema,
-                                                 @RequestParam String table) {
+    public ResponseEntity<?> tableMetadataExtra(@PathVariable(name = "organizationId") Long tenantId,
+                                                @RequestParam String datasourceCode,
+                                                @RequestParam(required = false) String schema,
+                                                @RequestParam String table) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
-        return ResponseEntity.ok(driverSession.tableMetaDetail(schema, table));
+        return ResponseEntity.ok(driverSession.tableMetaExtra(schema, table));
     }
 
     @ApiOperation(value = "批量获取表结构信息")

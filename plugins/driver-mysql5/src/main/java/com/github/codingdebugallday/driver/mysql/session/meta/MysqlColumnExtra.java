@@ -27,4 +27,5 @@ public class MysqlColumnExtra {
      * 是否为主键
      */
     private Integer pkFlag;
+
 }
