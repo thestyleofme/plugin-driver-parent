@@ -1,10 +1,10 @@
 package com.github.codingdebugallday.driver.core.app.service.session;
 
-import java.util.List;
-
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.core.infra.meta.Column;
 import com.github.codingdebugallday.driver.core.infra.meta.Table;
+
+import java.util.List;
 
 /**
  * <p>
@@ -40,4 +40,27 @@ public interface MetaDataSession {
         throw new DriverException("Not Supported");
     }
 
+    /**
+     * 适用RDB
+     * 表表元数据
+     *
+     * @param schema    schema
+     * @param tableName tableName
+     * @return Table
+     */
+    default Table tableMetaDetail(String schema, String tableName) {
+        throw new DriverException("Not Supported");
+    }
+
+    /**
+     * 适用RDB
+     * 查询列元数据
+     *
+     * @param schema    schema
+     * @param tableName 表名
+     * @return List<Column>
+     */
+    default List<Column> columnMetaDetail(String schema, String tableName) {
+        throw new DriverException("Not Supported");
+    }
 }

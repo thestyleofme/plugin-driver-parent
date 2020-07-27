@@ -28,7 +28,7 @@ import java.sql.SQLException;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class Column implements Serializable, Cloneable {
+public class Column extends BaseInfo implements Serializable, Cloneable {
 
     private String tableCat;
     private String tableSchema;

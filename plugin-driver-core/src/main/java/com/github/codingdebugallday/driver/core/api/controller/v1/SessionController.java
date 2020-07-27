@@ -1,17 +1,11 @@
 package com.github.codingdebugallday.driver.core.api.controller.v1;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.github.codingdebugallday.driver.core.domain.page.PluginPageRequest;
-import com.github.codingdebugallday.driver.core.infra.utils.PageUtil;
 import com.github.codingdebugallday.driver.core.app.service.DriverSessionService;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
+import com.github.codingdebugallday.driver.core.domain.page.PluginPageRequest;
 import com.github.codingdebugallday.driver.core.infra.meta.SchemaBase;
 import com.github.codingdebugallday.driver.core.infra.meta.Table;
+import com.github.codingdebugallday.driver.core.infra.utils.PageUtil;
 import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +13,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -149,6 +149,16 @@ public class SessionController {
         return ResponseEntity.ok(driverSession.tableMetaData(schema, table));
     }
 
+    @ApiOperation(value = "获取表结构信息(包含自定义额外信息)")
+    @GetMapping("/table/metadata-detail")
+    public ResponseEntity<?> tableMetadataDetail(@PathVariable(name = "organizationId") Long tenantId,
+                                                 @RequestParam String datasourceCode,
+                                                 @RequestParam(required = false) String schema,
+                                                 @RequestParam String table) {
+        DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
+        return ResponseEntity.ok(driverSession.tableMetaDetail(schema, table));
+    }
+
     @ApiOperation(value = "批量获取表结构信息")
     @GetMapping("/table/batch-metadata")
     public ResponseEntity<?> tableBatchMetadata(@PathVariable(name = "organizationId") Long tenantId,
@@ -201,10 +211,10 @@ public class SessionController {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
         List<SchemaBase> schemaBaseList = new ArrayList<>();
         List<String> schemaList = driverSession.schemaList();
-        if (!StringUtils.isEmpty(schema)){
+        if (!StringUtils.isEmpty(schema)) {
             schemaList = schemaList.stream().filter(s -> s.contains(schema)).collect(Collectors.toList());
         }
-        for (String sc : schemaList){
+        for (String sc : schemaList) {
             List<String> tableList = driverSession.tableList(sc);
             List<String> viewList = driverSession.views(sc);
             schemaBaseList.add(SchemaBase.builder().tables(tableList).views(viewList).build());

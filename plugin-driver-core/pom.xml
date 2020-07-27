@@ -35,6 +35,7 @@
         <lombok.version>1.18.12</lombok.version>
         <springfox-swagger2.version>3.0.0</springfox-swagger2.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
+        <bean.utils.version>1.9.3</bean.utils.version>
     </properties>
 
     <licenses>
@@ -95,6 +96,12 @@
             <artifactId>druid</artifactId>
             <version>${druid.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>${bean.utils.version}</version>
         </dependency>
 
         <!-- swagger-->

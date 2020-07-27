@@ -24,7 +24,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class Table {
+public class Table extends BaseInfo {
 
     /**
      * table catalog (may be <code>null</code>)
@@ -62,28 +62,22 @@ public class Table {
     /**
      * 主键s
      */
-    private final List<PrimaryKey> pkList = new ArrayList<>();
+    private final Map<String, PrimaryKey> pkMap = new LinkedHashMap<>();
 
     /**
      * 外键s
      */
-    private final List<ForeignKey> fkList = new ArrayList<>();
+    private final Map<String, ForeignKey> fkMap = new LinkedHashMap<>();
 
     /**
      * 索引s
      */
-    private final List<IndexKey> ikList = new ArrayList<>();
+    private final Map<String, IndexKey> ikMap = new LinkedHashMap<>();
 
     /**
      * 列s
      */
-    private final Map<String, Column> columnMap = new LinkedHashMap<>();
-
-    /**
-     * 额外信息，如表是压缩表、列表等
-     */
-    private Map<String, String> extra;
-
+    private final List<Column> columnList = new ArrayList<>();
 
     public void init(Connection connection, String catalog, String schema, String tableName) {
         // 表信息
@@ -108,7 +102,7 @@ public class Table {
         try (ResultSet rs = connection.getMetaData().getPrimaryKeys(catalog, schema, tableName)) {
             if (null != rs) {
                 while (rs.next()) {
-                    this.pkList.add(new PrimaryKey(rs));
+                    this.pkMap.put(tableName, new PrimaryKey(rs));
                 }
             }
         } catch (SQLException e) {
@@ -120,7 +114,7 @@ public class Table {
         try (ResultSet rs = connection.getMetaData().getImportedKeys(catalog, schema, tableName)) {
             if (null != rs) {
                 while (rs.next()) {
-                    this.fkList.add(new ForeignKey(rs));
+                    this.fkMap.put(tableName, new ForeignKey(rs));
                 }
             }
         } catch (SQLException e) {
@@ -132,7 +126,7 @@ public class Table {
         try (ResultSet rs = connection.getMetaData().getIndexInfo(catalog, schema, tableName, true, true)) {
             if (null != rs) {
                 while (rs.next()) {
-                    this.ikList.add(new IndexKey(rs));
+                    this.ikMap.put(tableName, new IndexKey(rs));
                 }
             }
         } catch (SQLException e) {
@@ -145,7 +139,7 @@ public class Table {
             if (null != rs) {
                 while (rs.next()) {
                     Column column = new Column(rs);
-                    columnMap.put(column.getColumnName(), column);
+                    columnList.add(column);
                 }
             }
         } catch (SQLException e) {

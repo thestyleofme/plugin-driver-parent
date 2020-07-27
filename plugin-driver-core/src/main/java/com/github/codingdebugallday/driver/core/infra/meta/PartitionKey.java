@@ -16,7 +16,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class PartitionKey {
+public class PartitionKey extends BaseInfo {
 
     private String tableCat;
     private String tableSchema;

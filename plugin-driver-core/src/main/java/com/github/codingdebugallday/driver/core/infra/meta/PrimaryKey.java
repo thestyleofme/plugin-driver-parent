@@ -8,9 +8,8 @@ import java.sql.SQLException;
 /**
  * 表主键
  *
- * @see java.sql.DatabaseMetaData#getPrimaryKeys
- *
  * @author JupiterMouse 2020/07/21
+ * @see java.sql.DatabaseMetaData#getPrimaryKeys
  * @since 1.0
  */
 @Data
@@ -18,7 +17,7 @@ import java.sql.SQLException;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class PrimaryKey {
+public class PrimaryKey extends BaseInfo {
     private String tableCat;
     private String tableSchema;
     private String tableName;
@@ -28,6 +27,7 @@ public class PrimaryKey {
 
     /**
      * 主键构造方法
+     *
      * @param rs ResultSet
      * @throws SQLException SQLException
      */
