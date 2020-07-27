@@ -1,13 +1,5 @@
 package com.github.codingdebugallday.plugin.core.infra.vo;
 
-import java.time.LocalDateTime;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.Version;
-import com.github.codingdebugallday.plugin.core.api.dto.ValidGroup;
 import lombok.*;
 
 /**

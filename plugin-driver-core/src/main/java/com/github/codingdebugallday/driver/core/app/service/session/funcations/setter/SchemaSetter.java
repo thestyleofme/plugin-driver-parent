@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.core.app.service.funcations.setter;
+package com.github.codingdebugallday.driver.core.app.service.session.funcations.setter;
 
 import java.sql.Connection;
 import java.sql.SQLException;

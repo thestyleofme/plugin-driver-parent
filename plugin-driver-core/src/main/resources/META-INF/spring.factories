@@ -1,4 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 com.github.codingdebugallday.driver.core.infra.autoconfigure.DriverCommonConfiguration,\
-com.github.codingdebugallday.plugin.core.infra.autoconfigure.PluginCoreConfiguration,\
 com.github.codingdebugallday.driver.core.infra.autoconfigure.PluginApplicationConfiguration

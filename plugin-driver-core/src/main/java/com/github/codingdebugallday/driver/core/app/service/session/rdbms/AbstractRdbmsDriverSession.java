@@ -6,8 +6,8 @@ import java.sql.*;
 import java.util.*;
 import javax.sql.DataSource;
 
-import com.github.codingdebugallday.driver.core.app.service.funcations.extractor.*;
-import com.github.codingdebugallday.driver.core.app.service.funcations.setter.SchemaSetter;
+import com.github.codingdebugallday.driver.core.app.service.session.funcations.extractor.*;
+import com.github.codingdebugallday.driver.core.app.service.session.funcations.setter.SchemaSetter;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.core.app.service.session.SessionTool;
 import com.github.codingdebugallday.driver.core.infra.constants.DataSourceTypeConstant;

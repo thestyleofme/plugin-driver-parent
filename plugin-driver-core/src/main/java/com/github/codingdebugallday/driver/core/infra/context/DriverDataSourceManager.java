@@ -17,9 +17,12 @@ import org.springframework.stereotype.Service;
 public class DriverDataSourceManager {
 
     private final JdbcTemplate jdbcTemplate;
+    private final PluginDataSourceHolder pluginDataSourceHolder;
 
-    public DriverDataSourceManager(JdbcTemplate jdbcTemplate) {
+    public DriverDataSourceManager(JdbcTemplate jdbcTemplate,
+                                   PluginDataSourceHolder pluginDataSourceHolder) {
         this.jdbcTemplate = jdbcTemplate;
+        this.pluginDataSourceHolder = pluginDataSourceHolder;
     }
 
     public DataSource getDataSource() {
@@ -27,11 +30,11 @@ public class DriverDataSourceManager {
     }
 
     public <T> T getDataSource(Long tenantId, String datasourceCode, Class<T> clazz) {
-        return PluginDataSourceHolder.getOrCreate(tenantId, datasourceCode, clazz);
+        return pluginDataSourceHolder.getOrCreate(tenantId, datasourceCode, clazz);
     }
 
     public void clearDataSource(Long tenantId, String datasourceCode) {
-        PluginDataSourceHolder.remove(tenantId, datasourceCode);
+        pluginDataSourceHolder.remove(tenantId, datasourceCode);
     }
 
 }

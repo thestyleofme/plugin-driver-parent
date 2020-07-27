@@ -1,7 +1,5 @@
 package com.github.codingdebugallday.driver.core.app.service.impl;
 
-import javax.validation.constraints.NotBlank;
-
 import com.github.codingdebugallday.driver.core.app.service.DriverSessionService;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.core.app.service.session.rdbms.RdbmsDriverSession;
@@ -12,7 +10,6 @@ import com.github.codingdebugallday.driver.core.infra.function.DriverSessionFunc
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.integration.application.PluginApplication;
 import com.github.codingdebugallday.integration.user.PluginUser;
-import com.github.codingdebugallday.plugin.core.infra.vo.PluginVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -32,15 +29,18 @@ public class DriverSessionServiceImpl implements DriverSessionService {
 
     private final PluginUser pluginUser;
     private final PluginDatasourceHelper pluginDatasourceHelper;
+    private final PluginDataSourceHolder pluginDataSourceHolder;
 
     private final JdbcTemplate jdbcTemplate;
 
     public DriverSessionServiceImpl(PluginApplication pluginApplication,
                                     PluginDatasourceHelper pluginDatasourceHelper,
-                                    JdbcTemplate jdbcTemplate) {
+                                    JdbcTemplate jdbcTemplate,
+                                    PluginDataSourceHolder pluginDataSourceHolder) {
         this.pluginUser = pluginApplication.getPluginUser();
         this.pluginDatasourceHelper = pluginDatasourceHelper;
         this.jdbcTemplate = jdbcTemplate;
+        this.pluginDataSourceHolder = pluginDataSourceHolder;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -50,8 +50,7 @@ public class DriverSessionServiceImpl implements DriverSessionService {
         if (!StringUtils.isEmpty(datasourceCode)) {
             try {
                 PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
-                PluginVO pluginVO = pluginDatasourceVO.getDatasourceDriver();
-                @NotBlank String pluginId = pluginVO.getPluginId();
+                String pluginId = pluginDatasourceHelper.getPluginVO(pluginDatasourceVO).getPluginId();
                 ClassLoader pluginClassLoader = pluginUser.getPluginManager()
                         .getPluginClassLoader(pluginId);
                 // 使用插件的classloader
@@ -59,7 +58,7 @@ public class DriverSessionServiceImpl implements DriverSessionService {
                 DriverSessionFunction driverSessionFunction = pluginUser.getPluginExtension(DriverSessionFunction.class, pluginId);
                 // 获取该数据源的插件数据源
                 Class<?> clazz = driverSessionFunction.getDataSource();
-                Object dataSource = PluginDataSourceHolder.getOrCreate(pluginDatasourceVO, clazz);
+                Object dataSource = pluginDataSourceHolder.getOrCreate(pluginDatasourceVO, clazz);
                 driverSessionFunction.setDataSource(dataSource);
                 log.debug("use plugin[{}] datasource...", pluginId);
                 return driverSessionFunction.getDriverSession();

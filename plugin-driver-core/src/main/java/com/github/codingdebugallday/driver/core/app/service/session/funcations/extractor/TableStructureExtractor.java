@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.core.app.service.funcations.extractor;
+package com.github.codingdebugallday.driver.core.app.service.session.funcations.extractor;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -6,16 +6,16 @@ import java.sql.SQLException;
 
 /**
  * <p>
- * 表索引提取器
+ * 表结构提取器
  * </p>
  *
  * @author JupiterMouse 2020/07/08
  * @since 1.0.0
  */
-public interface TableIndexExtractor {
+public interface TableStructureExtractor {
 
     /**
-     * 表索引提取
+     * 表提取
      *
      * @param metaData 元数据
      * @param schema   数据库schema

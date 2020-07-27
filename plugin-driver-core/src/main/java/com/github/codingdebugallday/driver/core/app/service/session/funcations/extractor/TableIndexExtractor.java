@@ -1,4 +1,4 @@
-package com.github.codingdebugallday.driver.core.app.service.funcations.extractor;
+package com.github.codingdebugallday.driver.core.app.service.session.funcations.extractor;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -6,13 +6,13 @@ import java.sql.SQLException;
 
 /**
  * <p>
- * 表主键提取器
+ * 表索引提取器
  * </p>
  *
  * @author JupiterMouse 2020/07/08
  * @since 1.0.0
  */
-public interface TablePkExtractor {
+public interface TableIndexExtractor {
 
     /**
      * 表索引提取
@@ -24,4 +24,5 @@ public interface TablePkExtractor {
      * @throws SQLException sql异常
      */
     ResultSet extract(DatabaseMetaData metaData, String schema, String table) throws SQLException;
+
 }
