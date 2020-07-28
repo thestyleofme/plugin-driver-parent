@@ -1,7 +1,8 @@
 package com.github.codingdebugallday.driver.core.app.service.session;
 
-import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
+import com.github.codingdebugallday.driver.core.infra.meta.Catalog;
 import com.github.codingdebugallday.driver.core.infra.meta.Column;
+import com.github.codingdebugallday.driver.core.infra.meta.Schema;
 import com.github.codingdebugallday.driver.core.infra.meta.Table;
 
 import java.util.List;
@@ -49,6 +50,27 @@ public interface MetaDataSession {
      * @return Table
      */
     default Table tableMetaExtra(String schema, String tableName) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * 适用RDB
+     * schema元数据
+     *
+     * @param schema    schema
+     * @return Schema
+     */
+    default Schema schemaMetaExtra(String schema) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * 适用RDB
+     * Catalog 元数据
+     *
+     * @return Catalog
+     */
+    default Catalog catalogMetaExtra() {
         throw new UnsupportedOperationException("Not Implement");
     }
 }

@@ -1,7 +1,5 @@
 package com.github.codingdebugallday.driver.core.app.service.session;
 
-import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
-
 /**
  * <p>
  * description

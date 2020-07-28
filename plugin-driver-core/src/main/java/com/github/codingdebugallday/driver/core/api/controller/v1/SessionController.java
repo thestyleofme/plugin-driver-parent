@@ -3,7 +3,7 @@ package com.github.codingdebugallday.driver.core.api.controller.v1;
 import com.github.codingdebugallday.driver.core.app.service.DriverSessionService;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.core.domain.page.PluginPageRequest;
-import com.github.codingdebugallday.driver.core.infra.meta.SchemaBase;
+import com.github.codingdebugallday.driver.core.infra.meta.Schema;
 import com.github.codingdebugallday.driver.core.infra.meta.Table;
 import com.github.codingdebugallday.driver.core.infra.utils.PageUtil;
 import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
@@ -128,17 +128,6 @@ public class SessionController {
         return ResponseEntity.ok(driverSession.columnMetaData(schema, table));
     }
 
-    @ApiOperation(value = "获取指定csv表信息")
-    @GetMapping("/csv/column")
-    public ResponseEntity<?> csvColumn(@PathVariable(name = "organizationId") Long tenantId,
-                                       @RequestParam String datasourceCode,
-                                       @RequestParam(required = false) String schema,
-                                       @RequestParam String table) {
-        DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
-        // TODO
-        return ResponseEntity.ok(null);
-    }
-
     @ApiOperation(value = "获取表结构信息")
     @GetMapping("/table/metadata")
     public ResponseEntity<?> tableMetadata(@PathVariable(name = "organizationId") Long tenantId,
@@ -150,13 +139,30 @@ public class SessionController {
     }
 
     @ApiOperation(value = "获取表结构信息(包含自定义额外信息)")
-    @GetMapping("/table/metadata-detail")
+    @GetMapping("/table/metadata/extra")
     public ResponseEntity<?> tableMetadataExtra(@PathVariable(name = "organizationId") Long tenantId,
                                                 @RequestParam String datasourceCode,
                                                 @RequestParam(required = false) String schema,
                                                 @RequestParam String table) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
         return ResponseEntity.ok(driverSession.tableMetaExtra(schema, table));
+    }
+
+    @ApiOperation(value = "获取schema元数据信息(包含自定义额外信息)")
+    @GetMapping("/schema/metadata/extra")
+    public ResponseEntity<?> schemaMetadataExtra(@PathVariable(name = "organizationId") Long tenantId,
+            @RequestParam String datasourceCode,
+            @RequestParam(required = false) String schema) {
+        DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
+        return ResponseEntity.ok(driverSession.schemaCreate(schema));
+    }
+
+    @ApiOperation(value = "获取catalog元数据信息(包含自定义额外信息)")
+    @GetMapping("/catalog/metadata/extra")
+    public ResponseEntity<?> catalogMetadataExtra(@PathVariable(name = "organizationId") Long tenantId,
+            @RequestParam String datasourceCode) {
+        DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
+        return ResponseEntity.ok(driverSession.catalogMetaExtra());
     }
 
     @ApiOperation(value = "批量获取表结构信息")
@@ -205,11 +211,11 @@ public class SessionController {
 
     @ApiOperation(value = "获取指定数据库的表和视图")
     @GetMapping("/database/metadata")
-    public ResponseEntity<?> schemaBaseInfo(@PathVariable(name = "organizationId") Long tenantId,
+    public ResponseEntity<?> schemaInfo(@PathVariable(name = "organizationId") Long tenantId,
                                             @RequestParam String datasourceCode,
                                             @RequestParam(required = false) String schema) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
-        List<SchemaBase> schemaBaseList = new ArrayList<>();
+        List<Schema> schemaBaseList = new ArrayList<>();
         List<String> schemaList = driverSession.schemaList();
         if (!StringUtils.isEmpty(schema)) {
             schemaList = schemaList.stream().filter(s -> s.contains(schema)).collect(Collectors.toList());
@@ -217,14 +223,14 @@ public class SessionController {
         for (String sc : schemaList) {
             List<String> tableList = driverSession.tableList(sc);
             List<String> viewList = driverSession.views(sc);
-            schemaBaseList.add(SchemaBase.builder().tables(tableList).views(viewList).build());
+            schemaBaseList.add(Schema.builder().tables(tableList).views(viewList).build());
         }
         return ResponseEntity.ok(schemaBaseList);
     }
 
     @ApiOperation(value = "获取建表语句SQL")
     @GetMapping("/table/sql")
-    public ResponseEntity<?> schemaBaseInfo(@PathVariable(name = "organizationId") Long tenantId,
+    public ResponseEntity<?> createTableSql(@PathVariable(name = "organizationId") Long tenantId,
                                             @RequestParam String sourceDatasourceCode,
                                             @RequestParam(required = false) String sourceSchema,
                                             @RequestParam String sourceTable,

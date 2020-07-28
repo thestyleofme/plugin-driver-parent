@@ -531,6 +531,38 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         }
     }
 
+    @Override
+    public Schema schemaMetaExtra(String schema) {
+        List<String> tableList = this.tableList(schema);
+        List<String> viewList = this.views(schema);
+        return Schema.builder()
+                .tables(tableList)
+                .views(viewList)
+                .tableSchema(schema)
+                .build();
+    }
+
+    @Override
+    public Catalog catalogMetaExtra() {
+        Catalog catalog = new Catalog();
+        try(Connection conn = this.dataSource.getConnection()){
+            catalog.init(conn);
+        } catch (SQLException e) {
+            throw new DriverException("catalog error", e);
+        }
+        return catalog;
+    }
+
+    @Override
+    public String currentSchema() {
+        try(Connection conn = this.dataSource.getConnection();){
+            return Optional.ofNullable(conn.getSchema()).orElse(conn.getCatalog());
+        } catch (SQLException e) {
+            throw new DriverException("current schema", e);
+        }
+    }
+
+
     protected String getPageFormat() {
         return DEFAULT_PAGE_SQL;
     }

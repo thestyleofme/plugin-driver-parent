@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * <p>
- * description
+ * Schema元数据信息
  * </p>
  *
  * @author JupiterMouse 2020/07/23
@@ -17,9 +17,20 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class SchemaBase extends BaseInfo {
+public class Schema extends BaseInfo {
 
+    /**
+     * schema名
+     */
+    private String tableSchema;
+
+    /**
+     * tables
+     */
     private List<String> tables;
 
+    /**
+     * views
+     */
     private List<String> views;
 }

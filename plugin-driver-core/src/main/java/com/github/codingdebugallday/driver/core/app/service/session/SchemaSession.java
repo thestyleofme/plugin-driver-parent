@@ -181,4 +181,12 @@ public interface SchemaSession {
         throw new UnsupportedOperationException("Not Implement");
     }
 
+    /**
+     * 默认的schema
+     * @return schema
+     */
+    default String currentSchema() {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
 }
