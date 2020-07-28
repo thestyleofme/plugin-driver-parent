@@ -221,4 +221,24 @@ public class SessionController {
         }
         return ResponseEntity.ok(schemaBaseList);
     }
+
+    @ApiOperation(value = "获取建表语句SQL")
+    @GetMapping("/table/sql")
+    public ResponseEntity<?> schemaBaseInfo(@PathVariable(name = "organizationId") Long tenantId,
+                                            @RequestParam String sourceDatasourceCode,
+                                            @RequestParam(required = false) String sourceSchema,
+                                            @RequestParam String sourceTable,
+                                            @RequestParam String targetDatasourceCode,
+                                            @RequestParam(required = false) String targetSchema,
+                                            @RequestParam String targetTable
+                                            ) {
+        DriverSession sourceDriverSession = driverSessionService.getDriverSession(tenantId, sourceDatasourceCode);
+        DriverSession targetDriverSession = driverSessionService.getDriverSession(tenantId, targetDatasourceCode);
+        Table table = sourceDriverSession.tableMetaData(sourceSchema, sourceTable);
+        table.setTableSchema(targetSchema);
+        table.setTableName(targetTable);
+        String tableSql = targetDriverSession.createTableSql(table);
+        return ResponseEntity.ok(tableSql);
+    }
+
 }

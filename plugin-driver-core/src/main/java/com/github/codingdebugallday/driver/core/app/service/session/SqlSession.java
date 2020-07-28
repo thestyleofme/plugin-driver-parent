@@ -16,7 +16,7 @@ public interface SqlSession extends SchemaSession, TableSession, MetaDataSession
      *
      * @return 正确返回true，否则为false
      */
-    default boolean isValid(){
+    default boolean isValid() {
         throw new DriverException("Not Implement");
     }
 }

@@ -1,7 +1,5 @@
 package com.github.codingdebugallday.driver.core.api.controller.v1;
 
-import java.util.List;
-
 import com.github.codingdebugallday.driver.core.api.dto.PluginDatasourceDTO;
 import com.github.codingdebugallday.driver.core.app.service.PluginDatasourceService;
 import io.swagger.annotations.ApiOperation;
@@ -10,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * <p>
@@ -33,21 +33,21 @@ public class PluginDatasourceController {
     @ApiOperation(value = "查询数据源")
     @GetMapping
     public ResponseEntity<List<PluginDatasourceDTO>> list(@PathVariable(name = "organizationId") Long tenantId,
-                                                         PluginDatasourceDTO pluginDatasourceDTO) {
+                                                          PluginDatasourceDTO pluginDatasourceDTO) {
         return ResponseEntity.ok(pluginDatasourceService.list(tenantId, pluginDatasourceDTO));
     }
 
     @ApiOperation(value = "数据源详情")
     @GetMapping("/{datasourceCode}")
     public ResponseEntity<PluginDatasourceDTO> detail(@PathVariable(name = "organizationId") Long tenantId,
-                                                   @PathVariable String datasourceCode) {
+                                                      @PathVariable String datasourceCode) {
         return ResponseEntity.ok(pluginDatasourceService.getDatasourceByCode(tenantId, datasourceCode));
     }
 
     @ApiOperation(value = "创建数据源")
     @PostMapping
     public ResponseEntity<PluginDatasourceDTO> create(@PathVariable(name = "organizationId") Long tenantId,
-                                                   @RequestBody @Validated PluginDatasourceDTO pluginDatasourceDTO) {
+                                                      @RequestBody @Validated PluginDatasourceDTO pluginDatasourceDTO) {
         pluginDatasourceDTO.setTenantId(tenantId);
         return ResponseEntity.ok(pluginDatasourceService.create(pluginDatasourceDTO));
     }
@@ -55,7 +55,7 @@ public class PluginDatasourceController {
     @ApiOperation(value = "更新数据源")
     @PutMapping
     public ResponseEntity<PluginDatasourceDTO> update(@PathVariable(name = "organizationId") Long tenantId,
-                                                   @RequestBody @Validated PluginDatasourceDTO pluginDatasourceDTO) {
+                                                      @RequestBody @Validated PluginDatasourceDTO pluginDatasourceDTO) {
         pluginDatasourceDTO.setTenantId(tenantId);
         return ResponseEntity.ok(pluginDatasourceService.update(pluginDatasourceDTO));
     }

@@ -1,16 +1,16 @@
 package com.github.codingdebugallday.plugin.core.infra.utils;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.github.codingdebugallday.plugin.core.infra.exceptions.JsonException;
 import org.apache.ibatis.plugin.PluginException;
 import org.springframework.context.ApplicationContext;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>

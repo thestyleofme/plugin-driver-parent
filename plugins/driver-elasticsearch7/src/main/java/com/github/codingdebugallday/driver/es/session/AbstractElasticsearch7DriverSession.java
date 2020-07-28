@@ -1,11 +1,5 @@
 package com.github.codingdebugallday.driver.es.session;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.core.app.service.session.SessionTool;
 import com.github.codingdebugallday.exceptions.PluginException;
@@ -14,6 +8,12 @@ import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.cluster.metadata.AliasMetaData;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>

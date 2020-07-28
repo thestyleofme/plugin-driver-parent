@@ -1,9 +1,5 @@
 package com.github.codingdebugallday.driver.core.infra.exceptions;
 
-import java.util.Objects;
-import javax.validation.ConstraintViolationException;
-import javax.xml.bind.ValidationException;
-
 import com.github.codingdebugallday.driver.core.domain.entity.Err;
 import com.github.codingdebugallday.exceptions.PluginException;
 import com.github.codingdebugallday.plugin.core.infra.exceptions.JsonException;
@@ -14,6 +10,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.validation.ConstraintViolationException;
+import javax.xml.bind.ValidationException;
+import java.util.Objects;
 
 /**
  * <p>

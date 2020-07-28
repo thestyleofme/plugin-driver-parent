@@ -1,13 +1,12 @@
 package com.github.codingdebugallday.driver.core.api.dto;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import javax.validation.constraints.NotBlank;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 /**
  * <p>

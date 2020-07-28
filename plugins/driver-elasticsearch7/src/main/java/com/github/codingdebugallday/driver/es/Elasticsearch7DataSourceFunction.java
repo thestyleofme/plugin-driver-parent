@@ -1,10 +1,9 @@
 package com.github.codingdebugallday.driver.es;
 
 import com.github.codingdebugallday.driver.core.domain.entity.CommonDatasourceSettingInfo;
-import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
-import com.github.codingdebugallday.driver.core.infra.utils.DriverUtil;
 import com.github.codingdebugallday.driver.core.infra.function.DriverDataSourceFunction;
+import com.github.codingdebugallday.driver.core.infra.utils.DriverUtil;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.pf4j.Extension;

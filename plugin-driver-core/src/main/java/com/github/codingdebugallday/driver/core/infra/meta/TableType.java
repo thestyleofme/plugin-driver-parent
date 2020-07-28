@@ -10,12 +10,33 @@ package com.github.codingdebugallday.driver.core.infra.meta;
  * @since 1.0
  */
 public enum TableType {
+    /**
+     * TABLE
+     */
     TABLE("TABLE"),
+    /**
+     * VIEW
+     */
     VIEW("VIEW"),
+    /**
+     * SYSTEM TABLE
+     */
     SYSTEM_TABLE("SYSTEM TABLE"),
+    /**
+     * GLOBAL TEMPORARY
+     */
     GLOBAL_TEMPORARY("GLOBAL TEMPORARY"),
+    /**
+     * LOCAL TEMPORARY
+     */
     LOCAL_TEMPORARY("LOCAL TEMPORARY"),
+    /**
+     * ALIAS
+     */
     ALIAS("ALIAS"),
+    /**
+     * SYNONYM
+     */
     SYNONYM("SYNONYM");
 
     private final String value;

@@ -60,19 +60,19 @@ public class Table extends BaseInfo {
     private String tableType;
 
     /**
-     * 主键s
+     * 主键s column-PrimaryKey
      */
     private final Map<String, PrimaryKey> pkMap = new LinkedHashMap<>();
 
     /**
-     * 外键s
+     * 外键s column-ForeignKey
      */
     private final Map<String, ForeignKey> fkMap = new LinkedHashMap<>();
 
     /**
      * 索引s
      */
-    private final Map<String, IndexKey> ikMap = new LinkedHashMap<>();
+    private final List<IndexKey> ikList = new ArrayList<>();
 
     /**
      * 列s
@@ -102,7 +102,8 @@ public class Table extends BaseInfo {
         try (ResultSet rs = connection.getMetaData().getPrimaryKeys(catalog, schema, tableName)) {
             if (null != rs) {
                 while (rs.next()) {
-                    this.pkMap.put(tableName, new PrimaryKey(rs));
+                    PrimaryKey pk = new PrimaryKey(rs);
+                    this.pkMap.put(pk.getColumnName(), pk);
                 }
             }
         } catch (SQLException e) {
@@ -114,7 +115,8 @@ public class Table extends BaseInfo {
         try (ResultSet rs = connection.getMetaData().getImportedKeys(catalog, schema, tableName)) {
             if (null != rs) {
                 while (rs.next()) {
-                    this.fkMap.put(tableName, new ForeignKey(rs));
+                    ForeignKey fk = new ForeignKey(rs);
+                    this.fkMap.put(fk.getColumnName(), fk);
                 }
             }
         } catch (SQLException e) {
@@ -126,7 +128,7 @@ public class Table extends BaseInfo {
         try (ResultSet rs = connection.getMetaData().getIndexInfo(catalog, schema, tableName, true, true)) {
             if (null != rs) {
                 while (rs.next()) {
-                    this.ikMap.put(tableName, new IndexKey(rs));
+                    ikList.add(new IndexKey(rs));
                 }
             }
         } catch (SQLException e) {

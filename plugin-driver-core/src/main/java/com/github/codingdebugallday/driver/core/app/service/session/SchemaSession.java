@@ -1,10 +1,10 @@
 package com.github.codingdebugallday.driver.core.app.service.session;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -20,6 +20,7 @@ public interface SchemaSession {
      * 执行SQL文本，SQL文本拆分成多个SQL语句后，单独运行
      * transactionFlag=true 开启事务，默认事务关闭
      * resultFlag=true 默认返回值为空
+     *
      * @param resultFlag      是否返回值
      * @param transactionFlag 是否事务
      * @param schema          schema
@@ -65,6 +66,7 @@ public interface SchemaSession {
      * transactionFlag=true 开启事务，默认事务关闭
      * resultFlag=true 默认返回值为空
      * Pageable page 分页参数
+     *
      * @param pageable        分页参数
      * @param resultFlag      是否返回值
      * @param transactionFlag 是否事务
@@ -79,6 +81,7 @@ public interface SchemaSession {
     /**
      * 执行单条非查询语句
      * 可选择开启事务、开启返回值
+     *
      * @param resultFlag      是否返回值
      * @param transactionFlag 是否事务
      * @param schema          schema
@@ -103,6 +106,7 @@ public interface SchemaSession {
     /**
      * 单条语句分页查询
      * pageable分页对象
+     *
      * @param schema   数据库，可为空。为空则取当前连接的数据库
      * @param sql      查询语句
      * @param pageable 分页

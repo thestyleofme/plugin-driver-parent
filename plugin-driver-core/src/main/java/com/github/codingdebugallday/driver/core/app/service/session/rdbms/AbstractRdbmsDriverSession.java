@@ -3,7 +3,7 @@ package com.github.codingdebugallday.driver.core.app.service.session.rdbms;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.core.app.service.session.SessionTool;
 import com.github.codingdebugallday.driver.core.app.service.session.funcations.extractor.*;
-import com.github.codingdebugallday.driver.core.app.service.session.funcations.setter.*;
+import com.github.codingdebugallday.driver.core.app.service.session.funcations.setter.SchemaSetter;
 import com.github.codingdebugallday.driver.core.infra.constants.DataSourceTypeConstant;
 import com.github.codingdebugallday.driver.core.infra.constants.PatternConstant;
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
@@ -25,6 +25,8 @@ import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.sql.*;
 import java.util.*;
+
+import static com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant.Symbol.*;
 
 /**
  * <p>
@@ -604,11 +606,11 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         lineReader.lines();
         lineReader.lines().forEach(line -> {
             // 注释符开头认为是注释
-            if (line.trim().startsWith("--")) {
-                sqlBuilder.append(line).append("\n");
+            if (line.trim().startsWith(TWO_MIDDLE_LINE)) {
+                sqlBuilder.append(line).append(NEWLINE);
                 // ;认为是结尾
-            } else if (line.trim().endsWith(";")) {
-                sqlBuilder.append(line).append("\n");
+            } else if (line.trim().endsWith(SEMICOLON)) {
+                sqlBuilder.append(line).append(NEWLINE);
                 sqlList.add(sqlBuilder.toString());
                 sqlBuilder.delete(0, sqlBuilder.length());
             } else {
@@ -674,4 +676,6 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         }
         return obj;
     }
+
+
 }

@@ -1,9 +1,9 @@
 package com.github.codingdebugallday.driver.core.infra.metrics;
 
-import com.github.codingdebugallday.plugin.core.infra.utils.ApplicationContextHelper;
 import com.github.codingdebugallday.driver.core.infra.utils.IpUtil;
-import com.github.codingdebugallday.plugin.core.infra.utils.JsonUtil;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
+import com.github.codingdebugallday.plugin.core.infra.utils.ApplicationContextHelper;
+import com.github.codingdebugallday.plugin.core.infra.utils.JsonUtil;
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.Statistic;
@@ -33,13 +33,13 @@ public class RedisMeterRegistry extends StepMeterRegistry {
 
     private final PluginDatasourceVO pluginDatasourceVO;
 
-    private static final StringRedisTemplate stringRedisTemplate;
+    private static final StringRedisTemplate STRING_REDIS_TEMPLATE;
 
-    private static final Environment env;
+    private static final Environment ENV;
 
     static {
-        stringRedisTemplate = ApplicationContextHelper.getContext().getBean(StringRedisTemplate.class);
-        env = ApplicationContextHelper.getContext().getBean(Environment.class);
+        STRING_REDIS_TEMPLATE = ApplicationContextHelper.getContext().getBean(StringRedisTemplate.class);
+        ENV = ApplicationContextHelper.getContext().getBean(Environment.class);
     }
 
     public RedisMeterRegistry(PluginDatasourceVO pluginDatasourceVO) {
@@ -90,7 +90,7 @@ public class RedisMeterRegistry extends StepMeterRegistry {
     private void doPublish(List<Metric> metrics) {
         if (!isClosed()) {
             String key = String.format(KEY_FMT, pluginDatasourceVO.getDatasourceCode(), IpUtil.LOCAL_IP + "-" + getPort());
-            stringRedisTemplate.boundValueOps(key).set(JsonUtil.toJson(metrics), EXPIRED_SECONDS, TimeUnit.SECONDS);
+            STRING_REDIS_TEMPLATE.boundValueOps(key).set(JsonUtil.toJson(metrics), EXPIRED_SECONDS, TimeUnit.SECONDS);
         } else {
             log.warn("redisMeterRegistry is closed!");
         }
@@ -99,7 +99,7 @@ public class RedisMeterRegistry extends StepMeterRegistry {
     private int getPort() {
         String port = "8080";
         try {
-            port = env.resolvePlaceholders("${server.port:8080}");
+            port = ENV.resolvePlaceholders("${server.port:8080}");
         } catch (NullPointerException e) {
             log.warn("not spring environment, set default port 8080");
         }

@@ -67,6 +67,11 @@ public class BaseConstant {
         public static final String LEFT_MIDDLE_BRACE = "[";
         public static final String RIGHT_MIDDLE_BRACE = "]";
         public static final String BACKQUOTE = "`";
+        public static final String NEWLINE = "\n";
+        public static final String TAB = "\t";
+        public static final String TWO_MIDDLE_LINE = "-";
+        public static final String LEFT_BRACKET = "(";
+        public static final String RIGHT_BRACKET = ")";
     }
 
     public static class Pattern {

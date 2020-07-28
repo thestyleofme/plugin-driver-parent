@@ -1,10 +1,9 @@
 package com.github.codingdebugallday.driver.core.app.service.session;
 
+import com.github.codingdebugallday.driver.core.infra.meta.*;
+
 import java.util.List;
 import java.util.Map;
-
-import com.github.codingdebugallday.driver.core.infra.meta.Tuple;
-import com.github.codingdebugallday.driver.core.infra.meta.*;
 
 /**
  * <p>
@@ -20,7 +19,8 @@ public interface TableSession {
     /**
      * 获取schema下的table列表
      * tablePattern = %table% 可模糊查询来过滤表
-     * @param schema schema
+     *
+     * @param schema       schema
      * @param tablePattern tablePattern
      * @return List<String>
      */
@@ -40,6 +40,7 @@ public interface TableSession {
 
     /**
      * 获取表主键
+     *
      * @param schema 数据库，可为空。为空则取当前连接的数据库
      * @param table  表名
      * @return 主键
@@ -158,5 +159,14 @@ public interface TableSession {
         throw new UnsupportedOperationException("Not Implement");
     }
 
+    /**
+     * 建表语句的SQL
+     *
+     * @param table 表
+     * @return 建表语句的SQL
+     */
+    default String createTableSql(Table table) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
 
 }

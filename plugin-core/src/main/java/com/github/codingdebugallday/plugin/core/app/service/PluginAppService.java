@@ -1,10 +1,10 @@
 package com.github.codingdebugallday.plugin.core.app.service;
 
-import java.nio.file.Path;
-
 import com.github.codingdebugallday.integration.operator.PluginOperator;
 import com.github.codingdebugallday.integration.operator.module.PluginInfo;
 import com.github.codingdebugallday.integration.user.PluginUser;
+
+import java.nio.file.Path;
 
 /**
  * <p>

@@ -2,7 +2,9 @@ package com.github.codingdebugallday.driver.mysql.session;
 
 import com.github.codingdebugallday.driver.core.app.service.session.rdbms.AbstractRdbmsDriverSession;
 import com.github.codingdebugallday.driver.core.infra.meta.Column;
+import com.github.codingdebugallday.driver.core.infra.meta.IndexKey;
 import com.github.codingdebugallday.driver.core.infra.meta.Table;
+import com.github.codingdebugallday.driver.mysql.session.generator.MysqlSqlGenerator;
 import com.github.codingdebugallday.driver.mysql.session.meta.MysqlColumnExtra;
 import com.github.codingdebugallday.driver.mysql.session.meta.MysqlTableExtra;
 import org.apache.commons.beanutils.BeanUtils;
@@ -12,6 +14,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -66,6 +69,7 @@ public class MysqlDriverSession extends AbstractRdbmsDriverSession {
         }
         // 字段额外信息
         List<Column> columnList = table.getColumnList();
+        Map<String, List<IndexKey>> columnIkList = table.getIkList().stream().collect(Collectors.groupingBy(IndexKey::getColumnName));
         columnList.forEach(column -> {
             MysqlColumnExtra columnExtra = new MysqlColumnExtra();
             boolean flag = false;
@@ -77,7 +81,7 @@ public class MysqlDriverSession extends AbstractRdbmsDriverSession {
                 columnExtra.setFkFlag(1);
                 flag = true;
             }
-            if (Objects.nonNull(table.getIkMap().get(column.getColumnName()))) {
+            if (Objects.nonNull(columnIkList) && CollectionUtils.isEmpty(columnIkList.get(column.getColumnName()))) {
                 columnExtra.setIndexFlag(1);
                 flag = true;
             }
@@ -92,4 +96,8 @@ public class MysqlDriverSession extends AbstractRdbmsDriverSession {
         return table;
     }
 
+    @Override
+    public String createTableSql(Table table) {
+        return MysqlSqlGenerator.getInstance().generateCreateSql(table);
+    }
 }

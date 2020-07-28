@@ -16,6 +16,8 @@
         <plugin.class>com.github.codingdebugallday.driver.mysql.Mysql5Plugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>isaac</plugin.provider>
+        <commons.beanutils.version>1.9.3</commons.beanutils.version>
+        <commons.lang3.version>3.11</commons.lang3.version>
     </properties>
 
     <dependencies>
@@ -28,7 +30,12 @@
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.9.3</version>
+            <version>${commons.beanutils.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang3.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
