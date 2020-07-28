@@ -3,7 +3,6 @@ package com.github.codingdebugallday.driver.core.infra.generator;
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.core.infra.meta.Column;
 import com.github.codingdebugallday.driver.core.infra.meta.Table;
-import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
 
 import static com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant.Symbol.*;
 
@@ -42,7 +41,7 @@ public interface SqlGenerator {
      * @return 主键SQL
      */
     default String buildPkSql(Table table) {
-        throw new DriverException("Not Implement");
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -52,7 +51,7 @@ public interface SqlGenerator {
      * @return 索引SQL
      */
     default String buildIkSql(Table table) {
-        throw new DriverException("Not Implement");
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -62,7 +61,7 @@ public interface SqlGenerator {
      * @return 外键SQL
      */
     default String buildFkSql(Table table) {
-        throw new DriverException("Not Implement");
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -72,7 +71,7 @@ public interface SqlGenerator {
      * @return 类型SQL生成
      */
     default String convertType(Column column) {
-        throw new DriverException("Not Implement");
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -82,7 +81,7 @@ public interface SqlGenerator {
      * @return 类型SQL生成
      */
     default String convertColumnDef(String columnDef) {
-        throw new DriverException("Not Implement");
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -92,7 +91,7 @@ public interface SqlGenerator {
      * @return 为NULL状态 SQL部分
      */
     default String convertNull(Integer nullable) {
-        throw new DriverException("Not Implement");
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -103,6 +102,6 @@ public interface SqlGenerator {
      * @return 自增SQL部分
      */
     default String convertAutoincrement(Table table, Column column) {
-        throw new DriverException("Not Implement");
+        throw new UnsupportedOperationException("Not Implement");
     }
 }
