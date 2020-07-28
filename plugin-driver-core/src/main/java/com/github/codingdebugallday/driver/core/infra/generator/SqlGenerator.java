@@ -1,6 +1,5 @@
 package com.github.codingdebugallday.driver.core.infra.generator;
 
-import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.core.infra.meta.Column;
 import com.github.codingdebugallday.driver.core.infra.meta.Table;
 

@@ -1,8 +1,12 @@
 package com.github.codingdebugallday.driver.core.infra.meta;
 
-import lombok.*;
-
 import java.util.List;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * <p>
@@ -20,7 +24,11 @@ import java.util.List;
 public class Schema extends BaseInfo {
 
     /**
-     * schema名
+     * 表类别（可为 null)
+     */
+    private String catalog;
+    /**
+     * 表模式（可为 null)
      */
     private String tableSchema;
 

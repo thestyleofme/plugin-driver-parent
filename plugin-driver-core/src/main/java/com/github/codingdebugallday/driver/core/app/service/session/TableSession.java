@@ -1,9 +1,14 @@
 package com.github.codingdebugallday.driver.core.app.service.session;
 
-import com.github.codingdebugallday.driver.core.infra.meta.*;
-
 import java.util.List;
 import java.util.Map;
+
+import com.github.codingdebugallday.driver.core.infra.meta.ForeignKey;
+import com.github.codingdebugallday.driver.core.infra.meta.IndexKey;
+import com.github.codingdebugallday.driver.core.infra.meta.PartitionKey;
+import com.github.codingdebugallday.driver.core.infra.meta.PrimaryKey;
+import com.github.codingdebugallday.driver.core.infra.meta.Table;
+import com.github.codingdebugallday.driver.core.infra.meta.Tuple;
 
 /**
  * <p>
@@ -17,12 +22,11 @@ public interface TableSession {
 
 
     /**
-     * 获取schema下的table列表
-     * tablePattern = %table% 可模糊查询来过滤表
+     * 模糊查询schema下的table列表 tablePattern = %table% 可模糊查询来过滤表
      *
-     * @param schema       schema
-     * @param tablePattern tablePattern
-     * @return List<String>
+     * @param schema 表模式
+     * @param tablePattern 表匹配字段
+     * @return List<String> table列表
      */
     default List<String> tableList(String schema, String tablePattern) {
         throw new UnsupportedOperationException("Not Implement");
@@ -31,41 +35,41 @@ public interface TableSession {
     /**
      * 获取schema下的table列表
      *
-     * @param schema 数据库，可为空。为空则取当前连接的数据库
-     * @return 表名
+     * @param schema 表模式
+     * @return List<String> table列表
      */
     default List<String> tableList(String schema) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * 获取表主键
+     * 表主键获取
      *
-     * @param schema 数据库，可为空。为空则取当前连接的数据库
-     * @param table  表名
-     * @return 主键
+     * @param schema 表模式
+     * @param table 表名
+     * @return List<PrimaryKey> 主键列表
      */
     default List<PrimaryKey> tablePk(String schema, String table) {
         throw new UnsupportedOperationException("SqlSession unsupported!!!");
     }
 
     /**
-     * 获取表外键
+     * 表外键获取
      *
-     * @param schema 数据库，可为空。为空则取当前连接的数据库
-     * @param table  表名
-     * @return 主键
+     * @param schema 表模式
+     * @param table 表名
+     * @return List<ForeignKey> 主键
      */
     default List<ForeignKey> tableFk(String schema, String table) {
         throw new UnsupportedOperationException("SqlSession unsupported!!!");
     }
 
     /**
-     * 获取表索引
+     * 表索引获取
      *
-     * @param schema 数据库，可为空。为空则取当前连接的数据库
-     * @param table  表名
-     * @return 表索引
+     * @param schema 表模式
+     * @param table 表名
+     * @return List<IndexKey> 表索引
      */
     default List<IndexKey> tableIndex(String schema, String table) {
         throw new UnsupportedOperationException("SqlSession unsupported!!!");
@@ -73,97 +77,96 @@ public interface TableSession {
 
 
     /**
-     * 表是否存在
+     * 查询表是否存在
      *
-     * @param schema schema
-     * @param table  table
-     * @return true|false
+     * @param schema 表模式
+     * @param table 表名
+     * @return boolean true 存在，false 不存在
      */
     default boolean tableExists(String schema, String table) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * schema下视图
+     * 视图模糊查询
      *
-     * @param schema      schema
+     * @param schema 表模式
      * @param viewPattern 视图名称模糊查询
-     * @return 视图列表
+     * @return List<String> 视图列表
      */
     default List<String> views(String schema, String viewPattern) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * schema下视图
+     * 视图查询
      *
-     * @param schema schema
-     * @return 视图列表
+     * @param schema 表模式
+     * @return List<String> 视图列表
      */
     default List<String> views(String schema) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * 查询表数据
+     * 表数据查询
      *
-     * @param schema 库
-     * @param table  表
-     * @return 数据
+     * @param schema 表模式
+     * @param table 视图列表
+     * @return List<Map<String, Object>> 查询结果
      */
     default List<Map<String, Object>> tableQuery(String schema, String table) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * 表分区信息
+     * 查询分区字段
      *
-     * @param schema schema
-     * @param table  table
-     * @return List<PartitionKey>
+     * @param schema 表模式
+     * @param table 表名
+     * @return List<PartitionKey> 分区字段列表
      */
     default List<PartitionKey> partitionList(String schema, String table) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * 建表
+     * 创建表
      *
      * @param table 表信息
-     * @return 是否创建成功
+     * @return boolean true 创建成功，false创建失败
      */
     default boolean tableCreate(Table table) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
-
     /**
      * 插入数据
      *
-     * @param schema 库
-     * @param table  表
+     * @param schema 表模式
+     * @param table 表名
      * @param values 值 （二元组 <key（列）,value（值）>）
-     * @return 是否创建成功
+     * @return boolean true 插入成功，false 插入失败
      */
     default boolean tableInsert(String schema, String table, List<Tuple<String, String>> values) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * 更新表结构
+     * 表结构更新
      *
      * @param table 表信息
-     * @return 是否更新成功
+     * @return boolean true 插入成功，false 插入失败
      */
     default boolean tableUpdate(Table table) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * 建表语句的SQL
+     * 建表语句生成
      *
-     * @param table 表
-     * @return 建表语句的SQL
+     * @param table 表信息
+     * @return String 建表SQL
      */
     default String createTableSql(Table table) {
         throw new UnsupportedOperationException("Not Implement");

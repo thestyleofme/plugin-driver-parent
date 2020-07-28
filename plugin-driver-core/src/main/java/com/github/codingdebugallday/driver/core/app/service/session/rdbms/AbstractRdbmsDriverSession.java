@@ -477,7 +477,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     public List<IndexKey> tableIndex(String schema, String table) {
         List<IndexKey> indexKeyList = new ArrayList<>();
         // 获取索引
-        try (ResultSet rs = this.dataSource.getConnection().getMetaData().getIndexInfo(schema, schema, table, true, true)) {
+        try (ResultSet rs = this.dataSource.getConnection().getMetaData().getIndexInfo(schema, schema, table, false, false)) {
             if (null != rs) {
                 while (rs.next()) {
                     indexKeyList.add(new IndexKey(rs));
@@ -539,6 +539,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
                 .tables(tableList)
                 .views(viewList)
                 .tableSchema(schema)
+                .catalog(this.currentCatalog())
                 .build();
     }
 
@@ -555,13 +556,21 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public String currentSchema() {
-        try(Connection conn = this.dataSource.getConnection();){
-            return Optional.ofNullable(conn.getSchema()).orElse(conn.getCatalog());
+        try(Connection conn = this.dataSource.getConnection()){
+            return conn.getSchema();
         } catch (SQLException e) {
             throw new DriverException("current schema", e);
         }
     }
 
+    @Override
+    public String currentCatalog() {
+        try(Connection conn = this.dataSource.getConnection()){
+            return conn.getCatalog();
+        } catch (SQLException e) {
+            throw new DriverException("current schema", e);
+        }
+    }
 
     protected String getPageFormat() {
         return DEFAULT_PAGE_SQL;

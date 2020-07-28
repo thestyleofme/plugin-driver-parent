@@ -1,7 +1,11 @@
 package com.github.codingdebugallday.driver.core.infra.meta;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * <p>
@@ -18,8 +22,17 @@ import lombok.*;
 @AllArgsConstructor
 public class PartitionKey extends BaseInfo {
 
+    /**
+     * 表类别（可为 null)
+     */
     private String tableCat;
+    /**
+     * 表模式（可为 null）
+     */
     private String tableSchema;
+    /**
+     * 表名称
+     */
     private String tableName;
     /**
      * 分区字段

@@ -1,8 +1,5 @@
 package com.github.codingdebugallday.driver.core.infra.meta;
 
-import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
-import lombok.*;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,12 +8,20 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 /**
  * <p>
  *
  * @author JupiterMouse 2020/07/21
  * @see java.sql.DatabaseMetaData#getTables
- * </p>
+ *      </p>
  * @since 1.0
  */
 @Data
@@ -27,62 +32,71 @@ import java.util.Map;
 public class Table extends BaseInfo {
 
     /**
-     * table catalog (may be <code>null</code>)
+     * 表类别（可为 null)
      */
     private String tableCat;
     /**
-     * table schema (may be <code>null</code>)
+     * 表模式（可为 null)
      */
     private String tableSchema;
     /**
-     * table name
+     * 表名称
      */
     private String tableName;
 
     /**
-     * 注释
+     * 备注
      *
      * @see java.sql.DatabaseMetaData#getTables
      */
     private String remarks;
     /**
-     * selfReferencingColName
+     * 类型表的指定“标识符”列的名称 （可为 null)
      */
     private String selfReferencingColName;
     /**
-     * SYSTEM", "USER", "DERIVED"
+     * 指定如何创建selfReferencingColName中的值：SYSTEM", "USER", "DERIVED"
      */
     private String refGeneration;
 
     /**
-     * table type.  Typical types are "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL TEMPORARY","LOCAL TEMPORARY", "ALIAS", "SYNONYM"
+     * 表类型. Typical types are "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL TEMPORARY","LOCAL TEMPORARY",
+     * "ALIAS", "SYNONYM"
      */
     private String tableType;
 
     /**
-     * 主键s column-PrimaryKey
+     * 主键Map column->PrimaryKey
      */
     private final Map<String, PrimaryKey> pkMap = new LinkedHashMap<>();
 
     /**
-     * 外键s column-ForeignKey
+     * 外键MAP column->ForeignKey
      */
     private final Map<String, ForeignKey> fkMap = new LinkedHashMap<>();
 
     /**
-     * 索引s
+     * 索引列表
      */
     private final List<IndexKey> ikList = new ArrayList<>();
 
     /**
-     * 列s
+     * 字段列表
      */
     private final List<Column> columnList = new ArrayList<>();
 
+    /**
+     * 生成表元数据
+     * 
+     * @param connection 连接
+     * @param catalog 表类别（可为 null)
+     * @param schema 表模式（可为 null)
+     * @param tableName 表名
+     */
     public void init(Connection connection, String catalog, String schema, String tableName) {
         // 表信息
         // 获得表元数据（表注释）
-        try (ResultSet rs = connection.getMetaData().getTables(catalog, schema, tableName, new String[]{"TABLE"})) {
+        try (ResultSet rs = connection.getMetaData().getTables(catalog, schema, tableName, new String[] {"TABLE"})) {
             if (null != rs) {
                 if (rs.next()) {
                     this.remarks = rs.getString("REMARKS");
@@ -95,7 +109,7 @@ public class Table extends BaseInfo {
             }
         } catch (SQLException e) {
             throw new DriverException("[catelog:" + catalog + "],[schema:" + schema + "],[table:" + tableName
-                    + "] table basic info error", e);
+                            + "] table basic info error", e);
         }
 
         // 获得主键
@@ -108,7 +122,7 @@ public class Table extends BaseInfo {
             }
         } catch (SQLException e) {
             throw new DriverException("[catelog:" + catalog + "],[schema:" + schema + "],[table:" + tableName
-                    + "] table primary key error", e);
+                            + "] table primary key error", e);
         }
 
         // 获取外键
@@ -121,7 +135,7 @@ public class Table extends BaseInfo {
             }
         } catch (SQLException e) {
             throw new DriverException("[catelog:" + catalog + "],[schema:" + schema + "],[table:" + tableName
-                    + "] table foreign key error", e);
+                            + "] table foreign key error", e);
         }
 
         // 获取索引
@@ -133,7 +147,7 @@ public class Table extends BaseInfo {
             }
         } catch (SQLException e) {
             throw new DriverException("[catelog:" + catalog + "],[schema:" + schema + "],[table:" + tableName
-                    + "] table index key error", e);
+                            + "] table index key error", e);
         }
 
         // 列信息
@@ -146,7 +160,7 @@ public class Table extends BaseInfo {
             }
         } catch (SQLException e) {
             throw new DriverException("[catelog:" + catalog + "],[schema:" + schema + "],[table:" + tableName
-                    + "] table index key error", e);
+                            + "] table index key error", e);
         }
     }
 }
