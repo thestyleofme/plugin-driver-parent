@@ -22,25 +22,33 @@ public abstract class BasePluginConvert {
     /**
      * entityToDTO
      *
-     * @param entity PluginDatasourceDriver
-     * @return PluginDatasourceDriverDTO
+     * @param entity Plugin
+     * @return PluginDTO
      */
     public abstract PluginDTO entityToDTO(Plugin entity);
 
     /**
      * dtoToEntity
      *
-     * @param dto PluginDatasourceDriverDTO
-     * @return PluginDatasourceDriver
+     * @param dto PluginDTO
+     * @return Plugin
      */
     public abstract Plugin dtoToEntity(PluginDTO dto);
 
     /**
      * entityToVO
      *
-     * @param entity PluginDatasourceDriver
-     * @return PluginDatasourceDriverVO
+     * @param entity Plugin
+     * @return PluginVO
      */
     public abstract PluginVO entityToVO(Plugin entity);
+
+    /**
+     * voToEntity
+     *
+     * @param pluginVO PluginVO
+     * @return Plugin
+     */
+    public abstract Plugin voToEntity(PluginVO pluginVO);
 
 }

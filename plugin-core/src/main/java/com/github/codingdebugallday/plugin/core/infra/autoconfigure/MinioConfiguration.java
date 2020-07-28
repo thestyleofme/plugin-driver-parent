@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableConfigurationProperties(MinioProperties.class)
-@ConditionalOnExpression("'${plugin.runMode}'.equalsIgnoreCase('prod') || '${plugin.runMode}'.equalsIgnoreCase('deployment')")
+@ConditionalOnExpression("'${plugin.run-mode}'.equalsIgnoreCase('prod') || '${plugin.run-mode}'.equalsIgnoreCase('deployment')")
 public class MinioConfiguration {
 
     private final MinioProperties minioProperties;
