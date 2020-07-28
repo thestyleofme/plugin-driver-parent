@@ -25,7 +25,7 @@ public interface MetaDataSession {
      * @return List<Column>
      */
     default List<Column> columnMetaData(String schema, String tableName) {
-        throw new DriverException("Not Supported");
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -37,7 +37,7 @@ public interface MetaDataSession {
      * @return Table
      */
     default Table tableMetaData(String schema, String tableName) {
-        throw new DriverException("Not Supported");
+        throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
@@ -49,18 +49,6 @@ public interface MetaDataSession {
      * @return Table
      */
     default Table tableMetaExtra(String schema, String tableName) {
-        throw new DriverException("Not Supported");
-    }
-
-    /**
-     * 适用RDB
-     * 查询列元数据
-     *
-     * @param schema    schema
-     * @param tableName 表名
-     * @return List<Column>
-     */
-    default List<Column> columnMetaDetail(String schema, String tableName) {
-        throw new DriverException("Not Supported");
+        throw new UnsupportedOperationException("Not Implement");
     }
 }
