@@ -2,10 +2,10 @@
 
 #### 插件方面
 
-* 插件内类加载隔离，类似tomcat方式。参照datax隔离设计。
-* 插件扩展点更简单的实现SPI。
+* 插件内类加载隔离
+* 插件扩展点更简单的实现SPI
 * 插件懒加载
-* 插件local、minio下载方式
+* 插件local、minio存储
 
 #### 数据源方面
 
@@ -14,8 +14,6 @@
 * 数据源通用接口封装
 * 自动建表扩展开发
 * ....
-
-
 
 ## 如何开发数据源插件？
 
@@ -32,8 +30,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>hdsp-driver-plugin-parent</artifactId>
-        <groupId>com.hand.hdsp</groupId>
+        <artifactId>driver-plugin-parent</artifactId>
+        <groupId>com.github.codingdebugall</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -43,7 +41,7 @@
       <!--        插件 名称      -->
         <plugin.id>driver-mysql5</plugin.id>
        <!--        插件 入口类      -->
-        <plugin.class>com.hand.hdsp.driver.mysql.Mysql5Plugin</plugin.class>
+        <plugin.class>com.github.codingdebugallday.driver.mysql.Mysql5Plugin</plugin.class>
        <!--        插件 版本      -->
         <plugin.version>${project.version}</plugin.version>
        <!--        插件 作者    -->
@@ -53,8 +51,8 @@
     <dependencies>
       <!--        插件 依赖      -->
         <dependency>
-            <groupId>com.hand.hdsp</groupId>
-            <artifactId>hdsp-plugin-driver-core</artifactId>
+            <groupId>com.github.codingdebugallday</groupId>
+            <artifactId>plugin-driver-core</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -68,8 +66,6 @@
 
 </project>
 ```
-
-
 
 #### 入口类
 
@@ -110,7 +106,7 @@ public class Mysql5Plugin extends BasePlugin {
 
 > 1. 实现DriverDataSourceFunction<T extends PluginDatasourceVO, R>接口，2. 添加扩展点注解@Extension
 
-```java
+```
 @Extension
 public class MysqlDataSourceFunction implements DriverDataSourceFunction<PluginDatasourceVO, DataSource> {
 
@@ -280,8 +276,8 @@ cd plugins && mvn clean package -pl driver-mysql5 -am -DskipTests
 
 ```pom
         <dependency>
-            <groupId>com.hand.hdsp</groupId>
-            <artifactId>hdsp-plugin-driver-core</artifactId>
+            <groupId>com.github.codingdebugallday</groupId>
+            <artifactId>plugin-driver-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
 ```
@@ -293,7 +289,7 @@ cd plugins && mvn clean package -pl driver-mysql5 -am -DskipTests
 * 本地：获取Spring服务现有数据源实例。
 * 插件：指定租户、数据源CODE获取插件数据源实例。此实例是缓存的。
 
-```java
+```
     /**
      * 获取本地数据源
      */
@@ -351,7 +347,7 @@ public class DriverSessionServiceTest {
 
 Session 相关接口如下类图：
 
-![image-20200729113925930](/Users/renqiqiang/Library/Application Support/typora-user-images/image-20200729113925930.png)
+![Session类图](images/plugin-driver-core/session-class.jpg)
 
 
 
