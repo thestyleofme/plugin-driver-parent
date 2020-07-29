@@ -57,9 +57,7 @@ public class MysqlDriverSession extends AbstractRdbmsDriverSession {
         // basic info
         Table table = this.tableMetaData(schema, tableName);
         // 表额外信息
-        if (CollectionUtils.isEmpty(metaDataMapList)) {
-            // nothing to do
-        } else {
+        if (!CollectionUtils.isEmpty(metaDataMapList)) {
             try {
                 BeanUtils.populate(tableExtra, metaDataMapList.get(0));
                 table.setExtra(BeanUtils.describe(tableExtra));
