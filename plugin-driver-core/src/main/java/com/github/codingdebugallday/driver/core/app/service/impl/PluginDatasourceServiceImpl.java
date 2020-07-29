@@ -1,6 +1,10 @@
 package com.github.codingdebugallday.driver.core.app.service.impl;
 
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.codingdebugallday.driver.core.api.dto.PluginDatasourceDTO;
 import com.github.codingdebugallday.driver.core.app.service.PluginDatasourceService;
@@ -13,11 +17,9 @@ import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.plugin.core.app.service.PluginService;
 import com.github.codingdebugallday.plugin.core.domain.entity.Plugin;
 import com.github.codingdebugallday.plugin.core.infra.converter.BasePluginConvert;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -43,12 +45,16 @@ public class PluginDatasourceServiceImpl extends ServiceImpl<PluginDatasourceMap
     }
 
     @Override
-    public List<PluginDatasourceDTO> list(Long tenantId, PluginDatasourceDTO pluginDatasourceDTO) {
+    public IPage<PluginDatasourceDTO> list(Page<PluginDatasource> page, PluginDatasourceDTO pluginDatasourceDTO) {
         QueryWrapper<PluginDatasource> queryWrapper = new QueryWrapper<>(
                 BasePluginDatasourceConvert.INSTANCE.dtoToEntity(pluginDatasourceDTO));
-        return list(queryWrapper).stream()
+        Page<PluginDatasource> entityPage = page(page, queryWrapper);
+        final Page<PluginDatasourceDTO> dtoPage = new Page<>();
+        BeanUtils.copyProperties(entityPage, dtoPage);
+        dtoPage.setRecords(entityPage.getRecords().stream()
                 .map(BasePluginDatasourceConvert.INSTANCE::entityToDTO)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+        return dtoPage;
     }
 
     @Override

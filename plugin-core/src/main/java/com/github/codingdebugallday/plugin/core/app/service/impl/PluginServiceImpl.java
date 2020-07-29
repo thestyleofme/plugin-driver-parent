@@ -1,6 +1,17 @@
 package com.github.codingdebugallday.plugin.core.app.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Objects;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.codingdebugallday.exceptions.PluginException;
 import com.github.codingdebugallday.plugin.core.api.dto.PluginDTO;
@@ -12,23 +23,15 @@ import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
 import com.github.codingdebugallday.plugin.core.infra.converter.BasePluginConvert;
 import com.github.codingdebugallday.plugin.core.infra.mapper.PluginMapper;
 import com.github.codingdebugallday.plugin.core.infra.utils.Md5Util;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -39,6 +42,7 @@ import java.util.stream.Collectors;
  * @since 1.0.0
  */
 @Service
+@Slf4j
 public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> implements PluginService {
 
     /**
@@ -59,12 +63,16 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
     }
 
     @Override
-    public List<PluginDTO> list(PluginDTO pluginDTO) {
+    public IPage<PluginDTO> list(Page<Plugin> pluginPage, PluginDTO pluginDTO) {
         QueryWrapper<Plugin> queryWrapper = new QueryWrapper<>(
                 BasePluginConvert.INSTANCE.dtoToEntity(pluginDTO));
-        return list(queryWrapper).stream()
+        Page<Plugin> entityPage = page(pluginPage, queryWrapper);
+        final Page<PluginDTO> dtoPage = new Page<>();
+        BeanUtils.copyProperties(entityPage, dtoPage);
+        dtoPage.setRecords(entityPage.getRecords().stream()
                 .map(BasePluginConvert.INSTANCE::entityToDTO)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+        return dtoPage;
     }
 
     @Override
@@ -159,7 +167,8 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
             // minio处理并重新记录指纹
             handlePluginUpdate(dto, multipartFile);
         }
-        return null;
+        this.save(BasePluginConvert.INSTANCE.dtoToEntity(dto));
+        return BasePluginConvert.INSTANCE.entityToDTO(this.getById(id));
     }
 
     @Override

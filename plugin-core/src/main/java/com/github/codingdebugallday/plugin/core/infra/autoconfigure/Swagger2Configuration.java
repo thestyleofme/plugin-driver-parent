@@ -26,6 +26,7 @@ public class Swagger2Configuration {
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("plugin")
                 .apiInfo(this.apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.any())

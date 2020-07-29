@@ -1,11 +1,11 @@
 package com.github.codingdebugallday.plugin.core.app.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.codingdebugallday.plugin.core.api.dto.PluginDTO;
 import com.github.codingdebugallday.plugin.core.domain.entity.Plugin;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 /**
  * <p>
@@ -18,12 +18,13 @@ import java.util.List;
 public interface PluginService extends IService<Plugin> {
 
     /**
-     * 条件查询插件
+     * 分页条件查询插件
      *
-     * @param pluginDTO PluginDTO
-     * @return List<PluginDTO>
+     * @param pluginPage 分页
+     * @param pluginDTO  PluginDTO
+     * @return IPage<PluginDTO>
      */
-    List<PluginDTO> list(PluginDTO pluginDTO);
+    IPage<PluginDTO> list(Page<Plugin> pluginPage, PluginDTO pluginDTO);
 
     /**
      * 通过id获取插件

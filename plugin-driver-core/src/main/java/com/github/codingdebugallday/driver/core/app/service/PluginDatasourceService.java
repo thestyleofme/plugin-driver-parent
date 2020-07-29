@@ -1,10 +1,10 @@
 package com.github.codingdebugallday.driver.core.app.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.codingdebugallday.driver.core.api.dto.PluginDatasourceDTO;
 import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
-
-import java.util.List;
 
 /**
  * <p>
@@ -17,13 +17,13 @@ import java.util.List;
 public interface PluginDatasourceService extends IService<PluginDatasource> {
 
     /**
-     * 条件查询数据源
+     * 分页条件查询数据源
      *
-     * @param tenantId            租户id
+     * @param page                分页
      * @param pluginDatasourceDTO PluginDatasourceDTO
      * @return List<PluginDatasourceDTO>
      */
-    List<PluginDatasourceDTO> list(Long tenantId, PluginDatasourceDTO pluginDatasourceDTO);
+    IPage<PluginDatasourceDTO> list(Page<PluginDatasource> page, PluginDatasourceDTO pluginDatasourceDTO);
 
     /**
      * 通过数据源编码获取数据源详情

@@ -1,15 +1,17 @@
 package com.github.codingdebugallday.driver.core.api.controller.v1;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.codingdebugallday.driver.core.api.dto.PluginDatasourceDTO;
 import com.github.codingdebugallday.driver.core.app.service.PluginDatasourceService;
+import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * <p>
@@ -32,9 +34,12 @@ public class PluginDatasourceController {
 
     @ApiOperation(value = "查询数据源")
     @GetMapping
-    public ResponseEntity<List<PluginDatasourceDTO>> list(@PathVariable(name = "organizationId") Long tenantId,
-                                                          PluginDatasourceDTO pluginDatasourceDTO) {
-        return ResponseEntity.ok(pluginDatasourceService.list(tenantId, pluginDatasourceDTO));
+    public ResponseEntity<IPage<PluginDatasourceDTO>> list(@PathVariable(name = "organizationId") Long tenantId,
+                                                           Page<PluginDatasource> page,
+                                                           PluginDatasourceDTO pluginDatasourceDTO) {
+        pluginDatasourceDTO.setTenantId(tenantId);
+        page.addOrder(OrderItem.desc(PluginDatasource.FIELD_DATASOURCE_ID));
+        return ResponseEntity.ok(pluginDatasourceService.list(page, pluginDatasourceDTO));
     }
 
     @ApiOperation(value = "数据源详情")

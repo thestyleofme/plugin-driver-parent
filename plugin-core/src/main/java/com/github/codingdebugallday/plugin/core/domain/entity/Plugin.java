@@ -1,5 +1,10 @@
 package com.github.codingdebugallday.plugin.core.domain.entity;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -7,11 +12,6 @@ import com.baomidou.mybatisplus.annotation.Version;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.github.codingdebugallday.plugin.core.api.dto.ValidGroup;
 import lombok.*;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -31,6 +31,7 @@ import java.time.LocalDateTime;
 public class Plugin implements Serializable {
 
     private static final long serialVersionUID = 6116676176216890732L;
+    public static final String FIELD_ID = "id";
     public static final String PLUGIN_STORE_TYPE_LOCAL = "LOCAL";
     public static final String PLUGIN_STORE_TYPE_MINIO = "MINIO";
 

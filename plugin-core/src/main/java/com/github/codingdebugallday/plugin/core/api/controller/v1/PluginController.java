@@ -1,8 +1,12 @@
 package com.github.codingdebugallday.plugin.core.api.controller.v1;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.codingdebugallday.plugin.core.api.dto.PluginDTO;
 import com.github.codingdebugallday.plugin.core.api.dto.ValidGroup;
 import com.github.codingdebugallday.plugin.core.app.service.PluginService;
+import com.github.codingdebugallday.plugin.core.domain.entity.Plugin;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 /**
  * <p>
@@ -34,10 +36,12 @@ public class PluginController {
 
     @ApiOperation(value = "查询驱动")
     @GetMapping
-    public ResponseEntity<List<PluginDTO>> list(@PathVariable(name = "organizationId") Long tenantId,
-                                                PluginDTO pluginDTO) {
+    public ResponseEntity<IPage<PluginDTO>> list(@PathVariable(name = "organizationId") Long tenantId,
+                                                 Page<Plugin> pluginPage,
+                                                 PluginDTO pluginDTO) {
         pluginDTO.setTenantId(tenantId);
-        return ResponseEntity.ok(pluginService.list(pluginDTO));
+        pluginPage.addOrder(OrderItem.desc(Plugin.FIELD_ID));
+        return ResponseEntity.ok(pluginService.list(pluginPage, pluginDTO));
     }
 
     @ApiOperation(value = "创建驱动")

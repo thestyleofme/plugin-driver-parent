@@ -1,5 +1,9 @@
 package com.github.codingdebugallday.driver.core.domain.entity;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -7,10 +11,6 @@ import com.baomidou.mybatisplus.annotation.Version;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-
-import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -31,6 +31,8 @@ import java.time.LocalDateTime;
 public class PluginDatasource implements Serializable {
 
     private static final long serialVersionUID = 3106933368424452675L;
+
+    public static final String FIELD_DATASOURCE_ID = "datasource_id";
 
     @TableId(type = IdType.AUTO)
     private Long datasourceId;
