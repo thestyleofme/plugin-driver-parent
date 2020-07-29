@@ -28,6 +28,10 @@ plugin:
 
 ### 3 插件管理
 
+> ![插件表sql文件](sql/plugin.sql)
+
+> ![插件数据源表sql文件](sql/plugin_datasource.sql)
+
 #### 3.1 创建插件
 
 > 由于swagger这个接口没法测试，只能使用postman进行测试
