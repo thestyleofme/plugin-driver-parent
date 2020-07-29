@@ -57,9 +57,10 @@ plugin-driver-parent
 
 详情请看[插件开发指导](plugin-dev.md)
 
-## 6. 接口
+## 5. 接口
 
 > 数据源元数据
+
 详情请看[数据源元数据](metadata.md)
 
 ## 6. 数据源监控
