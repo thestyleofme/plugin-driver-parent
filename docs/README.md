@@ -1,4 +1,4 @@
-# plugin-driver设计
+# plugin-driver-parent
 
 ## 1. 简介
 
@@ -16,48 +16,49 @@ plugin-driver基于此需求下而开发，采用插件架构，可适配上述�
 
 ```
 plugin-driver-parent
-    ├── plugin-driver-common
-    ├── plugin-driver-datasource
+    ├── plugin-core
+    ├── plugin-driver-core
     ├── plugin-driver-runner
-    ├── plugin-driver-session
     └── plugins
-        ├── driver-datasource-mysql
-        ├── driver-datasource-postgresql
-        ├── driver-session-mysql
-        ├── driver-session-postgresql
+        ├── driver-mysql5
+        ├── driver-postgresql
+        ├── driver-es7
+        ├── ......
         └── out
             ├── disabled.txt
             ├── enabled.txt
-            ├── driver-datasource-mysql-1.0.0-SNAPSHOT-jar-with-dependencies.jar
-            ├── driver-session-mysql-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+            ├── driver-mysql5@1.0.0.jar
+            ├── driver-postgresql@1.0.0.jar
+            ├── driver-es7@1.0.0.jar
             └── ......
 ```
 
 结构这里简单讲一下，后文会各个模块详细讲解：
 
-1. plugin-driver-common是插件的通用管理，如插件的安装卸载停止等操作、数据源的curd以及一些工具类异常等处理。
-2. plugin-driver-datasource是根据数据源信息获取datasource，可获取该服务的本身数据源，即配置的spring.datasouce，也可获取插件定义的datasource。
-3. plugin-driver-session是基于plugin-driver-datasource得到的datasource进行常用操作，统一接口，适配多种数据源。
-4. plugin-driver-runner可以本地启动，集成swagger，方便接口测试。
-5. plugins是插件模块，包含datasource/session插件。
-6. plugins/out是插件jar的打包目录，里面有插件的配置文件以及插件jar等，启动时会去加载这些jar，也可通过配置disabled.txt/enabled.txt去选择加载的插件jar。
+1. plugin-core是插件中心，对插件的管理，如插件的创建/安装/卸载/停止/懒加载等一些对插件的操作、以及一些工具类、全局异常等处理。
+2. plugin-driver-core是插件数据源中心，根据数据源信息获取插件定义的datasource，也可获取该服务的本身数据源，即配置的spring.datasouce。然后基于此datasource，统一接口，适配多种数据源。
+3. plugin-driver-runner可以本地启动，集成swagger，方便接口调试。
+4. plugins是插件模块，包含一系列插件，这里主要是数据源的插件。
+5. plugins/out是插件jar的打包目录，里面有插件的配置文件以及插件jar等，启动时会去加载这些jar，可通过配置disabled.txt/enabled.txt去选择加载的插件jar，也可设置plugin.plugin-init-load模糊匹配插件进行加载。
 
 ## 2. 项目架构
 
-![image](./images/plugin-driver架构图.jpg)
+![image](images/plugin-driver-architecture.jpg)
 
 本项目采用[pf4j](https://github.com/pf4j/pf4j)作为插件化框架，用其管理插件的生命周期，基于pf4j开发了[springboot-plugin-framework](https://github.com/codingdebugallday/springboot-plugin-framework-parent)，方便spring boot项目使用，也扩展了很多点，如集成spring、mybatis，插件之间的通信/监听以及插件有自己的配置等。
 
 在[springboot-plugin-framework](https://github.com/codingdebugallday/springboot-plugin-framework-parent)上，开发了plugin-driver-datasource，数据源插件化，可获取多种数据源；开发了plugin-driver-session，数据源接口插件化，一套接口可适配多种数据源，屏蔽底层实现细节。
 
-## 3. 数据源驱动使用
+## 3. 插件中心
 
-todo
+详情请看[插件中心](plugin-core.md)
 
-## 4. 数据源插件开发
+## 4. 插件数据源
 
-详情请看[插件开发指导](PluginDev.md)
+## 5. 数据源插件开发
 
-## 5. 数据源监控
+详情请看[插件开发指导](plugin-dev.md)
+
+## 6. 数据源监控
 
 todo
