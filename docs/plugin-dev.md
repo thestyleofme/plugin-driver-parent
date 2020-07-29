@@ -31,7 +31,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>driver-plugin-parent</artifactId>
-        <groupId>com.github.codingdebugall</groupId>
+        <groupId>com.github.codingdebugallday</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
