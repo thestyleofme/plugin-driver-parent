@@ -28,9 +28,9 @@ plugin:
 
 ### 3 插件管理
 
-> ![插件表sql文件](sql/plugin.sql)
+> 环境准备
 
-> ![插件数据源表sql文件](sql/plugin_datasource.sql)
+mysql需建两张表，plugin/plugin_datasource，sql文件见sql/plugin.sql，sql/plugin_datasource.sql
 
 #### 3.1 创建插件
 
