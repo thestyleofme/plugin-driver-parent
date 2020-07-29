@@ -23,7 +23,8 @@ plugin:
   plugin-init-load: mysql,postgresql,es
 ```
 
-1. ```plugin.run-mode```代表插件运行模式，可取值[]
+1. ```plugin.run-mode```代表插件运行模式，可取值[dev/development/prod/deployment]
+2. todo
 
 ### 3 插件管理
 

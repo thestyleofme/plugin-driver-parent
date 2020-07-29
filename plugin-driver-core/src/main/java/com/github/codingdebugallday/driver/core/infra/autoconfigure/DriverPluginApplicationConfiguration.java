@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @since 1.0.0
  */
 @Configuration
-public class PluginApplicationConfiguration {
+public class DriverPluginApplicationConfiguration {
 
     /**
      * 定义插件应用 使用可以注入它操作插件。
@@ -23,7 +23,7 @@ public class PluginApplicationConfiguration {
      * @return PluginApplication
      */
     @Bean
-    public PluginApplication pluginApplication(PluginListener pluginListener) {
+    public PluginApplication driverPluginApplication(PluginListener pluginListener) {
         AutoPluginApplication autoPluginApplication = new AutoPluginApplication();
         autoPluginApplication.setPluginInitializerListener(pluginListener);
         autoPluginApplication.addListener(DefaultPluginListener.class);
