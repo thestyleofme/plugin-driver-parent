@@ -1,12 +1,12 @@
 package com.github.codingdebugallday.plugin.core.api.dto;
 
+import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-
-import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 
 /**
  * <p>

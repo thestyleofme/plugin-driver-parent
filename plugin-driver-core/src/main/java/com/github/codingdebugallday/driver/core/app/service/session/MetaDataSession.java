@@ -1,11 +1,11 @@
 package com.github.codingdebugallday.driver.core.app.service.session;
 
+import java.util.List;
+
 import com.github.codingdebugallday.driver.core.infra.meta.Catalog;
 import com.github.codingdebugallday.driver.core.infra.meta.Column;
 import com.github.codingdebugallday.driver.core.infra.meta.Schema;
 import com.github.codingdebugallday.driver.core.infra.meta.Table;
-
-import java.util.List;
 
 /**
  * <p>
@@ -53,7 +53,7 @@ public interface MetaDataSession {
     /**
      * schema 详细（包含自定义）元数据信息
      *
-     * @param schema    schema
+     * @param schema schema
      * @return Schema schema
      */
     default Schema schemaMetaExtra(String schema) {

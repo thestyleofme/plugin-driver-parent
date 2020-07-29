@@ -1,13 +1,13 @@
 package com.github.codingdebugallday.driver.core.infra.utils;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <p>

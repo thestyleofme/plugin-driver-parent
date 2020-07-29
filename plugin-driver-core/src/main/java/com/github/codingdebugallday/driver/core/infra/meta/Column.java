@@ -4,11 +4,7 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * <p>
@@ -16,15 +12,15 @@ import lombok.NoArgsConstructor;
  *
  * @author JupiterMouse 2020/07/21
  * @see java.sql.DatabaseMetaData#getColumns
- *      </p>
- *      <p>
- *      The COLUMN_SIZE column specifies the column size for the given column. For numeric data,
- *      this is the maximum precision. For character data, this is the length in characters. For
- *      datetime datatypes, this is the length in characters of the String representation (assuming
- *      the maximum allowed precision of the fractional seconds component). For binary data, this is
- *      the length in bytes. For the ROWID datatype, this is the length in bytes. Null is returned
- *      for data types where the column size is not applicable.
- *      </p>
+ * </p>
+ * <p>
+ * The COLUMN_SIZE column specifies the column size for the given column. For numeric data,
+ * this is the maximum precision. For character data, this is the length in characters. For
+ * datetime datatypes, this is the length in characters of the String representation (assuming
+ * the maximum allowed precision of the fractional seconds component). For binary data, this is
+ * the length in bytes. For the ROWID datatype, this is the length in bytes. Null is returned
+ * for data types where the column size is not applicable.
+ * </p>
  * @since 1.0
  */
 @Data
@@ -115,14 +111,13 @@ public class Column extends BaseInfo implements Serializable, Cloneable {
 
     /**
      * 构造Column
-     * 
-     * @see java.sql.DatabaseMetaData#getColumns catalog - 类别名称；它必须与存储在数据库中的类别名称匹配；该参数为 ""
-     *      表示获取没有类别的那些描述；为 null 则表示该类别名称不应该用于缩小搜索范围 schemaPattern - 模式名称的模式；它必须与存储在数据库中的模式名称匹配；该参数为 ""
-     *      表示获取没有模式的那些描述；为 null 则表示该模式名称不应该用于缩小搜索范围 tableNamePattern - 表名称模式；它必须与存储在数据库中的表名称匹配
-     *      columnNamePattern - 列名称模式；它必须与存储在数据库中的列名称匹配
      *
      * @param rs ResultSet
      * @throws SQLException SQL异常
+     * @see java.sql.DatabaseMetaData#getColumns catalog - 类别名称；它必须与存储在数据库中的类别名称匹配；该参数为 ""
+     * 表示获取没有类别的那些描述；为 null 则表示该类别名称不应该用于缩小搜索范围 schemaPattern - 模式名称的模式；它必须与存储在数据库中的模式名称匹配；该参数为 ""
+     * 表示获取没有模式的那些描述；为 null 则表示该模式名称不应该用于缩小搜索范围 tableNamePattern - 表名称模式；它必须与存储在数据库中的表名称匹配
+     * columnNamePattern - 列名称模式；它必须与存储在数据库中的列名称匹配
      */
     public Column(ResultSet rs) throws SQLException {
         this.tableCat = rs.getString("TABLE_CAT");

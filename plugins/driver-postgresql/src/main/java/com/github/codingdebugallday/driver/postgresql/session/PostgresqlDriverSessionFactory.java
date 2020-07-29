@@ -1,11 +1,11 @@
 package com.github.codingdebugallday.driver.postgresql.session;
 
+import javax.sql.DataSource;
+
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.core.infra.function.DriverSessionFunction;
 import lombok.extern.slf4j.Slf4j;
 import org.pf4j.Extension;
-
-import javax.sql.DataSource;
 
 /**
  * <p>

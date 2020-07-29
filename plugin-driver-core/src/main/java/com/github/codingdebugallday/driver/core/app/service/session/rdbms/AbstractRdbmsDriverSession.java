@@ -1,5 +1,13 @@
 package com.github.codingdebugallday.driver.core.app.service.session.rdbms;
 
+import static com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant.Symbol.*;
+
+import java.io.LineNumberReader;
+import java.io.StringReader;
+import java.sql.*;
+import java.util.*;
+import javax.sql.DataSource;
+
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.core.app.service.session.SessionTool;
 import com.github.codingdebugallday.driver.core.app.service.session.funcations.extractor.*;
@@ -19,14 +27,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import javax.sql.DataSource;
-import java.io.LineNumberReader;
-import java.io.StringReader;
-import java.sql.*;
-import java.util.*;
-
-import static com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant.Symbol.*;
 
 /**
  * <p>
@@ -546,7 +546,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     @Override
     public Catalog catalogMetaExtra() {
         Catalog catalog = new Catalog();
-        try(Connection conn = this.dataSource.getConnection()){
+        try (Connection conn = this.dataSource.getConnection()) {
             catalog.init(conn);
         } catch (SQLException e) {
             throw new DriverException("catalog error", e);
@@ -556,7 +556,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public String currentSchema() {
-        try(Connection conn = this.dataSource.getConnection()){
+        try (Connection conn = this.dataSource.getConnection()) {
             return conn.getSchema();
         } catch (SQLException e) {
             throw new DriverException("current schema", e);
@@ -565,7 +565,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public String currentCatalog() {
-        try(Connection conn = this.dataSource.getConnection()){
+        try (Connection conn = this.dataSource.getConnection()) {
             return conn.getCatalog();
         } catch (SQLException e) {
             throw new DriverException("current schema", e);

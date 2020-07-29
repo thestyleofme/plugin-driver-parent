@@ -19,14 +19,14 @@ public interface SchemaSession {
     /**
      * 执行SQL文本，SQL文本拆分成多个SQL语句后，单独运行 transactionFlag=true 开启事务，默认事务关闭 resultFlag=true 默认返回值为空
      *
-     * @param resultFlag 是否返回值
+     * @param resultFlag      是否返回值
      * @param transactionFlag 是否事务
-     * @param schema 模式
-     * @param text SQL文本
+     * @param schema          模式
+     * @param text            SQL文本
      * @return List<List < Map < String, Object>>>
      */
     default List<List<Map<String, Object>>> executeAll(String schema, String text, boolean transactionFlag,
-                    boolean resultFlag) {
+                                                       boolean resultFlag) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
@@ -34,8 +34,8 @@ public interface SchemaSession {
      * 执行SQL文本 SQL文本拆分成多个SQL语句后，单独运行 默认（transactionFlag=true）开启事务， resultFlag 默认开启返回值
      *
      * @param pageable 分页参数
-     * @param schema 模式
-     * @param text SQL文本
+     * @param schema   模式
+     * @param text     SQL文本
      * @return List<List < Map < String, Object>>>
      */
     default List<Page<Map<String, Object>>> executeAll(String schema, String text, Pageable pageable) {
@@ -46,7 +46,7 @@ public interface SchemaSession {
      * 执行SQL文本 SQL文本拆分成多个SQL语句后，单独运行 默认开启事务，开启返回值 默认分页 20条
      *
      * @param schema 模式
-     * @param text SQL文本
+     * @param text   SQL文本
      * @return List<List < Map < String, Object>>>
      */
     default List<Page<Map<String, Object>>> executeAll(String schema, String text) {
@@ -57,25 +57,25 @@ public interface SchemaSession {
      * 执行SQL文本 SQL文本拆分成多个SQL语句后，单独运行 transactionFlag=true 开启事务，默认事务关闭 resultFlag=true 默认返回值为空 Pageable
      * page 分页参数
      *
-     * @param pageable 分页参数
-     * @param resultFlag 是否返回值
+     * @param pageable        分页参数
+     * @param resultFlag      是否返回值
      * @param transactionFlag 是否事务
-     * @param schema 模式
-     * @param text SQL文本
+     * @param schema          模式
+     * @param text            SQL文本
      * @return List<List < Map < String, Object>>>
      */
     default List<Page<Map<String, Object>>> executeAll(String schema, String text, Pageable pageable,
-                    boolean transactionFlag, boolean resultFlag) {
+                                                       boolean transactionFlag, boolean resultFlag) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
      * 执行单条非查询语句 可选择开启事务、开启返回值
      *
-     * @param resultFlag 是否返回值
+     * @param resultFlag      是否返回值
      * @param transactionFlag 是否事务
-     * @param schema 模式
-     * @param sql 单条SQL
+     * @param schema          模式
+     * @param sql             单条SQL
      */
     default void executeOneUpdate(String schema, String sql, boolean transactionFlag, boolean resultFlag) {
         throw new UnsupportedOperationException("Not Implement");
@@ -85,7 +85,7 @@ public interface SchemaSession {
      * 执行单条查询语句 默认关闭事务、开启返回值
      *
      * @param schema 模式
-     * @param sql 单条SQL
+     * @param sql    单条SQL
      * @return List<Map < String, Object>>
      */
     default List<Map<String, Object>> executeOneQuery(String schema, String sql) {
@@ -95,10 +95,10 @@ public interface SchemaSession {
     /**
      * 单条语句分页查询 pageable分页对象
      *
-     * @param schema 模式
-     * @param sql 单条SQL
+     * @param schema   模式
+     * @param sql      单条SQL
      * @param pageable 分页信息
-     * @return Page<Map<String, Object>> 分页数据
+     * @return Page<Map < String, Object>> 分页数据
      */
     default Page<Map<String, Object>> executeOneQuery(String schema, String sql, Pageable pageable) {
         throw new UnsupportedOperationException("Not Implement");
@@ -109,7 +109,7 @@ public interface SchemaSession {
      * 执行CURD单条语句 默认开启事务、没有返回值
      *
      * @param schema 模式
-     * @param sql sql文本
+     * @param sql    sql文本
      */
     default void executeOneUpdate(String schema, String sql) {
         throw new UnsupportedOperationException("Not Implement");
@@ -119,7 +119,7 @@ public interface SchemaSession {
     /**
      * 批量执行SQL，开启事务，没有返回值
      *
-     * @param schema 模式
+     * @param schema  模式
      * @param sqlList SQL列表
      */
     default void executeBatch(String schema, List<String> sqlList) {
@@ -130,9 +130,9 @@ public interface SchemaSession {
      * 调用存储过程
      *
      * @param schema 模式
-     * @param sql 存储过程SQL
-     * @param args 入参
-     * @return List<Map<String, Object>> 调用返回结果
+     * @param sql    存储过程SQL
+     * @param args   入参
+     * @return List<Map < String, Object>> 调用返回结果
      */
     default List<Map<String, Object>> callProcedure(String schema, String sql, Object... args) {
         throw new UnsupportedOperationException("Not Implement");
@@ -161,7 +161,7 @@ public interface SchemaSession {
      * 查询数据条数
      *
      * @param schema 模式
-     * @param sql count语句
+     * @param sql    count语句
      * @return 条数
      */
     default Long queryCount(String schema, String sql) {
@@ -170,7 +170,7 @@ public interface SchemaSession {
 
     /**
      * 当前模式
-     * 
+     *
      * @return 当前模式
      */
     default String currentSchema() {
@@ -179,7 +179,7 @@ public interface SchemaSession {
 
     /**
      * 当前catalog
-     * 
+     *
      * @return catalog
      */
     default String currentCatalog() {

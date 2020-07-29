@@ -1,9 +1,9 @@
 package com.github.codingdebugallday.driver.core.domain.entity;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 /**
  * <p>

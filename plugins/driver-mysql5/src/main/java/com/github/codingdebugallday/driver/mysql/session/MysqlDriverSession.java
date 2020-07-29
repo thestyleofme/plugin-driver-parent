@@ -1,5 +1,11 @@
 package com.github.codingdebugallday.driver.mysql.session;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.sql.DataSource;
+
 import com.github.codingdebugallday.driver.core.app.service.session.rdbms.AbstractRdbmsDriverSession;
 import com.github.codingdebugallday.driver.core.infra.meta.Column;
 import com.github.codingdebugallday.driver.core.infra.meta.IndexKey;
@@ -9,12 +15,6 @@ import com.github.codingdebugallday.driver.mysql.session.meta.MysqlColumnExtra;
 import com.github.codingdebugallday.driver.mysql.session.meta.MysqlTableExtra;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.util.CollectionUtils;
-
-import javax.sql.DataSource;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * <p>

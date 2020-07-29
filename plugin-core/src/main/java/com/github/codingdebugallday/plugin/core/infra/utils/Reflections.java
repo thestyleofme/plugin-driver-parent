@@ -1,11 +1,11 @@
 package com.github.codingdebugallday.plugin.core.infra.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.springframework.util.ReflectionUtils.makeAccessible;
 
 import java.lang.reflect.*;
 
-import static org.springframework.util.ReflectionUtils.makeAccessible;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author JupiterMouse

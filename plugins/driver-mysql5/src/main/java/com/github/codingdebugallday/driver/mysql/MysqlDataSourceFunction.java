@@ -1,12 +1,12 @@
 package com.github.codingdebugallday.driver.mysql;
 
+import javax.sql.DataSource;
+
 import com.github.codingdebugallday.driver.core.infra.function.DriverDataSourceFunction;
 import com.github.codingdebugallday.driver.core.infra.function.hikari.HikariRdbmsDataSourceFactory;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.mysql.jdbc.Driver;
 import org.pf4j.Extension;
-
-import javax.sql.DataSource;
 
 /**
  * <p>

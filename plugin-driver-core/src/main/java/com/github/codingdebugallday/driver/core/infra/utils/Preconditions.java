@@ -1,9 +1,9 @@
 package com.github.codingdebugallday.driver.core.infra.utils;
 
+import java.util.Objects;
+
 import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import org.springframework.util.StringUtils;
-
-import java.util.Objects;
 
 /**
  * <p>

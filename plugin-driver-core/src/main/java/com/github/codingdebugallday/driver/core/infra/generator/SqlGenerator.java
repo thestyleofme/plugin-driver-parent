@@ -1,9 +1,9 @@
 package com.github.codingdebugallday.driver.core.infra.generator;
 
+import static com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant.Symbol.SPACE;
+
 import com.github.codingdebugallday.driver.core.infra.meta.Column;
 import com.github.codingdebugallday.driver.core.infra.meta.Table;
-
-import static com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant.Symbol.*;
 
 /**
  * <p>
@@ -97,7 +97,7 @@ public interface SqlGenerator {
      * 是否自增
      *
      * @param column 列
-     * @param table 表
+     * @param table  表
      * @return 自增SQL部分
      */
     default String convertAutoincrement(Table table, Column column) {

@@ -3,11 +3,7 @@ package com.github.codingdebugallday.driver.core.infra.meta;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 表索引
@@ -74,16 +70,15 @@ public class IndexKey extends BaseInfo {
     private Long pages;
 
     /**
-     * @see java.sql.DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean) catalog -
-     *      类别名称，因为存储在此数据库中，所以它必须匹配类别名称。该参数为 "" 则检索没有类别的描述，为 null 则表示该类别名称不应用于缩小搜索范围 schema -
-     *      模式名称，因为存储在此数据库中，所以它必须匹配模式名称。该参数为 "" 则检索那些没有模式的描述，为 null 则表示该模式名称不应用于缩小搜索范围 table -
-     *      表名称，因为存储在此数据库中，所以它必须匹配表名称 unique - 该参数为 true 时，仅返回惟一值的索引；该参数为 false 时，返回所有索引，不管它们是否惟一
-     *      approximate - 该参数为 true 时，允许结果是接近的数据值或这些数据值以外的值；该参数为 false 时，要求结果是精确结果
-     *
-     *      主键构造方法
-     *
      * @param rs ResultSet
      * @throws SQLException SQLException
+     * @see java.sql.DatabaseMetaData#getIndexInfo(String, String, String, boolean, boolean) catalog -
+     * 类别名称，因为存储在此数据库中，所以它必须匹配类别名称。该参数为 "" 则检索没有类别的描述，为 null 则表示该类别名称不应用于缩小搜索范围 schema -
+     * 模式名称，因为存储在此数据库中，所以它必须匹配模式名称。该参数为 "" 则检索那些没有模式的描述，为 null 则表示该模式名称不应用于缩小搜索范围 table -
+     * 表名称，因为存储在此数据库中，所以它必须匹配表名称 unique - 该参数为 true 时，仅返回惟一值的索引；该参数为 false 时，返回所有索引，不管它们是否惟一
+     * approximate - 该参数为 true 时，允许结果是接近的数据值或这些数据值以外的值；该参数为 false 时，要求结果是精确结果
+     * <p>
+     * 主键构造方法
      */
     public IndexKey(ResultSet rs) throws SQLException {
         this.tableCat = rs.getString("TABLE_CAT");

@@ -1,11 +1,11 @@
 package com.github.codingdebugallday.driver.core.infra.meta;
 
+import java.util.Date;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
-import java.util.Map;
 
 /**
  * <p>

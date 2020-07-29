@@ -1,5 +1,11 @@
 package com.github.codingdebugallday.driver.core.api.controller.v1;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.github.codingdebugallday.driver.core.app.service.DriverSessionService;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.core.domain.page.PluginPageRequest;
@@ -13,12 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * <p>
@@ -151,8 +151,8 @@ public class SessionController {
     @ApiOperation(value = "获取schema元数据信息(包含自定义额外信息)")
     @GetMapping("/schema/metadata/extra")
     public ResponseEntity<?> schemaMetadataExtra(@PathVariable(name = "organizationId") Long tenantId,
-            @RequestParam String datasourceCode,
-            @RequestParam(required = false) String schema) {
+                                                 @RequestParam String datasourceCode,
+                                                 @RequestParam(required = false) String schema) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
         return ResponseEntity.ok(driverSession.schemaCreate(schema));
     }
@@ -160,7 +160,7 @@ public class SessionController {
     @ApiOperation(value = "获取catalog元数据信息(包含自定义额外信息)")
     @GetMapping("/catalog/metadata/extra")
     public ResponseEntity<?> catalogMetadataExtra(@PathVariable(name = "organizationId") Long tenantId,
-            @RequestParam String datasourceCode) {
+                                                  @RequestParam String datasourceCode) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
         return ResponseEntity.ok(driverSession.catalogMetaExtra());
     }
@@ -212,8 +212,8 @@ public class SessionController {
     @ApiOperation(value = "获取指定数据库的表和视图")
     @GetMapping("/database/metadata")
     public ResponseEntity<?> schemaInfo(@PathVariable(name = "organizationId") Long tenantId,
-                                            @RequestParam String datasourceCode,
-                                            @RequestParam(required = false) String schema) {
+                                        @RequestParam String datasourceCode,
+                                        @RequestParam(required = false) String schema) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
         List<Schema> schemaBaseList = new ArrayList<>();
         List<String> schemaList = driverSession.schemaList();
@@ -237,7 +237,7 @@ public class SessionController {
                                             @RequestParam String targetDatasourceCode,
                                             @RequestParam(required = false) String targetSchema,
                                             @RequestParam String targetTable
-                                            ) {
+    ) {
         DriverSession sourceDriverSession = driverSessionService.getDriverSession(tenantId, sourceDatasourceCode);
         DriverSession targetDriverSession = driverSessionService.getDriverSession(tenantId, targetDatasourceCode);
         Table table = sourceDriverSession.tableMetaData(sourceSchema, sourceTable);

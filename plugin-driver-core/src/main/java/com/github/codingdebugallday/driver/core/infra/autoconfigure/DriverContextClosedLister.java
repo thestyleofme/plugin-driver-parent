@@ -1,14 +1,14 @@
 package com.github.codingdebugallday.driver.core.infra.autoconfigure;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
 import com.github.codingdebugallday.integration.application.PluginApplication;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.lang.NonNull;
-
-import java.io.IOException;
-import java.nio.file.Path;
 
 /**
  * <p>

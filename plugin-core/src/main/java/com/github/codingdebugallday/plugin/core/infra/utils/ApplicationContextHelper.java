@@ -1,5 +1,10 @@
 package com.github.codingdebugallday.plugin.core.infra.utils;
 
+import java.lang.reflect.Method;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -9,11 +14,6 @@ import org.springframework.context.support.AbstractRefreshableApplicationContext
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-
-import java.lang.reflect.Method;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>

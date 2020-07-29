@@ -1,5 +1,8 @@
 package com.github.codingdebugallday.driver.core.infra.function.hikari;
 
+import java.util.Properties;
+import javax.sql.DataSource;
+
 import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.core.infra.function.RdbmsDataSourceFactory;
 import com.github.codingdebugallday.driver.core.infra.metrics.RedisMeterRegistry;
@@ -10,9 +13,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.metrics.micrometer.MicrometerMetricsTrackerFactory;
 import org.springframework.util.StringUtils;
-
-import javax.sql.DataSource;
-import java.util.Properties;
 
 /**
  * <p>

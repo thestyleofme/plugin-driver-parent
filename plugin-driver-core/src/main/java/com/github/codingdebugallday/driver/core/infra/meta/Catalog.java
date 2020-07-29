@@ -5,20 +5,15 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * <p>
  * Catalog 元数据信息
  * </p>
  *
- * @see java.sql.DatabaseMetaData
  * @author JupiterMouse 2020/07/28
+ * @see java.sql.DatabaseMetaData
  * @since 1.0
  */
 @Data
@@ -35,56 +30,56 @@ public class Catalog extends BaseInfo {
 
     /**
      * database product name
-     * 
+     *
      * @see DatabaseMetaData#getDatabaseProductName()
      */
     private String databaseProductName;
 
     /**
      * database product version
-     * 
+     *
      * @see DatabaseMetaData#getDatabaseProductVersion()
      */
     private String databaseProductVersion;
 
     /**
      * JDBC driver name
-     * 
+     *
      * @see DatabaseMetaData#getDriverName()
      */
     private String driverName;
 
     /**
      * JDBC driver version
-     * 
+     *
      * @see DatabaseMetaData#getDriverVersion()
      */
     private String driverVersion;
 
     /**
      * JDBC driver version
-     * 
+     *
      * @see DatabaseMetaData#getDriverMajorVersion()
      */
     private Integer driverMajorVersion;
 
     /**
      * JDBC driver version
-     * 
+     *
      * @see DatabaseMetaData#getDriverMinorVersion()
      */
     private Integer driverMinorVersion;
 
     /**
      * Catalog|schema|table separator
-     * 
+     *
      * @see DatabaseMetaData#getCatalogSeparator()
      */
     private String catalogSeparator;
 
     /**
      * 初始化Catalog
-     * 
+     *
      * @param connection 连接
      */
     public void init(Connection connection) {

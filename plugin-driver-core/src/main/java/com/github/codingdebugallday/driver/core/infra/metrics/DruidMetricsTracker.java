@@ -1,13 +1,13 @@
 package com.github.codingdebugallday.driver.core.infra.metrics;
 
+import java.util.concurrent.TimeUnit;
+
 import com.alibaba.druid.pool.DruidDataSource;
 import com.zaxxer.hikari.metrics.IMetricsTracker;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * <p>

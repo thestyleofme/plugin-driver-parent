@@ -3,11 +3,7 @@ package com.github.codingdebugallday.driver.core.infra.meta;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  * 表主键

@@ -1,8 +1,8 @@
 package com.github.codingdebugallday.driver.postgresql.session;
 
-import com.github.codingdebugallday.driver.core.app.service.session.rdbms.AbstractRdbmsDriverSession;
-
 import javax.sql.DataSource;
+
+import com.github.codingdebugallday.driver.core.app.service.session.rdbms.AbstractRdbmsDriverSession;
 
 /**
  * <p>

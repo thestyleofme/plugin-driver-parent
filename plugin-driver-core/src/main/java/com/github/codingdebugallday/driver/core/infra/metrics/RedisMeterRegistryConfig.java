@@ -1,8 +1,8 @@
 package com.github.codingdebugallday.driver.core.infra.metrics;
 
-import io.micrometer.core.instrument.step.StepRegistryConfig;
-
 import java.time.Duration;
+
+import io.micrometer.core.instrument.step.StepRegistryConfig;
 
 /**
  * <p>
