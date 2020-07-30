@@ -1,5 +1,7 @@
 package com.github.codingdebugallday.driver.core.infra.context;
 
+import java.util.List;
+
 import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRepository;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.plugin.core.infra.annotations.LazyPlugin;
@@ -25,6 +27,10 @@ public class PluginDatasourceHelper {
 
     public PluginDatasourceVO getPluginDatasource(Long tenantId, String datasourceCode) {
         return pluginDatasourceRepository.hashGetByKey(tenantId, datasourceCode);
+    }
+
+    public List<PluginDatasourceVO> getAllPluginDatasource(Long tenantId) {
+        return pluginDatasourceRepository.hashGetAll(tenantId);
     }
 
     @LazyPlugin

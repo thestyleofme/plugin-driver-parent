@@ -64,6 +64,11 @@ public class RedisBaseRepositoryImpl<T> implements RedisBaseRepository<T> {
     }
 
     @Override
+    public void hashPut(Long tenantId, String key, T entity) {
+        this.pluginRedisHelper.hashPut(this.hashGetKey(tenantId), key, JsonUtil.toJson(entity));
+    }
+
+    @Override
     public void hashCreate(Long tenantId, String key, T entity) {
         if (Boolean.TRUE.equals(this.hashIsExist(tenantId, key))) {
             throw new PluginException("the entity is exist!");

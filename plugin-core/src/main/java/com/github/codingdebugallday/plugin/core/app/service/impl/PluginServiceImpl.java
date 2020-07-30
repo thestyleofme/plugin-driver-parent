@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ import com.github.codingdebugallday.plugin.core.api.dto.PluginDTO;
 import com.github.codingdebugallday.plugin.core.app.service.PluginAppService;
 import com.github.codingdebugallday.plugin.core.app.service.PluginMinioService;
 import com.github.codingdebugallday.plugin.core.app.service.PluginService;
+import com.github.codingdebugallday.plugin.core.app.service.hooks.UpdatePluginHook;
 import com.github.codingdebugallday.plugin.core.domain.entity.Plugin;
 import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
 import com.github.codingdebugallday.plugin.core.infra.converter.BasePluginConvert;
@@ -53,13 +55,16 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
 
     private final PluginMinioService pluginMinioService;
     private final PluginAppService pluginAppService;
+    private final List<UpdatePluginHook> updatePluginHookList;
 
     private final ReentrantLock lock = new ReentrantLock(true);
 
     public PluginServiceImpl(@Autowired(required = false) PluginMinioService pluginMinioService,
-                             PluginAppService pluginAppService) {
+                             PluginAppService pluginAppService,
+                             List<UpdatePluginHook> updatePluginHookList) {
         this.pluginMinioService = pluginMinioService;
         this.pluginAppService = pluginAppService;
+        this.updatePluginHookList = updatePluginHookList;
     }
 
     @Override
@@ -161,6 +166,8 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
             throw new PluginException("Plugin update cannot change the previous pluginId and pluginVersion. " +
                     "If you want to change, please delete the plugin and recreate it");
         }
+        // 更新插件前置钩子
+        updatePluginHookList.forEach(updatePluginHook -> updatePluginHook.before(dto));
         // 防止篡改objectName
         dto.setObjectName(oldPlugin.getObjectName());
         if (Objects.nonNull(multipartFile)) {
@@ -168,6 +175,8 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
             handlePluginUpdate(dto, multipartFile);
         }
         this.save(BasePluginConvert.INSTANCE.dtoToEntity(dto));
+        // 更新插件后置钩子
+        updatePluginHookList.forEach(updatePluginHook -> updatePluginHook.after(dto));
         return BasePluginConvert.INSTANCE.entityToDTO(this.getById(id));
     }
 

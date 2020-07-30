@@ -54,6 +54,15 @@ public interface RedisBaseRepository<T> {
     List<T> hashGetAll();
 
     /**
+     * 创建或覆盖实体
+     *
+     * @param tenantId 租户ID
+     * @param key      redis key
+     * @param entity   实体
+     */
+    void hashPut(Long tenantId, String key, T entity);
+
+    /**
      * 创建实体
      *
      * @param tenantId 租户ID

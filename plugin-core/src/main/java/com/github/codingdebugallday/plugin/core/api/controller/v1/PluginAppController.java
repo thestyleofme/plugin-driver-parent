@@ -47,7 +47,7 @@ public class PluginAppController {
      * @return 返回插件信息
      */
     @GetMapping
-    public List<PluginInfo> getPluginInfo() {
+    public List<PluginInfo> getPluginInfos() {
         return pluginOperator.getPluginInfo();
     }
 
@@ -67,7 +67,7 @@ public class PluginAppController {
      * @return 返回插件包装类集合
      */
     @GetMapping("/plugin-wrapper")
-    public List<PluginWrapper> getPluginWrapper() {
+    public List<PluginWrapper> getPluginWrappers() {
         return pluginOperator.getPluginWrapper();
     }
 
@@ -135,7 +135,7 @@ public class PluginAppController {
     }
 
     @PostMapping("/install-by-path")
-    public String install(@RequestParam String path) {
+    public String installByPath(@RequestParam String path) {
         if (pluginAppService.install(Paths.get(path))) {
             return "installByPath success";
         } else {
@@ -198,7 +198,7 @@ public class PluginAppController {
      * @return 成功返回true.不成功返回false, 或者抛出异常
      */
     @PostMapping("/back")
-    public String backupPlugin(Path path, String sign) {
+    public String backupPluginByPath(Path path, String sign) {
         if (pluginOperator.backupPlugin(path, sign)) {
             return "backupPlugin success";
         } else {
