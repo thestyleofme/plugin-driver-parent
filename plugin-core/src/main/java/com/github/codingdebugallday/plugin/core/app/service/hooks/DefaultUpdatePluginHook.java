@@ -2,6 +2,8 @@ package com.github.codingdebugallday.plugin.core.app.service.hooks;
 
 import com.github.codingdebugallday.plugin.core.api.dto.PluginDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class DefaultUpdatePluginHook implements UpdatePluginHook {
 
     @Override

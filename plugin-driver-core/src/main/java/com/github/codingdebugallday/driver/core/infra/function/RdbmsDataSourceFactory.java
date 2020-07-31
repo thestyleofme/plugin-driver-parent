@@ -1,6 +1,7 @@
 package com.github.codingdebugallday.driver.core.infra.function;
 
 import java.util.List;
+import java.util.Optional;
 import javax.sql.DataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
@@ -35,7 +36,7 @@ public interface RdbmsDataSourceFactory {
     default void configCommonDataSource(DruidDataSource dataSource, PluginDatasourceVO pluginDatasourceVO) {
         List<String> list = DriverUtil.dsSettingInfo2List(pluginDatasourceVO);
         dataSource.setUrl(list.get(0));
-        dataSource.setDriverClassName(list.get(1));
+        Optional.ofNullable(list.get(1)).ifPresent(s -> dataSource.setDriverClassName(list.get(1)));
         dataSource.setUsername(list.get(2));
         dataSource.setPassword(list.get(3));
     }
@@ -50,7 +51,7 @@ public interface RdbmsDataSourceFactory {
     default void configCommonDataSource(HikariConfig hikariConfig, PluginDatasourceVO pluginDatasourceVO) {
         List<String> list = DriverUtil.dsSettingInfo2List(pluginDatasourceVO);
         hikariConfig.setJdbcUrl(list.get(0));
-        hikariConfig.setDriverClassName(list.get(1));
+        Optional.ofNullable(list.get(1)).ifPresent(s -> hikariConfig.setDriverClassName(list.get(1)));
         hikariConfig.setUsername(list.get(2));
         hikariConfig.setPassword(list.get(3));
     }
