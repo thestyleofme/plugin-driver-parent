@@ -11,7 +11,7 @@ plugin-driver基于此需求下而开发，采用插件架构，可适配上述�
 ### 使用
 
 ```
-mvn clean package
+mvn clean package -DskipTests
 http://localhost:9898/doc.html
 ```
 首先需要先打包，保证plugin下代码被编译，然后执行DriverApplication即可，可访问
