@@ -70,8 +70,8 @@ plugin:
     endpoint: http://hdspdev010:9000
     access-key: AKIAIOSFODNN7EXAMPLE
     secret-key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-  plugin-path: plugins/out
-  plugin-config-file-path: pluginConfig
+  plugin-path: dist/plugins
+  plugin-config-file-path: dist/pluginConfig
   # 可模糊匹配
 #  plugin-init-load: mysql,postgresql,es
 

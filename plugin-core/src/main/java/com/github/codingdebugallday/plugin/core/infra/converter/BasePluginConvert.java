@@ -51,4 +51,20 @@ public abstract class BasePluginConvert {
      */
     public abstract Plugin voToEntity(PluginVO pluginVO);
 
+    /**
+     * dtoToVO
+     *
+     * @param dto PluginDTO
+     * @return PluginVO
+     */
+    public abstract PluginVO dtoToVO(PluginDTO dto);
+
+    /**
+     * voToDTO
+     *
+     * @param pluginVO PluginVO
+     * @return PluginDTO
+     */
+    public abstract PluginDTO voToDTO(PluginVO pluginVO);
+
 }

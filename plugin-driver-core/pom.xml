@@ -104,13 +104,6 @@
             <version>${bean.utils.version}</version>
         </dependency>
 
-        <!-- swagger-->
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>swagger-bootstrap-ui</artifactId>
-            <version>${swagger-bootstrap-ui.version}</version>
-        </dependency>
-
         <!-- util-->
 
     </dependencies>

@@ -154,6 +154,7 @@ Temporary Items
 .idea
 *.iml
 out
+dist
 gen
 ### Windows template
 # Windows thumbnail cache files
