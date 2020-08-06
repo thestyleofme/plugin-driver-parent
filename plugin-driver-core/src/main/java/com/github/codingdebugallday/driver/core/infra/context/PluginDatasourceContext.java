@@ -3,6 +3,8 @@ package com.github.codingdebugallday.driver.core.infra.context;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.zaxxer.hikari.HikariDataSource;
+
 /**
  * <p>
  * description
@@ -80,6 +82,13 @@ public class PluginDatasourceContext {
      * @param key key
      */
     public static Object get(String key) {
+        // HikariDataSource closed
+        if (MAP.containsKey(key) && MAP.get(key) instanceof HikariDataSource) {
+            HikariDataSource dataSource = (HikariDataSource) MAP.get(key);
+            if (dataSource.isClosed()) {
+                MAP.put(key, new HikariDataSource(dataSource));
+            }
+        }
         return MAP.get(key);
     }
 
