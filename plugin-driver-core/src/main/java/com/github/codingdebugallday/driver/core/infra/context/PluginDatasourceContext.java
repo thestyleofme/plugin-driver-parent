@@ -3,6 +3,7 @@ package com.github.codingdebugallday.driver.core.infra.context;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.zaxxer.hikari.HikariDataSource;
 
 /**
@@ -82,11 +83,12 @@ public class PluginDatasourceContext {
      * @param key key
      */
     public static Object get(String key) {
-        // HikariDataSource closed
-        if (MAP.containsKey(key) && MAP.get(key) instanceof HikariDataSource) {
-            HikariDataSource dataSource = (HikariDataSource) MAP.get(key);
-            if (dataSource.isClosed()) {
-                MAP.put(key, new HikariDataSource(dataSource));
+        if (MAP.containsKey(key)) {
+            Object datasource = MAP.get(key);
+            boolean isHikari = datasource instanceof HikariDataSource && ((HikariDataSource) datasource).isClosed();
+            boolean isDruid = datasource instanceof DruidDataSource && ((DruidDataSource) datasource).isClosed();
+            if (isHikari || isDruid) {
+                MAP.remove(key);
             }
         }
         return MAP.get(key);
