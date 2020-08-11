@@ -90,7 +90,7 @@ public class PluginDatasourceServiceImpl extends ServiceImpl<PluginDatasourceMap
         PluginDatasourceVO pluginDatasourceVO = BasePluginDatasourceConvert.INSTANCE.entityToVO(entity);
         Plugin driver = pluginService.getById(pluginDatasourceDTO.getDriverId());
         // 删除缓存的数据源
-        pluginDataSourceHolder.remove(driver.getTenantId(), driver.getPluginId());
+        pluginDataSourceHolder.remove(driver.getTenantId(), pluginDatasourceVO.getDatasourceCode());
         pluginDatasourceVO.setDatasourceDriver(BasePluginConvert.INSTANCE.entityToVO(driver));
         pluginDatasourceRepository.hashUpdate(pluginDatasourceDTO.getTenantId(),
                 pluginDatasourceDTO.getDatasourceCode(), pluginDatasourceVO);

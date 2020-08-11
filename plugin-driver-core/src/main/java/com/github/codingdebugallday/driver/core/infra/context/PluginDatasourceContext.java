@@ -86,9 +86,14 @@ public class PluginDatasourceContext {
         if (MAP.containsKey(key)) {
             Object datasource = MAP.get(key);
             boolean isHikari = datasource instanceof HikariDataSource && ((HikariDataSource) datasource).isClosed();
-            boolean isDruid = datasource instanceof DruidDataSource && ((DruidDataSource) datasource).isClosed();
-            if (isHikari || isDruid) {
+            if (isHikari) {
                 MAP.remove(key);
+                return null;
+            }
+            boolean isDruid = datasource instanceof DruidDataSource && ((DruidDataSource) datasource).isClosed();
+            if (isDruid) {
+                MAP.remove(key);
+                return null;
             }
         }
         return MAP.get(key);
