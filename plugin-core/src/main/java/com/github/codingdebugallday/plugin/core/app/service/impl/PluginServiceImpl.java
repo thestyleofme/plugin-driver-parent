@@ -19,6 +19,7 @@ import com.github.codingdebugallday.plugin.core.api.dto.PluginDTO;
 import com.github.codingdebugallday.plugin.core.app.service.PluginAppService;
 import com.github.codingdebugallday.plugin.core.app.service.PluginMinioService;
 import com.github.codingdebugallday.plugin.core.app.service.PluginService;
+import com.github.codingdebugallday.plugin.core.app.service.hooks.DeletePluginHook;
 import com.github.codingdebugallday.plugin.core.app.service.hooks.UpdatePluginHook;
 import com.github.codingdebugallday.plugin.core.domain.entity.Plugin;
 import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
@@ -56,15 +57,18 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
     private final PluginMinioService pluginMinioService;
     private final PluginAppService pluginAppService;
     private final List<UpdatePluginHook> updatePluginHookList;
+    private final List<DeletePluginHook> deletePluginHookList;
 
     private final ReentrantLock lock = new ReentrantLock(true);
 
     public PluginServiceImpl(@Autowired(required = false) PluginMinioService pluginMinioService,
                              PluginAppService pluginAppService,
-                             List<UpdatePluginHook> updatePluginHookList) {
+                             List<UpdatePluginHook> updatePluginHookList,
+                             List<DeletePluginHook> deletePluginHookList) {
         this.pluginMinioService = pluginMinioService;
         this.pluginAppService = pluginAppService;
         this.updatePluginHookList = updatePluginHookList;
+        this.deletePluginHookList = deletePluginHookList;
     }
 
     @Override
@@ -183,7 +187,14 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void delete(Long id) {
+        Plugin plugin = getById(id);
+        // 前置钩子
+        deletePluginHookList.forEach(deletePluginHook -> deletePluginHook.before(plugin));
         removeById(id);
+        // 删minio
+        pluginMinioService.removeObject(BaseConstant.PLUGIN_MINIO_BUCKET, plugin.getObjectName());
+        // 后置钩子
+        deletePluginHookList.forEach(deletePluginHook -> deletePluginHook.after(plugin));
     }
 
     private void handlePluginCreate(Plugin entity, MultipartFile multipartFile) {

@@ -10,8 +10,14 @@ package com.github.codingdebugallday.driver.core.infra.exceptions;
  */
 public class DriverException extends RuntimeException {
 
+    private static final long serialVersionUID = 6750996908505446134L;
+
     public DriverException(String message) {
         super(message);
+    }
+
+    public DriverException(String format, Object... obj) {
+        super(String.format(format, obj));
     }
 
     public DriverException(String message, Throwable cause) {
