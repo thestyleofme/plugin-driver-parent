@@ -10,7 +10,6 @@ import com.github.codingdebugallday.integration.operator.PluginOperator;
 import com.github.codingdebugallday.integration.operator.module.PluginInfo;
 import com.github.codingdebugallday.plugin.core.app.service.PluginAppService;
 import lombok.extern.slf4j.Slf4j;
-import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author isaac 2020/6/16 17:34
  * @since 1.0.0
  */
-@RestController("pluginController.v1")
+@RestController("pluginAppController.v1")
 @RequestMapping("/v1/plugin-app")
 @Slf4j
 public class PluginAppController {
@@ -62,28 +61,6 @@ public class PluginAppController {
     }
 
     /**
-     * 得到所有插件的包装类 [适用于生产环境、开发环境]
-     *
-     * @return 返回插件包装类集合
-     */
-    @GetMapping("/plugin-wrapper")
-    public List<PluginWrapper> getPluginWrappers() {
-        return pluginOperator.getPluginWrapper();
-    }
-
-    /**
-     * 通过插件id得到插件的包装类 [适用于生产环境、开发环境]
-     *
-     * @param pluginId 插件id
-     * @return 返回插件包装类集合
-     */
-    @GetMapping("/plugin-wrapper/{pluginId}")
-    public PluginWrapper getPluginWrapper(@PathVariable String pluginId) {
-        return pluginOperator.getPluginWrapper(pluginId);
-    }
-
-
-    /**
      * 获取插件jar文件名
      *
      * @return 获取插件文件名。只在生产环境显示
@@ -92,7 +69,6 @@ public class PluginAppController {
     public Set<String> getPluginFilePaths() {
         return pluginOperator.getPluginFilePaths();
     }
-
 
     /**
      * 根据插件id停止插件

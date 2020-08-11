@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author isaac 2020/7/14 14:40
  * @since 1.0.0
  */
-@RestController("pluginDriverController.v1")
+@RestController("pluginController.v1")
 @RequestMapping("/v1/{organizationId}/plugin")
 @Slf4j
 public class PluginController {
