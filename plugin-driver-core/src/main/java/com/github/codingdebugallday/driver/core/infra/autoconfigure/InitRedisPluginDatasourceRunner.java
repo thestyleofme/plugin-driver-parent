@@ -40,22 +40,22 @@ public class InitRedisPluginDatasourceRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        log.info("==========init redis plugin datasource start==========");
-        List<PluginDatasource> list;
+        log.info("========== init redis plugin datasource start ==========");
         try {
-            list = pluginDatasourceService.list();
+            List<PluginDatasource> list = pluginDatasourceService.list();
+            list.forEach(pluginDatasource -> {
+                PluginDatasourceVO pluginDatasourceVO = BasePluginDatasourceConvert.INSTANCE.entityToVO(pluginDatasource);
+                Plugin plugin = pluginService.getById(pluginDatasource.getDriverId());
+                pluginDatasourceVO.setDatasourceDriver(BasePluginConvert.INSTANCE.entityToVO(plugin));
+                // 写redis
+                pluginDatasourceRepository.hashPut(pluginDatasource.getTenantId(),
+                        pluginDatasource.getDatasourceCode(), pluginDatasourceVO);
+            });
         } catch (Exception e) {
             // 捕获异常的原因是，这个starter其他服务依赖时其实不需要初始化，表都不存在，故直接return即可，不做处理
+            log.warn("not need init redis plugin datasource");
             return;
         }
-        list.forEach(pluginDatasource -> {
-            PluginDatasourceVO pluginDatasourceVO = BasePluginDatasourceConvert.INSTANCE.entityToVO(pluginDatasource);
-            Plugin plugin = pluginService.getById(pluginDatasource.getDriverId());
-            pluginDatasourceVO.setDatasourceDriver(BasePluginConvert.INSTANCE.entityToVO(plugin));
-            // 写redis
-            pluginDatasourceRepository.hashPut(pluginDatasource.getTenantId(),
-                    pluginDatasource.getDatasourceCode(), pluginDatasourceVO);
-        });
-        log.info("==========init redis plugin datasource end==========");
+        log.info("========== init redis plugin datasource end ==========");
     }
 }

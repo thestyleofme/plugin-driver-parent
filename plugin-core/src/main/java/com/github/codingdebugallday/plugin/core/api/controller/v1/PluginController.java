@@ -34,7 +34,7 @@ public class PluginController {
         this.pluginService = pluginService;
     }
 
-    @ApiOperation(value = "查询驱动")
+    @ApiOperation(value = "查询插件")
     @GetMapping
     public ResponseEntity<IPage<PluginDTO>> list(@PathVariable(name = "organizationId") Long tenantId,
                                                  Page<Plugin> pluginPage,
@@ -44,43 +44,43 @@ public class PluginController {
         return ResponseEntity.ok(pluginService.list(pluginPage, pluginDTO));
     }
 
-    @ApiOperation(value = "创建驱动")
+    @ApiOperation(value = "创建插件")
     @PostMapping
     public ResponseEntity<PluginDTO> create(@PathVariable(name = "organizationId") Long tenantId,
-                                            @RequestPart(value = "driver") @Validated PluginDTO driver,
+                                            @RequestPart(value = "plugin") @Validated PluginDTO plugin,
                                             @RequestPart(value = "file") MultipartFile multipartFile) {
-        driver.setTenantId(tenantId);
-        return ResponseEntity.ok(pluginService.create(driver, multipartFile));
+        plugin.setTenantId(tenantId);
+        return ResponseEntity.ok(pluginService.create(plugin, multipartFile));
     }
 
-    @ApiOperation(value = "加载驱动")
-    @GetMapping("/install/{driverId}")
+    @ApiOperation(value = "加载插件")
+    @GetMapping("/install/{id}")
     public ResponseEntity<Boolean> install(@PathVariable(name = "organizationId") Long tenantId,
-                                           @PathVariable Long driverId) {
-        return ResponseEntity.ok(pluginService.install(driverId));
+                                           @PathVariable Long id) {
+        return ResponseEntity.ok(pluginService.install(id));
     }
 
-    @ApiOperation(value = "卸载驱动")
-    @GetMapping("/uninstall/{driverId}")
+    @ApiOperation(value = "卸载插件")
+    @GetMapping("/uninstall/{id}")
     public ResponseEntity<Boolean> uninstall(@PathVariable(name = "organizationId") Long tenantId,
-                                             @PathVariable Long driverId) {
-        return ResponseEntity.ok(pluginService.uninstall(driverId));
+                                             @PathVariable Long id) {
+        return ResponseEntity.ok(pluginService.uninstall(id));
     }
 
-    @ApiOperation(value = "更新驱动")
+    @ApiOperation(value = "更新插件")
     @PutMapping
     public ResponseEntity<PluginDTO> update(@PathVariable(name = "organizationId") Long tenantId,
-                                            @RequestPart(value = "driver") @Validated(value = ValidGroup.Update.class) PluginDTO driver,
+                                            @RequestPart(value = "plugin") @Validated(value = ValidGroup.Update.class) PluginDTO plugin,
                                             @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
-        driver.setTenantId(tenantId);
-        return ResponseEntity.ok(pluginService.update(driver, multipartFile));
+        plugin.setTenantId(tenantId);
+        return ResponseEntity.ok(pluginService.update(plugin, multipartFile));
     }
 
-    @ApiOperation(value = "删除驱动")
-    @DeleteMapping("/{driverId}")
+    @ApiOperation(value = "删除插件")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable(name = "organizationId") Long tenantId,
-                                       @PathVariable Long driverId) {
-        pluginService.delete(driverId);
+                                       @PathVariable Long id) {
+        pluginService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
