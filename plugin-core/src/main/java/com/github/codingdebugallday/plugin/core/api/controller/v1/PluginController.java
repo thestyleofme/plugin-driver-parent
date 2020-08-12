@@ -53,18 +53,11 @@ public class PluginController {
         return ResponseEntity.ok(pluginService.create(plugin, multipartFile));
     }
 
-    @ApiOperation(value = "加载插件")
-    @GetMapping("/install/{id}")
+    @ApiOperation(value = "安装插件")
+    @PostMapping("/install")
     public ResponseEntity<Boolean> install(@PathVariable(name = "organizationId") Long tenantId,
-                                           @PathVariable Long id) {
-        return ResponseEntity.ok(pluginService.install(id));
-    }
-
-    @ApiOperation(value = "卸载插件")
-    @GetMapping("/uninstall/{id}")
-    public ResponseEntity<Boolean> uninstall(@PathVariable(name = "organizationId") Long tenantId,
-                                             @PathVariable Long id) {
-        return ResponseEntity.ok(pluginService.uninstall(id));
+                                           @RequestBody Plugin plugin) {
+        return ResponseEntity.ok(pluginService.install(plugin));
     }
 
     @ApiOperation(value = "更新插件")

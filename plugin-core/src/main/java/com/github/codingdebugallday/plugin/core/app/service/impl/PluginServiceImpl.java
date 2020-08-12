@@ -118,13 +118,6 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
     }
 
     @Override
-    public Boolean install(Long id) {
-        // 获取插件路径
-        Plugin entity = this.getById(id);
-        return install(entity);
-    }
-
-    @Override
     public Boolean install(Plugin entity) {
         if (pluginStoreType.equalsIgnoreCase(Plugin.PLUGIN_STORE_TYPE_MINIO)) {
             // minio模式
@@ -145,16 +138,6 @@ public class PluginServiceImpl extends ServiceImpl<PluginMapper, Plugin> impleme
         } else {
             // local模式
             pluginAppService.install(entity.getPluginId(), Paths.get(entity.getPluginPath()));
-        }
-        return true;
-    }
-
-    @Override
-    public boolean uninstall(Long id) {
-        Plugin entity = this.getById(id);
-        // 卸载插件
-        if (Objects.nonNull(pluginAppService.getPluginInfo(entity.getPluginId()))) {
-            pluginAppService.uninstall(entity.getPluginId(), false);
         }
         return true;
     }

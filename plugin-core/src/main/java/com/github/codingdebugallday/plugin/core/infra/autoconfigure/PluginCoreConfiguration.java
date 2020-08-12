@@ -76,11 +76,11 @@ public class PluginCoreConfiguration {
                     if (pluginId.contains(BaseConstant.Symbol.AT)) {
                         // 指定了版本
                         String[] split = pluginId.split(BaseConstant.Symbol.AT);
-                        Long id = fetchAllDriver(driver ->
+                        Plugin plugin = fetchAllDriver(driver ->
                                 driver.getPluginId().contains(split[0]) &&
                                         driver.getPluginVersion().equals(split[1]))
-                                .get(0).getId();
-                        pluginService.install(id);
+                                .get(0);
+                        pluginService.install(plugin);
                     } else {
                         // 若未指定版本用最新的
                         Map<String, Plugin> map = fetchMaxVersionPlugin(
@@ -122,7 +122,7 @@ public class PluginCoreConfiguration {
             log.debug("plugin[{}] is already loaded, skip...", pluginId);
             return;
         }
-        pluginService.install(plugin.getId());
+        pluginService.install(plugin);
     }
 
     private Map<String, Plugin> fetchMaxVersionPlugin(List<Plugin> list) {

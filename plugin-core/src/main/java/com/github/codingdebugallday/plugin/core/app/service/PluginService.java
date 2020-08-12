@@ -46,26 +46,10 @@ public interface PluginService extends IService<Plugin> {
     /**
      * 安装插件
      *
-     * @param id id
-     * @return true/false
-     */
-    Boolean install(Long id);
-
-    /**
-     * 安装插件
-     *
      * @param plugin Plugin
      * @return true/false
      */
     Boolean install(Plugin plugin);
-
-    /**
-     * 卸载插件
-     *
-     * @param id id)
-     * @return true/false
-     */
-    boolean uninstall(Long id);
 
     /**
      * 更新插件

@@ -1,9 +1,6 @@
 package com.github.codingdebugallday.driver.core.infra.autoconfigure;
 
-import java.util.List;
-
 import com.github.codingdebugallday.driver.core.app.service.PluginDatasourceService;
-import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRepository;
 import com.github.codingdebugallday.driver.core.infra.converter.BasePluginDatasourceConvert;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
@@ -42,8 +39,7 @@ public class InitRedisPluginDatasourceRunner implements CommandLineRunner {
     public void run(String... args) {
         log.info("========== init redis plugin datasource start ==========");
         try {
-            List<PluginDatasource> list = pluginDatasourceService.list();
-            list.forEach(pluginDatasource -> {
+            pluginDatasourceService.list().forEach(pluginDatasource -> {
                 PluginDatasourceVO pluginDatasourceVO = BasePluginDatasourceConvert.INSTANCE.entityToVO(pluginDatasource);
                 Plugin plugin = pluginService.getById(pluginDatasource.getDriverId());
                 pluginDatasourceVO.setDatasourceDriver(BasePluginConvert.INSTANCE.entityToVO(plugin));
@@ -54,7 +50,6 @@ public class InitRedisPluginDatasourceRunner implements CommandLineRunner {
         } catch (Exception e) {
             // 捕获异常的原因是，这个starter其他服务依赖时其实不需要初始化，表都不存在，故直接return即可，不做处理
             log.warn("not need init redis plugin datasource");
-            return;
         }
         log.info("========== init redis plugin datasource end ==========");
     }
