@@ -105,11 +105,11 @@
         plugin_datasource
         LEFT JOIN plugin ON plugin_datasource.driver_id = plugin.id
         <where>
-        2>1
-        <if test="datasourceCode!=null and tenantId !=null">
-            and plugin_datasource.datasource_code=#{datasourceCode}
-            and plugin_datasource.tenant_id=#{tenantId}
-        </if>
+            2>1
+            <if test="datasourceCode!=null and tenantId !=null">
+                and plugin_datasource.datasource_code=#{datasourceCode}
+                and plugin_datasource.tenant_id=#{tenantId}
+            </if>
         </where>
     </select>
 
