@@ -83,6 +83,17 @@
             <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>com.netflix.hystrix</groupId>
+            <artifactId>hystrix-javanica</artifactId>
+            <version>1.5.18</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-api</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <!-- plugin-->
         <dependency>
             <groupId>com.github.codingdebugallday</groupId>
@@ -93,7 +104,6 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
             <version>${druid.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>

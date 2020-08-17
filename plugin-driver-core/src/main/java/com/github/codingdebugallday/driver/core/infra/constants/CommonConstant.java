@@ -15,6 +15,7 @@ public class CommonConstant {
     }
 
     public static final String REDIS_PLUGIN_DATASOURCE_PREFIX = "plugin:datasource";
+    public static final String REDIS_PLUGIN_DATASOURCE_METRIC = "hdsp:plugin:datasource:metric:%s:%s";
 
     /**
      * 数据源储存到redis的key格式，如plugin:datasource::${tenantId}

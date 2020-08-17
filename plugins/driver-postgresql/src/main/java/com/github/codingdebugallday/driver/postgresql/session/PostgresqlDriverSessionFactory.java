@@ -12,8 +12,8 @@ import org.pf4j.Extension;
  * 主程序定义SessionService接口的实现类
  * </p>
  *
- * @author JupiterMouse 2020/07/07
- * @since 1.0.0
+ * @author JupiterMouse 2020/8/6
+ * @since 1.0
  */
 @SuppressWarnings("unused")
 @Slf4j

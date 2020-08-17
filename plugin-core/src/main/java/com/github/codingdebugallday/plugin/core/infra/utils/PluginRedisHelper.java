@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Consumer;
 
-import com.github.codingdebugallday.exceptions.PluginException;
+import com.github.codingdebugallday.plugin.framework.exceptions.PluginException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.*;

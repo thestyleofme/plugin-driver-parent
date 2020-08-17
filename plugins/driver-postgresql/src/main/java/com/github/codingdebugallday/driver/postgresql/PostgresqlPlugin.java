@@ -1,6 +1,6 @@
 package com.github.codingdebugallday.driver.postgresql;
 
-import com.github.codingdebugallday.realize.BasePlugin;
+import com.github.codingdebugallday.plugin.framework.realize.BasePlugin;
 import lombok.extern.slf4j.Slf4j;
 import org.pf4j.PluginWrapper;
 
@@ -9,8 +9,8 @@ import org.pf4j.PluginWrapper;
  * postgresql datasource plugin add
  * </p>
  *
- * @author JupiterMouse 2020/07/07
- * @since 1.0.0
+ * @author JupiterMouse 2020/8/6
+ * @since 1.0
  */
 @Slf4j
 public class PostgresqlPlugin extends BasePlugin {
@@ -21,16 +21,16 @@ public class PostgresqlPlugin extends BasePlugin {
 
     @Override
     protected void startEvent() {
-        log.info("mysql datasource plugin start...");
+        log.info("postgresql plugin start...");
     }
 
     @Override
     protected void deleteEvent() {
-        log.info("mysql datasource plugin delete...");
+        log.info("postgresql plugin delete...");
     }
 
     @Override
     protected void stopEvent() {
-        log.info("mysql datasource plugin stop...");
+        log.info("postgresql plugin stop...");
     }
 }

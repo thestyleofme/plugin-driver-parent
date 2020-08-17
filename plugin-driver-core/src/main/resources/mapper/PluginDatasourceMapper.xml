@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.github.codingdebugallday.driver.core.infra.mapper.PluginDatasourceMapper">
+    <resultMap id="BaseResultMap" type="com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource">
+        <result column="datasource_id" property="datasourceId" jdbcType="DECIMAL"/>
+        <result column="datasource_code" property="datasourceCode" jdbcType="VARCHAR"/>
+        <result column="datasource_description" property="datasourceDescription" jdbcType="VARCHAR"/>
+        <result column="datasource_type" property="datasourceType" jdbcType="VARCHAR"/>
+        <result column="datasource_class" property="datasourceClass" jdbcType="VARCHAR"/>
+        <result column="database_pool_type" property="databasePoolType" jdbcType="VARCHAR"/>
+        <result column="database_pool_setting" property="databasePoolSetting" jdbcType="VARCHAR"/>
+        <result column="driver_id" property="driverId" jdbcType="DECIMAL"/>
+        <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
+        <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
+        <result column="object_version_number" property="objectVersionNumber" jdbcType="DECIMAL"/>
+        <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP"/>
+        <result column="created_by" property="createdBy" jdbcType="DECIMAL"/>
+        <result column="last_updated_by" property="lastUpdatedBy" jdbcType="DECIMAL"/>
+        <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <resultMap id="DTOResultMap" type="com.github.codingdebugallday.driver.core.api.dto.PluginDatasourceDTO"
+               extends="BaseResultMap">
+        <association property="plugin"
+                     resultMap="com.github.codingdebugallday.plugin.core.infra.mapper.PluginMapper.BaseResultMap">
+        </association>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        ${prefix}.datasource_id,
+        ${prefix}.datasource_code,
+        ${prefix}.datasource_description,
+        ${prefix}.datasource_type,
+        ${prefix}.datasource_class,
+        ${prefix}.database_pool_type,
+        ${prefix}.database_pool_setting,
+        ${prefix}.driver_id,
+        ${prefix}.enabled_flag,
+        ${prefix}.tenant_id,
+        ${prefix}.object_version_number,
+        ${prefix}.creation_date,
+        ${prefix}.created_by,
+        ${prefix}.last_updated_by,
+        ${prefix}.last_update_date
+    </sql>
+
+    <select id="list" resultMap="DTOResultMap">
+        SELECT
+        <include refid="Base_Column_List">
+            <property name="prefix" value="plugin_datasource"/>
+        </include>
+        ,
+        <include refid="com.github.codingdebugallday.plugin.core.infra.mapper.PluginMapper.Base_Column_List">
+            <property name="prefix" value="plugin"/>
+        </include>
+        FROM
+        plugin_datasource
+        LEFT JOIN plugin ON plugin_datasource.driver_id = plugin.id
+        <where>
+            2>1
+            <if test="dto.datasourceCode !=null">
+                <bind name="datasourceCodeLike" value='"%"+dto.datasourceCode+"%"'/>
+                and plugin_datasource.datasource_code like #{datasourceCodeLike}
+            </if>
+            <if test="dto.datasourceType !=null">
+                and plugin_datasource.datasource_type = #{dto.datasourceType}
+            </if>
+            <if test="dto.enabledFlag !=null">
+                and plugin_datasource.enabled_flag = #{dto.enabledFlag}
+            </if>
+            <if test="dto.tenantId !=null">
+                and plugin_datasource.tenant_id IN (#{dto.tenantId},0)
+            </if>
+            <if test="dto.datasourceTypeList !=null and dto.dbTypeList.size > 0">
+                and plugin_datasource.datasource_type in
+                <foreach collection="dto.datasourceTypeList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="dto.datasourceIdList !=null and dto.datasourceIdList.size > 0">
+                and plugin_datasource.datasource_id in
+                <foreach collection="dto.datasourceIdList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="dto.datasourceClassList !=null and dto.datasourceClassList.size > 0">
+                and plugin_datasource.datasourceClass in
+                <foreach collection="dto.datasourceClassList" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="detail" resultMap="DTOResultMap">
+        SELECT
+        <include refid="Base_Column_List">
+            <property name="prefix" value="plugin_datasource"/>
+        </include>
+        ,
+        <include refid="com.github.codingdebugallday.plugin.core.infra.mapper.PluginMapper.Base_Column_List">
+            <property name="prefix" value="plugin"/>
+        </include>
+        FROM
+        plugin_datasource
+        LEFT JOIN plugin ON plugin_datasource.driver_id = plugin.id
+        <where>
+        2>1
+        <if test="datasourceCode!=null and tenantId !=null">
+            and plugin_datasource.datasource_code=#{datasourceCode}
+            and plugin_datasource.tenant_id=#{tenantId}
+        </if>
+        </where>
+    </select>
+
+</mapper>

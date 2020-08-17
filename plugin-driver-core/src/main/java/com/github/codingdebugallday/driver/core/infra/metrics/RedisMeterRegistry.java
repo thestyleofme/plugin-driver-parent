@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.core.infra.utils.IpUtil;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.plugin.core.infra.utils.ApplicationContextHelper;
@@ -27,9 +28,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 @Slf4j
 public class RedisMeterRegistry extends StepMeterRegistry {
 
-    private static final String KEY_FMT = "plugin:datasource:metric:%s:%s";
+    private static final String KEY_FMT = CommonConstant.REDIS_PLUGIN_DATASOURCE_METRIC;
 
     private static final Long EXPIRED_SECONDS = 10L;
+
+    private static final String DEFAULT_PORT = "8080";
 
     private final PluginDatasourceVO pluginDatasourceVO;
 
@@ -53,9 +56,11 @@ public class RedisMeterRegistry extends StepMeterRegistry {
             Meter.Id id = meter.getId();
             Meter.Type type = id.getType();
             Metric metric = Metric.builder()
+                    .description(id.getDescription())
                     .name(id.getName())
                     .baseUnit(id.getBaseUnit())
                     .type(type.name())
+                    .tags(id.getTags())
                     .build();
             meter.measure().forEach(measurement -> {
                 Statistic statistic = measurement.getStatistic();
@@ -97,7 +102,7 @@ public class RedisMeterRegistry extends StepMeterRegistry {
     }
 
     private int getPort() {
-        String port = "8080";
+        String port = DEFAULT_PORT;
         try {
             port = ENV.resolvePlaceholders("${server.port:8080}");
         } catch (NullPointerException e) {

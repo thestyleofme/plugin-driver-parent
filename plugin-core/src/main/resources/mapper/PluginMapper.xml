@@ -21,4 +21,23 @@
         <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
     </resultMap>
 
+    <sql id="Base_Column_List">
+        ${prefix}.id,
+        ${prefix}.plugin_id,
+        ${prefix}.plugin_description,
+        ${prefix}.plugin_version,
+        ${prefix}.plugin_big_class,
+        ${prefix}.plugin_small_class,
+        ${prefix}.plugin_path,
+        ${prefix}.object_name,
+        ${prefix}.plugin_fingerprint,
+        ${prefix}.enabled_flag,
+        ${prefix}.tenant_id,
+        ${prefix}.object_version_number,
+        ${prefix}.creation_date,
+        ${prefix}.created_by,
+        ${prefix}.last_updated_by,
+        ${prefix}.last_update_date
+    </sql>
+
 </mapper>

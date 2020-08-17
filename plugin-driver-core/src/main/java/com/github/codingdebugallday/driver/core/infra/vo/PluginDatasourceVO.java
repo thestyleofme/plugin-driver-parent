@@ -22,6 +22,8 @@ public class PluginDatasourceVO {
     private String datasourceDescription;
     private String datasourceType;
     private String datasourceClass;
+    private String databasePoolType;
+    private String databasePoolSetting;
     private String settingsInfo;
 
     private Integer enabledFlag;

@@ -1,6 +1,6 @@
 package com.github.codingdebugallday.driver.mysql;
 
-import com.github.codingdebugallday.realize.BasePlugin;
+import com.github.codingdebugallday.plugin.framework.realize.BasePlugin;
 import lombok.extern.slf4j.Slf4j;
 import org.pf4j.PluginWrapper;
 

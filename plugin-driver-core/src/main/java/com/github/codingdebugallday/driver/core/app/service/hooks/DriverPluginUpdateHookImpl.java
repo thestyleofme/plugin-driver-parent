@@ -1,6 +1,6 @@
 package com.github.codingdebugallday.driver.core.app.service.hooks;
 
-import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRepository;
+import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRedisRepository;
 import com.github.codingdebugallday.driver.core.infra.context.PluginDatasourceHelper;
 import com.github.codingdebugallday.plugin.core.api.dto.PluginDTO;
 import com.github.codingdebugallday.plugin.core.app.service.hooks.UpdatePluginHook;
@@ -21,12 +21,12 @@ import org.springframework.stereotype.Component;
 public class DriverPluginUpdateHookImpl implements UpdatePluginHook {
 
     private final PluginDatasourceHelper pluginDatasourceHelper;
-    private final PluginDatasourceRepository pluginDatasourceRepository;
+    private final PluginDatasourceRedisRepository pluginDatasourceRedisRepository;
 
     protected DriverPluginUpdateHookImpl(PluginDatasourceHelper pluginDatasourceHelper,
-                                         PluginDatasourceRepository pluginDatasourceRepository) {
+                                         PluginDatasourceRedisRepository pluginDatasourceRedisRepository) {
         this.pluginDatasourceHelper = pluginDatasourceHelper;
-        this.pluginDatasourceRepository = pluginDatasourceRepository;
+        this.pluginDatasourceRedisRepository = pluginDatasourceRedisRepository;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class DriverPluginUpdateHookImpl implements UpdatePluginHook {
                         .equals(pluginDTO.getPluginId()))
                 .forEach(pluginDatasourceVO -> {
                     pluginDatasourceVO.setDatasourceDriver(BasePluginConvert.INSTANCE.dtoToVO(pluginDTO));
-                    pluginDatasourceRepository.hashUpdate(pluginDatasourceVO.getTenantId(),
+                    pluginDatasourceRedisRepository.hashUpdate(pluginDatasourceVO.getTenantId(),
                             pluginDatasourceVO.getDatasourceCode(), pluginDatasourceVO);
                     log.info("update redis plugin datasource[{}]", pluginDatasourceVO.getDatasourceCode());
                 });

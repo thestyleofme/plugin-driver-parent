@@ -13,7 +13,7 @@ import lombok.*;
  * </p>
  *
  * @author JupiterMouse 2020/07/28
- * @see java.sql.DatabaseMetaData
+ * @see DatabaseMetaData
  * @since 1.0
  */
 @Data

@@ -8,8 +8,8 @@ import com.github.codingdebugallday.driver.core.infra.context.PluginDatasourceHe
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.core.infra.function.DriverSessionFunction;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
-import com.github.codingdebugallday.integration.application.PluginApplication;
-import com.github.codingdebugallday.integration.user.PluginUser;
+import com.github.codingdebugallday.plugin.framework.integration.application.PluginApplication;
+import com.github.codingdebugallday.plugin.framework.integration.user.PluginUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -51,8 +51,7 @@ public class DriverSessionServiceImpl implements DriverSessionService {
             try {
                 PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
                 String pluginId = pluginDatasourceHelper.getPluginVO(pluginDatasourceVO).getPluginId();
-                ClassLoader pluginClassLoader = pluginUser.getPluginManager()
-                        .getPluginClassLoader(pluginId);
+                ClassLoader pluginClassLoader = pluginUser.getPluginManager().getPluginClassLoader(pluginId);
                 // 使用插件的classloader
                 Thread.currentThread().setContextClassLoader(pluginClassLoader);
                 DriverSessionFunction driverSessionFunction = pluginUser.getPluginExtension(DriverSessionFunction.class, pluginId);

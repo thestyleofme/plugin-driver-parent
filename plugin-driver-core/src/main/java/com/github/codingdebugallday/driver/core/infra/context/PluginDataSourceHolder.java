@@ -3,16 +3,20 @@ package com.github.codingdebugallday.driver.core.infra.context;
 import java.sql.Driver;
 import java.util.Objects;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
+import com.github.codingdebugallday.driver.core.infra.constants.DatabasePoolTypeConstant;
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.core.infra.function.DriverDataSourceFunction;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
-import com.github.codingdebugallday.integration.application.PluginApplication;
-import com.github.codingdebugallday.integration.user.PluginUser;
 import com.github.codingdebugallday.plugin.core.infra.annotations.LazyPlugin;
 import com.github.codingdebugallday.plugin.core.infra.vo.PluginVO;
+import com.github.codingdebugallday.plugin.framework.integration.application.PluginApplication;
+import com.github.codingdebugallday.plugin.framework.integration.user.PluginUser;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * <p>
@@ -70,8 +74,7 @@ public class PluginDataSourceHolder {
                     log.debug(">>>>>>>>> driverClassName:{}", driverClassName);
                     log.debug(">>>>>>>>> driver version:{}", driver.getMajorVersion() + "." + driver.getMinorVersion());
                 }
-                Object object = driverDataSourceFunction
-                        .createDataSource(pluginDatasourceVO);
+                Object object = driverDataSourceFunction.createDataSource(pluginDatasourceVO);
                 T t = clazz.cast(object);
                 PluginDatasourceContext.put(key, t);
                 return t;
@@ -86,6 +89,41 @@ public class PluginDataSourceHolder {
 
     public <T> T getOrCreate(Long tenantId, String datasourceCode, Class<T> clazz) {
         PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
+        return getOrCreate(pluginDatasourceVO, clazz);
+    }
+
+    public Class<?> getDataSourceClazz(Long tenantId, String datasourceCode) {
+        PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
+        // 判断数据源类型
+        if (CommonConstant.DataSourceType.RDB.equalsIgnoreCase(pluginDatasourceVO.getDatasourceClass())) {
+            String dbPoolType = pluginDatasourceVO.getDatabasePoolType();
+            if (DatabasePoolTypeConstant.HIKARI.equalsIgnoreCase(dbPoolType)) {
+                return HikariDataSource.class;
+            } else if (DatabasePoolTypeConstant.DRUID.equalsIgnoreCase(dbPoolType)) {
+                return DruidDataSource.class;
+            } else {
+                throw new DriverException("the dbPoolType[%s] not supported!", dbPoolType);
+            }
+        }
+        String driverClass = pluginDatasourceVO.getDriverClassName();
+        if (StringUtils.isEmpty(driverClass)) {
+            PluginVO pluginVO = getPluginVO(pluginDatasourceVO);
+            // 为了走aop 懒加载插件
+            String datasourcePluginId = pluginVO.getPluginId();
+            final DriverDataSourceFunction driverDataSourceFunction = pluginUser
+                    .getPluginExtension(DriverDataSourceFunction.class, datasourcePluginId);
+            driverClass = driverDataSourceFunction.getDriverClassName();
+        }
+        try {
+            return Class.forName(driverClass);
+        } catch (ClassNotFoundException e) {
+            throw new DriverException(e);
+        }
+    }
+
+    public Object getOrCreate(Long tenantId, String datasourceCode) {
+        PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
+        Class<?> clazz = getDataSourceClazz(tenantId, datasourceCode);
         return getOrCreate(pluginDatasourceVO, clazz);
     }
 

@@ -16,7 +16,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
-        <druid.version>1.1.23</druid.version>
         <swagger-bootstrap-ui.version>1.9.6</swagger-bootstrap-ui.version>
     </properties>
 
@@ -37,11 +36,6 @@
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>swagger-bootstrap-ui</artifactId>
             <version>${swagger-bootstrap-ui.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid</artifactId>
-            <version>${druid.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

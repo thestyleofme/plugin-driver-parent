@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.github.codingdebugallday.exceptions.PluginException;
 import com.github.codingdebugallday.plugin.core.app.service.PluginMinioService;
 import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
 import com.github.codingdebugallday.plugin.core.infra.utils.PluginCommonUtil;
+import com.github.codingdebugallday.plugin.framework.exceptions.PluginException;
 import io.minio.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;

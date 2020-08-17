@@ -10,4 +10,13 @@ package com.github.codingdebugallday.driver.core.app.service.session;
  */
 public interface DriverSession extends SqlSession, NoSqlSession {
 
+    /**
+     * 验证是否正确
+     *
+     * @return 正确返回true，否则为false
+     */
+    default boolean isValid() {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
 }

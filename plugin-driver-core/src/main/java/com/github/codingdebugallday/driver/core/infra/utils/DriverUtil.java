@@ -1,14 +1,13 @@
 package com.github.codingdebugallday.driver.core.infra.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
-import com.github.codingdebugallday.driver.core.domain.entity.CommonDatasourceSettingInfo;
+import com.github.codingdebugallday.driver.core.domain.entity.DriverPoolSettingInfo;
 import com.github.codingdebugallday.driver.core.infra.constants.CommonConstant;
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.plugin.core.infra.utils.JsonUtil;
+import com.github.codingdebugallday.plugin.framework.constants.BaseConstants;
 import org.springframework.util.StringUtils;
 
 /**
@@ -25,19 +24,31 @@ public class DriverUtil {
         throw new IllegalStateException("util class");
     }
 
+    public static DriverPoolSettingInfo parseDatasourcePool(PluginDatasourceVO pluginDatasourceVO) {
+        String databasePoolSetting = pluginDatasourceVO.getDatabasePoolSetting();
+        if (StringUtils.isEmpty(databasePoolSetting)) {
+            return DriverPoolSettingInfo.builder().build();
+        }
+        return JsonUtil.toObj(databasePoolSetting, DriverPoolSettingInfo.class);
+    }
+
     /**
      * 从PluginDatasource中解析配置信息
      *
      * @param pluginDatasourceVO PluginDatasourceVO
      * @return CommonDatasourceSettingInfo
      */
-    public static CommonDatasourceSettingInfo parseDatasourceSettingInfo(PluginDatasourceVO pluginDatasourceVO) {
+    public static Properties parseDatasourceSettingInfo(PluginDatasourceVO pluginDatasourceVO) {
         String settingsInfo = pluginDatasourceVO.getSettingsInfo();
+        Properties properties;
         if (StringUtils.isEmpty(settingsInfo)) {
-            throw new DriverException("the datasource settingsInfo cannot be empty");
+            properties = new Properties();
+        } else {
+            properties = JsonUtil.toObj(settingsInfo, Properties.class);
         }
-        return JsonUtil.toObj(settingsInfo, CommonDatasourceSettingInfo.class);
+        return properties;
     }
+
 
     /**
      * 常用数据源配置转为list
@@ -46,49 +57,17 @@ public class DriverUtil {
      * @return List<String>
      */
     public static List<String> dsSettingInfo2List(PluginDatasourceVO pluginDatasourceVO) {
-        CommonDatasourceSettingInfo commonDatasourceSettingInfo =
-                parseDatasourceSettingInfo(pluginDatasourceVO);
+        Properties properties = parseDatasourceSettingInfo(pluginDatasourceVO);
         ArrayList<String> list = new ArrayList<>();
-        list.add(commonDatasourceSettingInfo.getJdbcUrl());
-        String driverClassName = commonDatasourceSettingInfo.getDriverClassName();
+        list.add(properties.getProperty(CommonConstant.JdbcProperties.JDBC_URL));
+        String driverClassName = properties.getProperty(CommonConstant.JdbcProperties.DRIVER_CLASS_NAME);
         if (StringUtils.isEmpty(driverClassName)) {
             driverClassName = pluginDatasourceVO.getDriverClassName();
         }
         list.add(driverClassName);
-        list.add(commonDatasourceSettingInfo.getUsername());
-        list.add(commonDatasourceSettingInfo.getPassword());
+        list.add(properties.getProperty(CommonConstant.JdbcProperties.USERNAME));
+        list.add(properties.getProperty(CommonConstant.JdbcProperties.PASSWORD));
         return list;
-    }
-
-    /**
-     * 从PluginDatasource中解析配置信息
-     *
-     * @param pluginDatasourceVO PluginDatasourceVO
-     * @return Properties
-     */
-    public static Properties parseDsSetting2Properties(PluginDatasourceVO pluginDatasourceVO) {
-        String settingsInfo = pluginDatasourceVO.getSettingsInfo();
-        if (StringUtils.isEmpty(settingsInfo)) {
-            throw new DriverException("the datasource settingsInfo cannot be empty");
-        }
-        return JsonUtil.toObj(settingsInfo, Properties.class);
-    }
-
-    /**
-     * 校验参数是否包含必要信息
-     *
-     * @param commonDatasourceSettingInfo 通用的数据源信息映射类
-     */
-    public static void verifyConfig(CommonDatasourceSettingInfo commonDatasourceSettingInfo) {
-        if (StringUtils.isEmpty(commonDatasourceSettingInfo.getJdbcUrl())) {
-            throw new DriverException("jdbcUrl need not null");
-        }
-        if (StringUtils.isEmpty(commonDatasourceSettingInfo.getUsername())) {
-            throw new DriverException("username need not null");
-        }
-        if (StringUtils.isEmpty(commonDatasourceSettingInfo.getPassword())) {
-            throw new DriverException("password need not null");
-        }
     }
 
     /**
@@ -106,5 +85,50 @@ public class DriverUtil {
         if (StringUtils.isEmpty(prop.get(CommonConstant.JdbcProperties.PASSWORD))) {
             throw new DriverException("password need not null");
         }
+    }
+
+    /**
+     * 将map的key从下划线转为小驼峰
+     *
+     * @param map 下划线map
+     * @return key为小驼峰的map
+     */
+    public static Map<String, Object> underlineToCamelHumpMapKey(Map<String, Object> map) {
+        Map<String, Object> resultMap = new HashMap<>(16);
+        map.forEach((k, v) -> resultMap.put(underlineToCamel(k), v));
+        return resultMap;
+    }
+
+
+    /**
+     * 下划线转驼峰
+     *
+     * @param param 下划线
+     * @return 驼峰
+     */
+    public static String underlineToCamel(String param) {
+        if (param == null || "".equals(param.trim())) {
+            return "";
+        }
+        int len = param.length();
+        StringBuilder sb = new StringBuilder(len);
+        // "_" 后转大写标志,默认字符前面没有"_"
+        boolean flag = false;
+        for (int i = 0; i < len; i++) {
+            char c = param.charAt(i);
+            if (String.valueOf(c).equals(BaseConstants.Symbol.LOWER_LINE)) {
+                flag = true;
+            } else {
+                if (flag) {
+                    // 表示当前字符前面是"_" ,当前字符转大写
+                    sb.append(Character.toUpperCase(param.charAt(i)));
+                    // 重置标识
+                    flag = false;
+                } else {
+                    sb.append(Character.toLowerCase(param.charAt(i)));
+                }
+            }
+        }
+        return sb.toString();
     }
 }

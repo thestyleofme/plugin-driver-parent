@@ -134,7 +134,7 @@ public class Table extends BaseInfo {
         }
 
         // 获取索引
-        try (ResultSet rs = connection.getMetaData().getIndexInfo(catalog, schema, tableName, true, true)) {
+        try (ResultSet rs = connection.getMetaData().getIndexInfo(catalog, schema, tableName, false, true)) {
             if (null != rs) {
                 while (rs.next()) {
                     ikList.add(new IndexKey(rs));

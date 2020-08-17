@@ -1,17 +1,21 @@
 package com.github.codingdebugallday.driver.core.app.service.session.rdbms;
 
+import static com.baomidou.mybatisplus.core.toolkit.StringPool.SINGLE_QUOTE;
 import static com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant.Symbol.*;
 
 import java.io.LineNumberReader;
 import java.io.StringReader;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.sql.DataSource;
 
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
 import com.github.codingdebugallday.driver.core.app.service.session.SessionTool;
+import com.github.codingdebugallday.driver.core.app.service.session.SqlResponse;
 import com.github.codingdebugallday.driver.core.app.service.session.funcations.extractor.*;
 import com.github.codingdebugallday.driver.core.app.service.session.funcations.setter.SchemaSetter;
+import com.github.codingdebugallday.driver.core.domain.entity.DatasourceChildren;
 import com.github.codingdebugallday.driver.core.infra.constants.DataSourceTypeConstant;
 import com.github.codingdebugallday.driver.core.infra.constants.PatternConstant;
 import com.github.codingdebugallday.driver.core.infra.exceptions.DriverException;
@@ -25,15 +29,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.MetaDataAccessException;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
  * <p>
- * RdbmsDriver抽象实现
- * 1. SQL执行器
- * 2. 支持事务的执行
- * 3. 元数据信息
+ * RdbmsDriver抽象实现 1. SQL执行器 2. 支持事务的执行 3. 元数据信息
  * </p>
  *
  * @author JupiterMouse 2020/07/10
@@ -42,12 +46,13 @@ import org.springframework.util.StringUtils;
 @Slf4j
 public abstract class AbstractRdbmsDriverSession implements DriverSession, SessionTool {
 
-    private static final String DEFAULT_CREATE_SCHEMA = "CREATE DATABASE IF NOT EXISTS %s";
+    private static final String DEFAULT_CREATE_SCHEMA = "CREATE DATABASE %s;";
     private static final String DEFAULT_PAGE_SQL = "%s LIMIT %d, %d";
     private static final String COUNT_SQL_FORMAT = "SELECT COUNT(1) FROM ( %s ) t";
     private static final int DEFAULT_PAGE = 0;
     private static final int DEFAULT_SIZE = 10;
-
+    private static final int DEFAULT_VALID_TIME = 3;
+    private static final String RESULT_PREFIX = "RESULT_";
     protected final DataSource dataSource;
 
     public AbstractRdbmsDriverSession(DataSource dataSource) {
@@ -133,20 +138,28 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
 
     @Override
-    public List<List<Map<String, Object>>> executeAll(String schema
-            , String text
-            , boolean transactionFlag
-            , boolean resultFlag) {
+    public List<List<Map<String, Object>>> executeAll(String schema,
+                                                      String text,
+                                                      boolean transactionFlag,
+                                                      boolean savepointFlag,
+                                                      boolean resultFlag) {
         List<String> sqlList = sqlExtract2List(text);
 
         Connection connection = null;
         Statement ps = null;
+        ResultSet resultSet = null;
+        Savepoint savepoint = null;
+        String nowSql = null;
         List<List<Map<String, Object>>> result = new ArrayList<>();
         try {
             // 获取 connection
             connection = this.dataSource.getConnection();
             if (transactionFlag) {
                 this.beginTransaction(connection);
+            }
+            if (savepointFlag) {
+                this.beginTransaction(connection);
+                savepoint = this.setSavepoint(connection);
             }
             // 设置schema
             schemaSetter().setSchema(connection, schema);
@@ -157,9 +170,10 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
             for (String sql : sqlList) {
                 List<Map<String, Object>> rows = new ArrayList<>();
                 Map<String, Object> row = new LinkedHashMap<>();
+                nowSql = sql;
                 boolean execute = ps.execute(sql);
                 if (resultFlag && execute) {
-                    ResultSet resultSet = ps.getResultSet();
+                    resultSet = ps.getResultSet();
                     while (resultSet.next()) {
                         // todo 类型处理
                         this.transformMap(resultSet, row);
@@ -173,31 +187,105 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
             }
             return result;
         } catch (SQLException e) {
-            if (transactionFlag) {
+            log.error("error now sql:[{}]", nowSql);
+            if (savepointFlag && Objects.nonNull(savepoint)) {
+                Assert.notNull(connection, "connection is null");
+                this.rollback(connection, savepoint);
+            } else if (transactionFlag) {
                 this.quietRollback(connection);
             }
-            log.error("error sql:{}", text);
-            throw new DriverException("sql execute error", e);
+            throw new DriverException("sql execute error, sql [" + nowSql + "]", e);
         } finally {
-            CloseUtil.close(ps, connection);
+            CloseUtil.close(ps, connection, resultSet);
         }
     }
 
-
     @Override
-    public List<Page<Map<String, Object>>> executeAll(String schema, String text, Pageable pageable) {
-        return this.executeAll(schema, text, pageable, true, true);
+    public Map<String, SqlResponse> executeAllDetail(String schema, String text, boolean transactionFlag,
+                                                     boolean savepointFlag, boolean resultFlag) {
+        List<String> sqlList = this.sqlExtract2List(text);
+        Connection connection = null;
+        Statement ps = null;
+        ResultSet resultSet = null;
+        Savepoint savepoint = null;
+        String nowSql = null;
+        AtomicInteger index = new AtomicInteger(0);
+        LinkedHashMap<String, SqlResponse> responseMap = new LinkedHashMap<>();
+        try {
+            // 获取 connection
+            connection = this.dataSource.getConnection();
+            if (transactionFlag) {
+                this.beginTransaction(connection);
+            }
+            if (savepointFlag) {
+                this.beginTransaction(connection);
+                savepoint = this.setSavepoint(connection);
+            }
+            // 设置schema
+            schemaSetter().setSchema(connection, schema);
+            // 执行
+            ps = connection.createStatement();
+            // true if the first result is a ResultSet object
+            // false if it is an update count or there are no results
+            for (String sql : sqlList) {
+                List<Map<String, Object>> rows = new ArrayList<>();
+                Map<String, Object> row = new LinkedHashMap<>();
+                nowSql = sql;
+                // TODO sql 解析语句，加上数据限制。
+                boolean execute = ps.execute(sql);
+                if (resultFlag && execute) {
+                    resultSet = ps.getResultSet();
+                    while (resultSet.next()) {
+                        this.transformMap(resultSet, row);
+                        rows.add(row);
+                    }
+                }
+                SqlResponse sqlResponse = SqlResponse.builder()
+                        .sql(sql)
+                        .isSuccess(true)
+                        .data(rows)
+                        .build();
+                responseMap.put(RESULT_PREFIX + index.incrementAndGet(), sqlResponse);
+            }
+            if (transactionFlag) {
+                this.quietCommit(connection);
+            }
+            return responseMap;
+        } catch (SQLException e) {
+            SqlResponse sqlResponse = SqlResponse.builder()
+                    .sql(nowSql)
+                    .isSuccess(false)
+                    .error(e.getMessage())
+                    .build();
+            responseMap.put(RESULT_PREFIX + index.incrementAndGet(), sqlResponse);
+            log.error("error now sql:[{}]", nowSql);
+            if (savepointFlag && Objects.nonNull(savepoint)) {
+                Assert.notNull(connection, "connection is null");
+                this.quietRollback(connection, savepoint);
+            } else if (transactionFlag) {
+                this.quietRollback(connection);
+            }
+        } finally {
+            CloseUtil.close(ps, connection, resultSet);
+        }
+        return responseMap;
     }
 
     @Override
-    public List<Page<Map<String, Object>>> executeAll(String schema
-            , String text
-            , Pageable pageable
-            , boolean transactionFlag
-            , boolean resultFlag) {
+    public List<Page<Map<String, Object>>> executePageAll(String schema, String text, Pageable pageable) {
+        return this.executePageAll(schema, text, pageable, true, true);
+    }
+
+    @Override
+    public List<Page<Map<String, Object>>> executePageAll(String schema,
+                                                          String text,
+                                                          Pageable pageable,
+                                                          boolean transactionFlag,
+                                                          boolean resultFlag) {
         List<String> sqlList = sqlExtract2List(text);
         Connection connection = null;
         Statement ps = null;
+        String nowSql = null;
         List<Page<Map<String, Object>>> result = new ArrayList<>();
         try {
             // 获取 connection
@@ -225,6 +313,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
                         sql = this.pageSqlExtractor().extract(this.getPageFormat(), sql.trim(), pageable);
                     }
                 }
+                nowSql = sql;
                 boolean execute = ps.execute(sql);
                 if (execute && resultFlag) {
                     ResultSet resultSet = ps.getResultSet();
@@ -245,25 +334,25 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
                 this.quietRollback(connection);
             }
             log.error("error sql:{}", text);
-            throw new DriverException("sql execute error", e);
+            throw new DriverException("sql execute error, sql [" + nowSql + "]", e);
         } finally {
             CloseUtil.close(ps, connection);
         }
     }
 
     @Override
-    public List<Page<Map<String, Object>>> executeAll(String schema, String text) {
-        return this.executeAll(schema, text, PageRequest.of(DEFAULT_PAGE, DEFAULT_SIZE));
+    public List<Page<Map<String, Object>>> executePageAll(String schema, String text) {
+        return this.executePageAll(schema, text, PageRequest.of(DEFAULT_PAGE, DEFAULT_SIZE));
     }
 
     @Override
     public void executeOneUpdate(String schema, String sql, boolean transactionFlag, boolean resultFlag) {
-        this.executeAll(schema, sql, transactionFlag, resultFlag);
+        this.executeAll(schema, sql, transactionFlag, false, resultFlag);
     }
 
     @Override
     public List<Map<String, Object>> executeOneQuery(String schema, String sql) {
-        List<List<Map<String, Object>>> list = this.executeAll(schema, sql, false, true);
+        List<List<Map<String, Object>>> list = this.executeAll(schema, sql, false, false, true);
         if (CollectionUtils.isEmpty(list)) {
             return Collections.emptyList();
         }
@@ -272,7 +361,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public Page<Map<String, Object>> executeOneQuery(String schema, String sql, Pageable pageable) {
-        List<Page<Map<String, Object>>> list = this.executeAll(schema, sql, pageable, false, true);
+        List<Page<Map<String, Object>>> list = this.executePageAll(schema, sql, pageable, false, true);
         if (CollectionUtils.isEmpty(list)) {
             List<Map<String, Object>> emptyList = Collections.emptyList();
             list.add(new PageImpl<>(emptyList, pageable, 0L));
@@ -282,7 +371,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
 
     @Override
     public void executeOneUpdate(String schema, String sql) {
-        this.executeAll(schema, sql);
+        this.executePageAll(schema, sql);
     }
 
     @Override
@@ -317,11 +406,11 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         }
     }
 
-
     @Override
     public List<String> schemaList() {
         List<String> schemaList = new ArrayList<>();
-        try (Connection connection = this.dataSource.getConnection(); ResultSet rs = schemaExtractor().extract(connection.getMetaData())) {
+        try (Connection connection = this.dataSource.getConnection(); ResultSet rs = schemaExtractor()
+                .extract(connection.getMetaData())) {
             while (rs.next()) {
                 String schema = rs.getString(1);
                 schemaList.add(schema);
@@ -335,7 +424,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     @Override
     public boolean schemaCreate(String schema) {
         String createSchemaSql = String.format(DEFAULT_CREATE_SCHEMA, schema);
-        this.executeOneUpdate(schema, createSchemaSql);
+        this.executeOneUpdate(null, createSchemaSql);
         // 执行失败即抛异常结束
         return true;
     }
@@ -393,12 +482,13 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     //====================table==================
     //============================================
 
-    @SuppressWarnings("unchecked")
+
     @Override
-    public List<String> tableList(String schema, String tablePattern) {
+    public List<String> tableList(String schema, String tablePattern, String... type) {
         List<String> tables = new ArrayList<>();
-        tablePattern = Optional.ofNullable(tablePattern).map(x -> "%" + x + "%s").orElse("%");
-        try (ResultSet rs = tableExtractor().extract(this.dataSource.getConnection().getMetaData(), schema, tablePattern, new String[]{TableType.TABLE.value()})) {
+        tablePattern = Optional.ofNullable(tablePattern).map(x -> PERCENTAGE + x + PERCENTAGE).orElse(PERCENTAGE);
+        try (Connection connection = this.dataSource.getConnection();
+             ResultSet rs = tableExtractor().extract(connection.getMetaData(), schema, tablePattern, type)) {
             while (rs.next()) {
                 tables.add(rs.getString("TABLE_NAME"));
             }
@@ -409,22 +499,45 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     }
 
     @Override
-    public boolean tableExists(String schema, String table) {
-        return false;
+    public Map<String, List<String>> showAllDatabasesAndTables() {
+        List<String> schemaList = schemaList();
+        HashMap<String, List<String>> map = new HashMap<>(schemaList.size() * 4 / 3 + 1);
+        schemaList.forEach(db -> map.put(db, tableList(db)));
+        return map;
     }
 
     @Override
-    public List<String> views(String schema, String tablePattern) {
-        List<String> views = new ArrayList<>();
-        tablePattern = Optional.ofNullable(tablePattern).map(x -> "%" + x + "%s").orElse("%");
-        try (ResultSet rs = tableExtractor().extract(this.dataSource.getConnection().getMetaData(), schema, tablePattern, new String[]{TableType.VIEW.value()})) {
-            while (rs.next()) {
-                views.add(rs.getString("TABLE_NAME"));
-            }
-        } catch (SQLException e) {
-            throw new DriverException("fetch tables error", e);
+    public List<DatasourceChildren> showAllDatabasesAndTablesAndViews() {
+        List<String> schemaList = schemaList();
+        List<DatasourceChildren> result = new ArrayList<>();
+        for (String schema : schemaList) {
+            DatasourceChildren datasourceChildren = DatasourceChildren.builder().key(schema).title(schema).build();
+            List<String> tables = tableList(schema);
+            List<DatasourceChildren> tableInfo = new ArrayList<>();
+            tables.addAll(viewList(schema));
+            tables.forEach(t -> tableInfo.add(DatasourceChildren.builder()
+                    .key(String.format("%s.%s", schema, t))
+                    .title(t).build()));
+            datasourceChildren.setChildren(tableInfo);
+            result.add(datasourceChildren);
         }
-        return views;
+        return result;
+    }
+
+    @Override
+    public List<String> tableList(String schema, String tablePattern) {
+        return this.tableList(schema, tablePattern, TableTypeEnum.TABLE.value());
+    }
+
+    @Override
+    public boolean tableExists(String schema, String table) {
+        List<String> tableList = this.tableList(schema, table);
+        return !CollectionUtils.isEmpty(tableList);
+    }
+
+    @Override
+    public List<String> viewList(String schema, String tablePattern) {
+        return this.tableList(schema, tablePattern, TableTypeEnum.VIEW.value());
     }
 
     @Override
@@ -437,15 +550,46 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         return this.tableList(schema, null);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List<String> views(String schema) {
-        return this.views(schema, null);
+    public List<Map<String, Object>> tableStructure(String schema, String table) {
+        try {
+            return (List<Map<String, Object>>) JdbcUtils.extractDatabaseMetaData(dataSource, databaseMetaData -> {
+                List<Map<String, Object>> tableStructure = new ArrayList<>();
+                ResultSet rs = null;
+                try {
+                    // 表结构提取
+                    rs = tableStructureExtractor().extract(databaseMetaData, schema, table);
+                    ResultSetMetaData metaData = rs.getMetaData();
+                    while (rs.next()) {
+                        int columnCount = metaData.getColumnCount();
+                        Map<String, Object> fieldStructure = new HashMap<>(columnCount);
+                        for (int i = 1; i <= columnCount; i++) {
+                            fieldStructure.put(metaData.getColumnName(i).toUpperCase(), rs.getObject(i));
+                        }
+                        tableStructure.add(fieldStructure);
+                    }
+                } finally {
+                    CloseUtil.close(rs);
+                }
+                return tableStructure;
+            });
+        } catch (MetaDataAccessException e) {
+            log.error("fetch structure error");
+            throw new DriverException("fetch structure error", e);
+        }
+    }
+
+    @Override
+    public List<String> viewList(String schema) {
+        return this.viewList(schema, null);
     }
 
     @Override
     public List<PrimaryKey> tablePk(String schema, String tableName) {
         List<PrimaryKey> primaryKeyList = new ArrayList<>();
-        try (ResultSet rs = this.dataSource.getConnection().getMetaData().getPrimaryKeys(schema, schema, tableName)) {
+        try (Connection connection = this.dataSource.getConnection();
+             ResultSet rs = connection.getMetaData().getPrimaryKeys(schema, schema, tableName)) {
             if (null != rs) {
                 while (rs.next()) {
                     primaryKeyList.add(new PrimaryKey(rs));
@@ -461,7 +605,8 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     @Override
     public List<ForeignKey> tableFk(String schema, String tableName) {
         List<ForeignKey> foreignKeyList = new ArrayList<>();
-        try (ResultSet rs = this.dataSource.getConnection().getMetaData().getImportedKeys(schema, schema, tableName)) {
+        try (Connection connection = this.dataSource.getConnection();
+             ResultSet rs = connection.getMetaData().getImportedKeys(schema, schema, tableName)) {
             if (null != rs) {
                 while (rs.next()) {
                     foreignKeyList.add(new ForeignKey(rs));
@@ -477,7 +622,8 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     public List<IndexKey> tableIndex(String schema, String table) {
         List<IndexKey> indexKeyList = new ArrayList<>();
         // 获取索引
-        try (ResultSet rs = this.dataSource.getConnection().getMetaData().getIndexInfo(schema, schema, table, false, false)) {
+        try (Connection connection = this.dataSource.getConnection();
+             ResultSet rs = connection.getMetaData().getIndexInfo(schema, schema, table, false, false)) {
             if (null != rs) {
                 while (rs.next()) {
                     indexKeyList.add(new IndexKey(rs));
@@ -493,7 +639,8 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     public List<Column> columnMetaData(String schema, String tableName) {
         List<Column> columnList = new ArrayList<>();
         // 列信息
-        try (ResultSet rs = this.dataSource.getConnection().getMetaData().getColumns(schema, schema, tableName, null)) {
+        try (Connection connection = this.dataSource.getConnection();
+             ResultSet rs = connection.getMetaData().getColumns(schema, schema, tableName, null)) {
             if (null != rs) {
                 while (rs.next()) {
                     Column column = new Column(rs);
@@ -501,7 +648,42 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
                 }
             }
         } catch (SQLException e) {
-            throw new DriverException("[schema:" + schema + "],[table:" + tableName + "] table index key error", e);
+            throw new DriverException("[schema:" + schema + "],[table:" + tableName + "] table column error", e);
+        }
+        return columnList;
+    }
+
+    @Override
+    public Map<String, List<Column>> columnMetaDataBatch(String schema, List<String> tables) {
+        Map<String, List<Column>> result = new HashMap<>(tables.size() * 4 / 3 + 1);
+        tables.forEach(table -> {
+            List<Column> columns = columnMetaData(schema, table);
+            result.put(table, columns);
+        });
+        return result;
+    }
+
+    @Override
+    public List<Column> columnMetaDataBySql(String schema, String sql) {
+        List<Column> columnList = new ArrayList<>();
+        // 列信息
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = this.dataSource.getConnection();
+            // 设置schema
+            schemaSetter().setSchema(connection, schema);
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Column column = new Column(rs);
+                columnList.add(column);
+            }
+        } catch (SQLException e) {
+            throw new DriverException("[schema:" + schema + "],[sql:" + sql + "] table column error", e);
+        } finally {
+            CloseUtil.close(rs, ps, connection);
         }
         return columnList;
     }
@@ -509,10 +691,14 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     @Override
     public Table tableMetaData(String schema, String tableName) {
         Table table = new Table();
+        Connection connection = null;
         try {
-            table.init(this.dataSource.getConnection(), schema, schema, tableName);
+            connection = this.dataSource.getConnection();
+            table.init(connection, schema, schema, tableName);
         } catch (SQLException e) {
             throw new DriverException("table metadata error", e);
+        } finally {
+            CloseUtil.close(connection);
         }
         return table;
     }
@@ -525,7 +711,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     @Override
     public boolean isValid() {
         try (Connection connection = this.dataSource.getConnection()) {
-            return connection.isValid(3);
+            return connection.isValid(DEFAULT_VALID_TIME);
         } catch (SQLException e) {
             throw new DriverException("connection error", e);
         }
@@ -534,7 +720,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     @Override
     public Schema schemaMetaExtra(String schema) {
         List<String> tableList = this.tableList(schema);
-        List<String> viewList = this.views(schema);
+        List<String> viewList = this.viewList(schema);
         return Schema.builder()
                 .tables(tableList)
                 .views(viewList)
@@ -572,6 +758,42 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         }
     }
 
+    @Override
+    public boolean tableInsert(String schema, String tableName, List<Tuple<String, String>> values) {
+        StringBuilder sql = new StringBuilder();
+        sql.append(String.format("insert into %s", tableName));
+
+        sql.append("(");
+        // 值sql
+        StringBuilder valuesSql = new StringBuilder();
+        valuesSql.append("(");
+        int size = values.size();
+        Tuple<String, String> tuple;
+        for (int i = 0; i < size; i++) {
+            tuple = values.get(i);
+            // 列名
+            String key = tuple.getFirst();
+            // 列值
+            String value = tuple.getSecond();
+            sql.append(key);
+            if (value.startsWith("to_date")) {
+                valuesSql.append(value);
+            } else {
+                valuesSql.append(SINGLE_QUOTE).append(value).append(SINGLE_QUOTE);
+            }
+            if (i != size - 1) {
+                sql.append(",");
+                valuesSql.append(",");
+            }
+        }
+        sql.append(")");
+        valuesSql.append(")");
+        sql.append(SPACE).append("VALUES").append(SPACE).append(valuesSql);
+        this.executeOneUpdate(schema, sql.toString(), true, false);
+        return true;
+    }
+
+
     protected String getPageFormat() {
         return DEFAULT_PAGE_SQL;
     }
@@ -584,6 +806,25 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     public void beginTransaction(Connection conn) throws SQLException {
         checkTransactionSupported(conn);
         conn.setAutoCommit(false);
+    }
+
+    /**
+     * 静默提交事务
+     *
+     * @param conn 连接
+     * @throws SQLException SQL执行异常
+     */
+    protected void quietCommit(Connection conn) throws SQLException {
+        try {
+            conn.commit();
+        } finally {
+            try {
+                // 事务结束，恢复自动提交
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -615,7 +856,22 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
             try {
                 conn.rollback();
             } catch (Exception e) {
-                throw new DriverException(e);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 静默回滚事务
+     *
+     * @param conn Connection
+     */
+    protected void quietRollback(Connection conn, Savepoint savepoint) {
+        if (null != conn) {
+            try {
+                conn.rollback(savepoint);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -630,6 +886,43 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     protected void checkTransactionSupported(Connection conn) throws SQLException {
         if (!conn.getMetaData().supportsTransactions()) {
             throw new DriverException("Transaction not supported for current database!");
+        }
+    }
+
+
+    /**
+     * 设置保存点
+     *
+     * @return 保存点对象
+     * @throws SQLException SQL执行异常
+     */
+    public Savepoint setSavepoint(Connection conn) throws SQLException {
+        return conn.setSavepoint();
+    }
+
+    /**
+     * 设置保存点
+     *
+     * @param name 保存点的名称
+     * @return 保存点对象
+     * @throws SQLException SQL执行异常
+     */
+    public Savepoint setSavepoint(Connection conn, String name) throws SQLException {
+        return conn.setSavepoint(name);
+    }
+
+    /**
+     * 回滚到保存点
+     *
+     * @param connection 连接
+     * @param savepoint  保存点
+     * @throws SQLException SQL执行异常
+     */
+    public void rollback(Connection connection, Savepoint savepoint) {
+        try {
+            connection.rollback(savepoint);
+        } catch (SQLException e) {
+            throw new DriverException("rollback savepoint error", e);
         }
     }
 
@@ -717,6 +1010,4 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         }
         return obj;
     }
-
-
 }

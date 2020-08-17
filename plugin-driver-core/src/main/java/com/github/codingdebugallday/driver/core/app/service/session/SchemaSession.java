@@ -17,17 +17,64 @@ import org.springframework.data.domain.Pageable;
 public interface SchemaSession {
 
     /**
-     * 执行SQL文本，SQL文本拆分成多个SQL语句后，单独运行 transactionFlag=true 开启事务，默认事务关闭 resultFlag=true 默认返回值为空
+     * 执行SQL文本，SQL文本拆分成多个SQL语句后，单独运行
+     * transactionFlag=true 开启事务，默认事务关闭
+     * resultFlag=true 默认返回值为空
      *
      * @param resultFlag      是否返回值
      * @param transactionFlag 是否事务
+     * @param savepointFlag   保存点
      * @param schema          模式
      * @param text            SQL文本
      * @return List<List < Map < String, Object>>>
      */
-    default List<List<Map<String, Object>>> executeAll(String schema, String text, boolean transactionFlag,
+    default List<List<Map<String, Object>>> executeAll(String schema,
+                                                       String text,
+                                                       boolean transactionFlag,
+                                                       boolean savepointFlag,
                                                        boolean resultFlag) {
         throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * 执行SQL文本，SQL文本拆分成多个SQL语句后，resultFlag=true 默认返回值为空
+     *
+     * @param resultFlag 是否返回值
+     * @param schema     模式
+     * @param text       SQL文本
+     * @return List<List < Map < String, Object>>>
+     */
+    default List<List<Map<String, Object>>> executeAll(String schema, String text, boolean resultFlag) {
+        return this.executeAll(schema, text, false, false, resultFlag);
+    }
+
+    /**
+     * 执行SQL文本，带返回值
+     *
+     * @param schema          模式
+     * @param text            文本
+     * @param transactionFlag 转换flag
+     * @param savepointFlag   保存点
+     * @param resultFlag      返回点
+     * @return Map<String, SqlResponse>
+     */
+    default Map<String, SqlResponse> executeAllDetail(String schema,
+                                                      String text,
+                                                      boolean transactionFlag,
+                                                      boolean savepointFlag,
+                                                      boolean resultFlag) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * 执行SQL文本，带返回值
+     *
+     * @param schema 模式
+     * @param text   文本
+     * @return Map<String, SqlResponse>
+     */
+    default Map<String, SqlResponse> executeAllDetail(String schema, String text) {
+        return this.executeAllDetail(schema, text, false, false, true);
     }
 
     /**
@@ -38,7 +85,7 @@ public interface SchemaSession {
      * @param text     SQL文本
      * @return List<List < Map < String, Object>>>
      */
-    default List<Page<Map<String, Object>>> executeAll(String schema, String text, Pageable pageable) {
+    default List<Page<Map<String, Object>>> executePageAll(String schema, String text, Pageable pageable) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
@@ -49,7 +96,7 @@ public interface SchemaSession {
      * @param text   SQL文本
      * @return List<List < Map < String, Object>>>
      */
-    default List<Page<Map<String, Object>>> executeAll(String schema, String text) {
+    default List<Page<Map<String, Object>>> executePageAll(String schema, String text) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
@@ -64,8 +111,8 @@ public interface SchemaSession {
      * @param text            SQL文本
      * @return List<List < Map < String, Object>>>
      */
-    default List<Page<Map<String, Object>>> executeAll(String schema, String text, Pageable pageable,
-                                                       boolean transactionFlag, boolean resultFlag) {
+    default List<Page<Map<String, Object>>> executePageAll(String schema, String text, Pageable pageable,
+                                                           boolean transactionFlag, boolean resultFlag) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
@@ -185,4 +232,5 @@ public interface SchemaSession {
     default String currentCatalog() {
         throw new UnsupportedOperationException("Not Implement");
     }
+
 }

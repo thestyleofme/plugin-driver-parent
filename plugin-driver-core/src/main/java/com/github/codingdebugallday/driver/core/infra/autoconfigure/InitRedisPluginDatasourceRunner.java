@@ -1,7 +1,7 @@
 package com.github.codingdebugallday.driver.core.infra.autoconfigure;
 
 import com.github.codingdebugallday.driver.core.app.service.PluginDatasourceService;
-import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRepository;
+import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRedisRepository;
 import com.github.codingdebugallday.driver.core.infra.converter.BasePluginDatasourceConvert;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.plugin.core.app.service.PluginService;
@@ -23,34 +23,34 @@ import org.springframework.stereotype.Component;
 @Component
 public class InitRedisPluginDatasourceRunner implements CommandLineRunner {
 
-    private final PluginDatasourceRepository pluginDatasourceRepository;
+    private final PluginDatasourceRedisRepository pluginDatasourceRedisRepository;
     private final PluginDatasourceService pluginDatasourceService;
     private final PluginService pluginService;
 
-    public InitRedisPluginDatasourceRunner(PluginDatasourceRepository pluginDatasourceRepository,
+    public InitRedisPluginDatasourceRunner(PluginDatasourceRedisRepository pluginDatasourceRedisRepository,
                                            PluginService pluginService,
                                            PluginDatasourceService pluginDatasourceService) {
-        this.pluginDatasourceRepository = pluginDatasourceRepository;
+        this.pluginDatasourceRedisRepository = pluginDatasourceRedisRepository;
         this.pluginService = pluginService;
         this.pluginDatasourceService = pluginDatasourceService;
     }
 
     @Override
     public void run(String... args) {
-        log.info("========== init redis plugin datasource start ==========");
+        log.info("init redis plugin datasource start");
         try {
             pluginDatasourceService.list().forEach(pluginDatasource -> {
                 PluginDatasourceVO pluginDatasourceVO = BasePluginDatasourceConvert.INSTANCE.entityToVO(pluginDatasource);
                 Plugin plugin = pluginService.getById(pluginDatasource.getDriverId());
                 pluginDatasourceVO.setDatasourceDriver(BasePluginConvert.INSTANCE.entityToVO(plugin));
                 // 写redis
-                pluginDatasourceRepository.hashPut(pluginDatasource.getTenantId(),
+                pluginDatasourceRedisRepository.hashPut(pluginDatasource.getTenantId(),
                         pluginDatasource.getDatasourceCode(), pluginDatasourceVO);
             });
         } catch (Exception e) {
             // 捕获异常的原因是，这个starter其他服务依赖时其实不需要初始化，表都不存在，故直接return即可，不做处理
             log.warn("not need init redis plugin datasource");
         }
-        log.info("========== init redis plugin datasource end ==========");
+        log.info("init redis plugin datasource end");
     }
 }

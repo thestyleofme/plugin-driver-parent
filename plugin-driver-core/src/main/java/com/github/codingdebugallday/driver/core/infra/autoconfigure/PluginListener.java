@@ -1,6 +1,6 @@
 package com.github.codingdebugallday.driver.core.infra.autoconfigure;
 
-import com.github.codingdebugallday.integration.listener.PluginInitializerListener;
+import com.github.codingdebugallday.plugin.framework.integration.listener.PluginInitializerListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

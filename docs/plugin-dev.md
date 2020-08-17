@@ -19,7 +19,7 @@
 
 #### pom先行
 
-* 引入驱动依赖`hdsp-plugin-driver-core` （provided）、数据源驱动JDBC依赖
+* 引入驱动依赖`plugin-driver-core` （provided）、数据源驱动JDBC依赖
 * 配置插件元数据（插件Id、插件入口类、插件版本、插件作者等）
 * `plugin.properties` 配置插件基本信息（插件Id，插件版本、插件入口类、作者）
 

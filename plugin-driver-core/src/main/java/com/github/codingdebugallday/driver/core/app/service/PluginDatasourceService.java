@@ -57,4 +57,13 @@ public interface PluginDatasourceService extends IService<PluginDatasource> {
      * @param datasourceCode 数据源编码
      */
     void delete(Long tenantId, String datasourceCode);
+
+    /**
+     * 测试连通性
+     *
+     * @param tenantId       租户id
+     * @param datasourceCode 数据源编码
+     * @return true/false
+     */
+    boolean testConnection(Long tenantId, String datasourceCode);
 }

@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.codingdebugallday.integration.application.PluginApplication;
-import com.github.codingdebugallday.integration.operator.PluginOperator;
 import com.github.codingdebugallday.plugin.core.app.service.PluginService;
 import com.github.codingdebugallday.plugin.core.domain.entity.Plugin;
 import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
 import com.github.codingdebugallday.plugin.core.infra.exceptions.JsonException;
 import com.github.codingdebugallday.plugin.core.infra.utils.PluginRedisHelper;
+import com.github.codingdebugallday.plugin.framework.integration.application.PluginApplication;
+import com.github.codingdebugallday.plugin.framework.integration.operator.PluginOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Configuration;

@@ -5,10 +5,10 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 
-import com.github.codingdebugallday.integration.application.PluginApplication;
-import com.github.codingdebugallday.integration.operator.PluginOperator;
-import com.github.codingdebugallday.integration.operator.module.PluginInfo;
 import com.github.codingdebugallday.plugin.core.app.service.PluginAppService;
+import com.github.codingdebugallday.plugin.framework.integration.application.PluginApplication;
+import com.github.codingdebugallday.plugin.framework.integration.operator.PluginOperator;
+import com.github.codingdebugallday.plugin.framework.integration.operator.module.PluginInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;

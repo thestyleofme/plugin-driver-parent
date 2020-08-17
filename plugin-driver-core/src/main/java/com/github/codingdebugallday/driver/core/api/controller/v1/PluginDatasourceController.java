@@ -65,6 +65,13 @@ public class PluginDatasourceController {
         return ResponseEntity.ok(pluginDatasourceService.update(pluginDatasourceDTO));
     }
 
+    @ApiOperation(value = "测试数据源连通性")
+    @GetMapping("/test-connection")
+    public ResponseEntity<Boolean> testConnection(@PathVariable(name = "organizationId") Long tenantId,
+                                                  String datasourceCode) {
+        return ResponseEntity.ok(pluginDatasourceService.testConnection(tenantId, datasourceCode));
+    }
+
     @ApiOperation(value = "删除数据源")
     @DeleteMapping
     public ResponseEntity<Void> delete(@PathVariable(name = "organizationId") Long tenantId,

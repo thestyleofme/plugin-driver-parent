@@ -29,6 +29,14 @@ public class DriverDataSourceManager {
         return jdbcTemplate.getDataSource();
     }
 
+    public Object getDataSource(Long tenantId, String datasourceCode) {
+        return pluginDataSourceHolder.getOrCreate(tenantId, datasourceCode);
+    }
+
+    public Class<?> getDataSourceClazz(Long tenantId, String datasourceCode) {
+        return pluginDataSourceHolder.getDataSourceClazz(tenantId, datasourceCode);
+    }
+
     public <T> T getDataSource(Long tenantId, String datasourceCode, Class<T> clazz) {
         return pluginDataSourceHolder.getOrCreate(tenantId, datasourceCode, clazz);
     }

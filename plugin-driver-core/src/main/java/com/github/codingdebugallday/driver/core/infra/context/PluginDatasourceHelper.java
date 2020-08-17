@@ -1,8 +1,9 @@
 package com.github.codingdebugallday.driver.core.infra.context;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRepository;
+import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRedisRepository;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.plugin.core.infra.annotations.LazyPlugin;
 import com.github.codingdebugallday.plugin.core.infra.vo.PluginVO;
@@ -19,23 +20,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class PluginDatasourceHelper {
 
-    private final PluginDatasourceRepository pluginDatasourceRepository;
+    private final PluginDatasourceRedisRepository pluginDatasourceRedisRepository;
 
-    public PluginDatasourceHelper(PluginDatasourceRepository pluginDatasourceRepository) {
-        this.pluginDatasourceRepository = pluginDatasourceRepository;
+    public PluginDatasourceHelper(PluginDatasourceRedisRepository pluginDatasourceRedisRepository) {
+        this.pluginDatasourceRedisRepository = pluginDatasourceRedisRepository;
     }
 
     public PluginDatasourceVO getPluginDatasource(Long tenantId, String datasourceCode) {
-        return pluginDatasourceRepository.hashGetByKey(tenantId, datasourceCode);
+        return pluginDatasourceRedisRepository.hashGetByKey(tenantId, datasourceCode);
     }
 
     public List<PluginDatasourceVO> getAllPluginDatasource(Long tenantId) {
-        return pluginDatasourceRepository.hashGetAll(tenantId);
+        return pluginDatasourceRedisRepository.hashGetAll(tenantId);
+    }
+
+    public List<PluginDatasourceVO> getAllDatasource(Long tenantId, List<String> datasourceCodeList) {
+        return pluginDatasourceRedisRepository.hashGetAll(tenantId).stream()
+                .filter(datasourceVO -> datasourceCodeList.contains(datasourceVO.getDatasourceCode()))
+                .collect(Collectors.toList());
     }
 
     @LazyPlugin
     public PluginVO getPluginVO(Long tenantId, String datasourceCode) {
-        return pluginDatasourceRepository.hashGetByKey(tenantId, datasourceCode)
+        return pluginDatasourceRedisRepository.hashGetByKey(tenantId, datasourceCode)
                 .getDatasourceDriver();
     }
 

@@ -1,8 +1,8 @@
 package com.github.codingdebugallday.driver.core.infra.autoconfigure;
 
-import com.github.codingdebugallday.extension.mybatis.SpringBootMybatisExtension;
-import com.github.codingdebugallday.integration.application.AutoPluginApplication;
-import com.github.codingdebugallday.integration.application.PluginApplication;
+import com.github.codingdebugallday.plugin.framework.extension.mybatis.SpringBootMybatisExtension;
+import com.github.codingdebugallday.plugin.framework.integration.application.AutoPluginApplication;
+import com.github.codingdebugallday.plugin.framework.integration.application.PluginApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

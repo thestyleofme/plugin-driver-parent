@@ -16,6 +16,9 @@
         <module>driver-mysql5</module>
         <module>driver-postgresql</module>
         <module>driver-elasticsearch7</module>
+        <module>driver-oracle</module>
+        <module>driver-hana</module>
+        <module>driver-greenplum6</module>
     </modules>
 
     <properties>
@@ -32,7 +35,17 @@
 
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+        <junit.version>4.12</junit.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

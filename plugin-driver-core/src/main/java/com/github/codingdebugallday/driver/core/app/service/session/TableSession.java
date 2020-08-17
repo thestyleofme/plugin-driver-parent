@@ -3,7 +3,11 @@ package com.github.codingdebugallday.driver.core.app.service.session;
 import java.util.List;
 import java.util.Map;
 
+import com.github.codingdebugallday.driver.core.domain.entity.DatasourceChildren;
+import com.github.codingdebugallday.driver.core.domain.page.PluginPageRequest;
+import com.github.codingdebugallday.driver.core.infra.generator.SqlGenerator;
 import com.github.codingdebugallday.driver.core.infra.meta.*;
+import org.springframework.data.domain.Page;
 
 /**
  * <p>
@@ -15,6 +19,49 @@ import com.github.codingdebugallday.driver.core.infra.meta.*;
  */
 public interface TableSession {
 
+    /**
+     * 模糊查询schema下的table列表 tablePattern = %table% 可模糊查询来过滤｜视图 表
+     *
+     * @param schema       表模式
+     * @param tablePattern 表匹配字段
+     * @param type         类型
+     * @return List<String> table列表
+     */
+    default List<String> tableList(String schema, String tablePattern, String... type) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * 查询该数据源下所有数据库以及数据库对应表
+     *
+     * @return Map 库表
+     */
+    default Map<String, List<String>> showAllDatabasesAndTables() {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * 查询该数据源下所有数据库以及数据库对应表视图
+     *
+     * @return Map 库表
+     */
+    default List<DatasourceChildren> showAllDatabasesAndTablesAndViews() {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * 分页查询该数据源下所有数据库以及数据库对应表
+     *
+     * @param schemaName  库
+     * @param tableName   表
+     * @param pageRequest 分页对象
+     * @return Map 库表
+     */
+    default Page<Map<String, String>> pageDatasourceTables(String schemaName,
+                                                           String tableName,
+                                                           PluginPageRequest pageRequest) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
 
     /**
      * 模糊查询schema下的table列表 tablePattern = %table% 可模糊查询来过滤表
@@ -35,6 +82,17 @@ public interface TableSession {
      */
     default List<String> tableList(String schema) {
         throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * 表结构获取
+     *
+     * @param schema 表模式
+     * @param table  表名
+     * @return Map<String, Object> 表结构
+     */
+    default List<Map<String, Object>> tableStructure(String schema, String table) {
+        throw new UnsupportedOperationException("SqlSession unsupported!!!");
     }
 
     /**
@@ -89,7 +147,7 @@ public interface TableSession {
      * @param viewPattern 视图名称模糊查询
      * @return List<String> 视图列表
      */
-    default List<String> views(String schema, String viewPattern) {
+    default List<String> viewList(String schema, String viewPattern) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
@@ -99,7 +157,7 @@ public interface TableSession {
      * @param schema 表模式
      * @return List<String> 视图列表
      */
-    default List<String> views(String schema) {
+    default List<String> viewList(String schema) {
         throw new UnsupportedOperationException("Not Implement");
     }
 
@@ -126,16 +184,6 @@ public interface TableSession {
     }
 
     /**
-     * 创建表
-     *
-     * @param table 表信息
-     * @return boolean true 创建成功，false创建失败
-     */
-    default boolean tableCreate(Table table) {
-        throw new UnsupportedOperationException("Not Implement");
-    }
-
-    /**
      * 插入数据
      *
      * @param schema 表模式
@@ -148,22 +196,23 @@ public interface TableSession {
     }
 
     /**
-     * 表结构更新
+     * 建表语句生成
      *
-     * @param table 表信息
-     * @return boolean true 插入成功，false 插入失败
+     * @return SqlGenerator
      */
-    default boolean tableUpdate(Table table) {
+    default SqlGenerator getSqlGenerator() {
         throw new UnsupportedOperationException("Not Implement");
     }
 
     /**
-     * 建表语句生成
+     * 建表
      *
-     * @param table 表信息
-     * @return String 建表SQL
+     * @param schema    库
+     * @param tableName 表
+     * @param columns   列
+     * @return 是否创建成功
      */
-    default String createTableSql(Table table) {
+    default boolean tableCreate(String schema, String tableName, List<Column> columns) {
         throw new UnsupportedOperationException("Not Implement");
     }
 

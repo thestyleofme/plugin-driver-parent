@@ -1,7 +1,7 @@
 package com.github.codingdebugallday.driver.core.infra.autoconfigure;
 
 import com.github.codingdebugallday.driver.core.infra.context.PluginDatasourceContext;
-import com.github.codingdebugallday.integration.listener.PluginListener;
+import com.github.codingdebugallday.plugin.framework.integration.listener.PluginListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

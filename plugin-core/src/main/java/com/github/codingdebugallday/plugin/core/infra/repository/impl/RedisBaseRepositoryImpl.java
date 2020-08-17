@@ -6,12 +6,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
-import com.github.codingdebugallday.exceptions.PluginException;
 import com.github.codingdebugallday.plugin.core.domain.repository.RedisBaseRepository;
 import com.github.codingdebugallday.plugin.core.infra.constants.BaseConstant;
 import com.github.codingdebugallday.plugin.core.infra.utils.JsonUtil;
 import com.github.codingdebugallday.plugin.core.infra.utils.PluginRedisHelper;
 import com.github.codingdebugallday.plugin.core.infra.utils.Reflections;
+import com.github.codingdebugallday.plugin.framework.exceptions.PluginException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

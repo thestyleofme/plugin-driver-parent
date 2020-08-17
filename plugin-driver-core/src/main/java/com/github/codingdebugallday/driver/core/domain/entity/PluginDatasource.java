@@ -45,6 +45,12 @@ public class PluginDatasource implements Serializable {
     @NotBlank
     @ApiModelProperty(value = "具体的数据源类型，如MYSQL/ES/POSTGRESQL/HIVE等")
     private String datasourceClass;
+    @NotBlank
+    @ApiModelProperty(value = "数据库连接池类型，如HIKARI/DRUID等")
+    private String databasePoolType;
+    @NotBlank
+    @ApiModelProperty(value = "数据库连接池配置")
+    private String databasePoolSetting;
     private Long driverId;
     @ApiModelProperty(value = "数据源配置")
     private String settingsInfo;

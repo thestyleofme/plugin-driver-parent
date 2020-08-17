@@ -16,8 +16,6 @@
         <plugin.class>com.github.codingdebugallday.driver.mysql.Mysql5Plugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>isaac</plugin.provider>
-        <commons.beanutils.version>1.9.3</commons.beanutils.version>
-        <commons.lang3.version>3.11</commons.lang3.version>
     </properties>
 
     <dependencies>
@@ -26,16 +24,6 @@
             <artifactId>plugin-driver-core</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>${commons.beanutils.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons.lang3.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -51,11 +39,12 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${maven-assembly-plugin.version}</version>
                 <configuration>
-                    <!-- 方便使用插件的正式环境模式，将插件jar打包到此目录即可-->
                     <outputDirectory>../../dist/plugins</outputDirectory>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <finalName>${project.artifactId}@${plugin.version}</finalName>
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>

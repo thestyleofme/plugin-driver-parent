@@ -46,6 +46,7 @@ public class Column extends BaseInfo implements Serializable, Cloneable {
      * 列名
      */
     private String columnName;
+
     /**
      * 来自 java.sql.Types 的 SQL 类型
      */
@@ -133,11 +134,10 @@ public class Column extends BaseInfo implements Serializable, Cloneable {
         this.remarks = rs.getString("REMARKS");
         this.columnDef = rs.getString("COLUMN_DEF");
         this.charOctetLength = rs.getString("CHAR_OCTET_LENGTH");
+        this.ordinalPosition = rs.getInt("ORDINAL_POSITION");
         this.isNullable = rs.getString("IS_NULLABLE");
         this.sourceDataType = rs.getInt("SOURCE_DATA_TYPE");
         this.isAutoincrement = rs.getString("IS_AUTOINCREMENT");
         this.isGeneratedColumn = rs.getString("IS_GENERATEDCOLUMN");
     }
-
-
 }

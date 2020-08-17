@@ -15,6 +15,7 @@
         <plugin.class>com.github.codingdebugallday.driver.postgresql.PostgresqlPlugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>JupiterMouse</plugin.provider>
+        <postgresql.jdbc.version>42.2.6</postgresql.jdbc.version>
     </properties>
 
     <dependencies>
@@ -27,7 +28,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.6</version>
+            <version>${postgresql.jdbc.version}</version>
         </dependency>
     </dependencies>
 
@@ -38,11 +39,12 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${maven-assembly-plugin.version}</version>
                 <configuration>
-                    <!-- 方便使用插件的正式环境模式，将插件jar打包到此目录即可-->
                     <outputDirectory>../../dist/plugins</outputDirectory>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <finalName>${project.artifactId}@${plugin.version}</finalName>
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>

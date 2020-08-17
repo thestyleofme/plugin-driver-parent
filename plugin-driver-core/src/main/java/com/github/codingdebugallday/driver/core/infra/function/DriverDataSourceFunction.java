@@ -5,7 +5,7 @@ import org.pf4j.ExtensionPoint;
 
 /**
  * <p>
- * description
+ * 数据源插件开发必须实现此类
  * </p>
  *
  * @author isaac 2020/7/7 13:48

@@ -12,9 +12,9 @@
     <artifactId>driver-elasticsearch7</artifactId>
 
     <properties>
-        <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
+        <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
         <plugin.id>driver-es7</plugin.id>
-        <plugin.class>com.github.codingdebugallday.driver.es.ElasticSearch7Plugin</plugin.class>
+        <plugin.class>com.github.codingdebugallday.driver.es7.ElasticSearch7Plugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>isaac</plugin.provider>
     </properties>
@@ -26,13 +26,6 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        <!--es 6.8.8-->
-        <!--<dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-            <version>${spring-boot.version}</version>
-        </dependency>-->
-
         <!--es 7.6.2-->
         <dependency>
             <groupId>org.springframework.data</groupId>
@@ -49,8 +42,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
-
     </dependencies>
 
     <build>
@@ -60,11 +51,12 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${maven-assembly-plugin.version}</version>
                 <configuration>
-                    <!-- 方便使用插件的正式环境模式，将插件jar打包到此目录即可-->
                     <outputDirectory>../../dist/plugins</outputDirectory>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <finalName>${project.artifactId}@${plugin.version}</finalName>
                     <archive>
                         <manifest>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
