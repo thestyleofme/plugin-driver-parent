@@ -6,6 +6,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.codingdebugallday.plugin.core.domain.entity.Plugin;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -75,5 +76,12 @@ public class PluginDatasourceDTO {
     private List<String> datasourceClassList;
     @Transient
     private Plugin plugin;
+
+    /**
+     * 是否需要修改该节点的密码
+     */
+    @Builder.Default
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Boolean changePassword = false;
 
 }

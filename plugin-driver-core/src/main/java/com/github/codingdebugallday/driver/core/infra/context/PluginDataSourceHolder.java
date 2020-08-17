@@ -88,12 +88,12 @@ public class PluginDataSourceHolder {
     }
 
     public <T> T getOrCreate(Long tenantId, String datasourceCode, Class<T> clazz) {
-        PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
+        PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getDatasourceWithDecryptPwd(tenantId, datasourceCode);
         return getOrCreate(pluginDatasourceVO, clazz);
     }
 
     public Class<?> getDataSourceClazz(Long tenantId, String datasourceCode) {
-        PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
+        PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getDatasourceWithDecryptPwd(tenantId, datasourceCode);
         // 判断数据源类型
         if (CommonConstant.DataSourceType.RDB.equalsIgnoreCase(pluginDatasourceVO.getDatasourceClass())) {
             String dbPoolType = pluginDatasourceVO.getDatabasePoolType();
@@ -122,7 +122,7 @@ public class PluginDataSourceHolder {
     }
 
     public Object getOrCreate(Long tenantId, String datasourceCode) {
-        PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
+        PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getDatasourceWithDecryptPwd(tenantId, datasourceCode);
         Class<?> clazz = getDataSourceClazz(tenantId, datasourceCode);
         return getOrCreate(pluginDatasourceVO, clazz);
     }

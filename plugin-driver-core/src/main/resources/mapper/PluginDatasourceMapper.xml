@@ -9,6 +9,7 @@
         <result column="datasource_class" property="datasourceClass" jdbcType="VARCHAR"/>
         <result column="database_pool_type" property="databasePoolType" jdbcType="VARCHAR"/>
         <result column="database_pool_setting" property="databasePoolSetting" jdbcType="VARCHAR"/>
+        <result column="settings_info" property="settingsInfo" jdbcType="VARCHAR"/>
         <result column="driver_id" property="driverId" jdbcType="DECIMAL"/>
         <result column="enabled_flag" property="enabledFlag" jdbcType="DECIMAL"/>
         <result column="tenant_id" property="tenantId" jdbcType="DECIMAL"/>
@@ -34,6 +35,7 @@
         ${prefix}.datasource_class,
         ${prefix}.database_pool_type,
         ${prefix}.database_pool_setting,
+        ${prefix}.settings_info,
         ${prefix}.driver_id,
         ${prefix}.enabled_flag,
         ${prefix}.tenant_id,

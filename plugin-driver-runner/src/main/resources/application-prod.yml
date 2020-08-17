@@ -63,6 +63,11 @@ mybatis-plus:
   configuration:
     mapUnderscoreToCamelCase: true
 
+jasypt:
+  encryptor:
+    # 加密盐值
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:hUyhdphl2gXcBDEH5dy}
+
 plugin:
   run-mode: prod
   store-type: minio

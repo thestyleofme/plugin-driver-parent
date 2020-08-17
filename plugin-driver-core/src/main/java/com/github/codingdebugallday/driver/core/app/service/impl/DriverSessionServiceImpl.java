@@ -49,7 +49,7 @@ public class DriverSessionServiceImpl implements DriverSessionService {
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         if (!StringUtils.isEmpty(datasourceCode)) {
             try {
-                PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getPluginDatasource(tenantId, datasourceCode);
+                PluginDatasourceVO pluginDatasourceVO = pluginDatasourceHelper.getDatasourceWithDecryptPwd(tenantId, datasourceCode);
                 String pluginId = pluginDatasourceHelper.getPluginVO(pluginDatasourceVO).getPluginId();
                 ClassLoader pluginClassLoader = pluginUser.getPluginManager().getPluginClassLoader(pluginId);
                 // 使用插件的classloader

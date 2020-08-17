@@ -1,13 +1,19 @@
 package com.github.codingdebugallday.driver.core.infra.context;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 
+import com.github.codingdebugallday.driver.core.domain.entity.CommonDatasourceSettingInfo;
 import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRedisRepository;
 import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.plugin.core.infra.annotations.LazyPlugin;
+import com.github.codingdebugallday.plugin.core.infra.utils.JsonUtil;
 import com.github.codingdebugallday.plugin.core.infra.vo.PluginVO;
+import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 /**
  * <p>
@@ -22,12 +28,34 @@ public class PluginDatasourceHelper {
 
     private final PluginDatasourceRedisRepository pluginDatasourceRedisRepository;
 
+    @Resource
+    private StringEncryptor stringEncryptor;
+
     public PluginDatasourceHelper(PluginDatasourceRedisRepository pluginDatasourceRedisRepository) {
         this.pluginDatasourceRedisRepository = pluginDatasourceRedisRepository;
     }
 
+    public PluginDatasourceVO decryptPwd(PluginDatasourceVO pluginDatasourceVO) {
+        String settingsInfo = pluginDatasourceVO.getSettingsInfo();
+        if (StringUtils.isEmpty(settingsInfo)) {
+            return pluginDatasourceVO;
+        }
+        CommonDatasourceSettingInfo commonDatasourceSettingInfo =
+                JsonUtil.toObj(settingsInfo, CommonDatasourceSettingInfo.class);
+        Optional.ofNullable(commonDatasourceSettingInfo.getPassword()).ifPresent(s ->{
+            commonDatasourceSettingInfo.setPassword(stringEncryptor.decrypt(s));
+            pluginDatasourceVO.setSettingsInfo(JsonUtil.toJson(commonDatasourceSettingInfo));
+        });
+        return pluginDatasourceVO;
+    }
+
     public PluginDatasourceVO getPluginDatasource(Long tenantId, String datasourceCode) {
         return pluginDatasourceRedisRepository.hashGetByKey(tenantId, datasourceCode);
+    }
+
+    public PluginDatasourceVO getDatasourceWithDecryptPwd(Long tenantId, String datasourceCode) {
+        PluginDatasourceVO vo = pluginDatasourceRedisRepository.hashGetByKey(tenantId, datasourceCode);
+        return decryptPwd(vo);
     }
 
     public List<PluginDatasourceVO> getAllPluginDatasource(Long tenantId) {

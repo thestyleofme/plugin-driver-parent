@@ -1,5 +1,9 @@
 package com.github.codingdebugallday.driver.core.app.service.impl;
 
+import java.util.Objects;
+import java.util.Optional;
+import javax.annotation.Resource;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,6 +12,7 @@ import com.github.codingdebugallday.driver.core.api.dto.PluginDatasourceDTO;
 import com.github.codingdebugallday.driver.core.app.service.DriverSessionService;
 import com.github.codingdebugallday.driver.core.app.service.PluginDatasourceService;
 import com.github.codingdebugallday.driver.core.app.service.session.DriverSession;
+import com.github.codingdebugallday.driver.core.domain.entity.CommonDatasourceSettingInfo;
 import com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource;
 import com.github.codingdebugallday.driver.core.domain.repository.PluginDatasourceRedisRepository;
 import com.github.codingdebugallday.driver.core.infra.context.PluginDataSourceHolder;
@@ -17,8 +22,11 @@ import com.github.codingdebugallday.driver.core.infra.vo.PluginDatasourceVO;
 import com.github.codingdebugallday.plugin.core.app.service.PluginService;
 import com.github.codingdebugallday.plugin.core.domain.entity.Plugin;
 import com.github.codingdebugallday.plugin.core.infra.converter.BasePluginConvert;
+import com.github.codingdebugallday.plugin.core.infra.utils.JsonUtil;
+import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 /**
  * <p>
@@ -36,6 +44,9 @@ public class PluginDatasourceServiceImpl extends ServiceImpl<PluginDatasourceMap
     private final PluginDataSourceHolder pluginDataSourceHolder;
     private final DriverSessionService driverSessionService;
     private final PluginDatasourceMapper pluginDatasourceMapper;
+
+    @Resource
+    private StringEncryptor stringEncryptor;
 
     public PluginDatasourceServiceImpl(PluginService pluginService,
                                        PluginDatasourceRedisRepository pluginDatasourceRedisRepository,
@@ -62,9 +73,8 @@ public class PluginDatasourceServiceImpl extends ServiceImpl<PluginDatasourceMap
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PluginDatasourceDTO create(PluginDatasourceDTO pluginDatasourceDTO) {
-        // 插表
-        // todo 密码加密
         PluginDatasource entity = BasePluginDatasourceConvert.INSTANCE.dtoToEntity(pluginDatasourceDTO);
+        encryptPassword(entity, pluginDatasourceDTO);
         this.save(entity);
         PluginDatasourceVO pluginDatasourceVO = BasePluginDatasourceConvert.INSTANCE.entityToVO(getById(entity.getDatasourceId()));
         Plugin driver = pluginService.getById(pluginDatasourceDTO.getDriverId());
@@ -75,11 +85,30 @@ public class PluginDatasourceServiceImpl extends ServiceImpl<PluginDatasourceMap
         return BasePluginDatasourceConvert.INSTANCE.entityToDTO(entity);
     }
 
+    private void encryptPassword(PluginDatasource entity, PluginDatasourceDTO pluginDatasourceDTO) {
+        String settingsInfo = pluginDatasourceDTO.getSettingsInfo();
+        if (StringUtils.isEmpty(settingsInfo)) {
+            return;
+        }
+        // 第一次新增时对密码进行加密 或者 该数据源需要对密码进行更新
+        if (Objects.isNull(pluginDatasourceDTO.getDatasourceId()) ||
+                Boolean.TRUE.equals(pluginDatasourceDTO.getChangePassword())) {
+            CommonDatasourceSettingInfo commonDatasourceSettingInfo =
+                    JsonUtil.toObj(settingsInfo, CommonDatasourceSettingInfo.class);
+            Optional.ofNullable(commonDatasourceSettingInfo.getPassword()).ifPresent(s -> {
+                commonDatasourceSettingInfo.setPassword(
+                        stringEncryptor.encrypt(s));
+                entity.setSettingsInfo(JsonUtil.toJson(commonDatasourceSettingInfo));
+            });
+        }
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public PluginDatasourceDTO update(PluginDatasourceDTO pluginDatasourceDTO) {
         // 更新表
         PluginDatasource entity = BasePluginDatasourceConvert.INSTANCE.dtoToEntity(pluginDatasourceDTO);
+        encryptPassword(entity, pluginDatasourceDTO);
         this.updateById(entity);
         // 更新redis
         PluginDatasourceVO pluginDatasourceVO = BasePluginDatasourceConvert.INSTANCE.entityToVO(entity);
