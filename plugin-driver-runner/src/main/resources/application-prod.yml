@@ -83,4 +83,4 @@ plugin:
 logging:
   level:
     org.apache.ibatis: ${LOGGING_LEVEL:debug}
-    com.github.codingdebugallday: ${LOGGING_LEVEL:debug}
+    com.github.thestyleofme: ${LOGGING_LEVEL:debug}

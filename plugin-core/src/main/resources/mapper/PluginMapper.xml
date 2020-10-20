@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.github.codingdebugallday.plugin.core.infra.mapper.PluginMapper">
+<mapper namespace="com.github.thestyleofme.plugin.core.infra.mapper.PluginMapper">
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap id="BaseResultMap" type="com.github.codingdebugallday.plugin.core.domain.entity.Plugin">
+    <resultMap id="BaseResultMap" type="com.github.thestyleofme.plugin.core.domain.entity.Plugin">
         <result column="id" property="id" jdbcType="DECIMAL"/>
         <result column="plugin_id" property="pluginId" jdbcType="VARCHAR"/>
         <result column="plugin_description" property="pluginDescription" jdbcType="VARCHAR"/>
@@ -39,5 +39,33 @@
         ${prefix}.last_updated_by,
         ${prefix}.last_update_date
     </sql>
+
+    <select id="list" resultType="com.github.thestyleofme.plugin.core.api.dto.PluginDTO">
+        select
+        <include refid="Base_Column_List">
+            <property name="prefix" value="hp"/>
+        </include>
+        from
+        hpfm_plugin hp
+        <where>
+            <if test="pluginBigClass !=null">
+                and hp.plugin_big_class = #{pluginBigClass}
+            </if>
+            <if test="pluginSmallClass !=null">
+                and hp.plugin_small_class = #{pluginSmallClass}
+            </if>
+            <if test="pluginId !=null">
+                <bind name="pluginId" value="'%' + pluginId + '%'"/>
+                and hp.plugin_id like #{pluginId}
+            </if>
+            <if test="tenantId !=null">
+                and ( hp.tenant_id = #{tenantId}
+                <if test="tenantId != 0">
+                    or hp.tenant_id = 0
+                </if>
+                )
+            </if>
+        </where>
+    </select>
 
 </mapper>

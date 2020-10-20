@@ -3,7 +3,7 @@
 ## 1. 简介
 这一块其实可以单独使用，可集成微服务注册中心，如eureka，对各服务的插件动态管理。
 后续插件中心会上传到maven中央仓库，源代码会放到
-[springboot-plugin-framework](https://github.com/codingdebugallday/springboot-plugin-framework-parent) 中。
+[springboot-plugin-framework](https://github.com/thestyleofme/springboot-plugin-framework-parent) 中。
 
 ### 2. 插件配置
 

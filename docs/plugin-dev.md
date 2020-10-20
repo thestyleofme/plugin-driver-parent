@@ -31,7 +31,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>driver-plugin-parent</artifactId>
-        <groupId>com.github.codingdebugallday</groupId>
+        <groupId>com.github.thestyleofme</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -41,7 +41,7 @@
       <!--        插件 名称      -->
         <plugin.id>driver-mysql5</plugin.id>
        <!--        插件 入口类      -->
-        <plugin.class>com.github.codingdebugallday.driver.mysql.Mysql5Plugin</plugin.class>
+        <plugin.class>com.github.thestyleofme.driver.mysql.Mysql5Plugin</plugin.class>
        <!--        插件 版本      -->
         <plugin.version>${project.version}</plugin.version>
        <!--        插件 作者    -->
@@ -51,7 +51,7 @@
     <dependencies>
       <!--        插件 依赖      -->
         <dependency>
-            <groupId>com.github.codingdebugallday</groupId>
+            <groupId>com.github.thestyleofme</groupId>
             <artifactId>plugin-driver-core</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
@@ -308,7 +308,7 @@ cd plugins && mvn clean package -pl driver-mysql5 -am -DskipTests
 
 ```pom
         <dependency>
-            <groupId>com.github.codingdebugallday</groupId>
+            <groupId>com.github.thestyleofme</groupId>
             <artifactId>plugin-driver-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>

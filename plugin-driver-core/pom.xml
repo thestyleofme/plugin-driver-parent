@@ -3,14 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.thestyleofme</groupId>
+        <artifactId>plugin-driver-parent</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 
-    <groupId>com.github.codingdebugallday</groupId>
     <artifactId>plugin-driver-core</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
 
     <name>plugin-driver-core</name>
     <description>基于插件架构的多数据源核心模块</description>
-    <url>https://github.com/codingdebugallday/plugin-driver-parent.git</url>
+    <url>https://github.com/thestyleofme/plugin-driver-parent.git</url>
 
     <properties>
         <java.version>1.8</java.version>
@@ -23,7 +26,6 @@
         <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 
-        <spring-boot.version>2.2.7.RELEASE</spring-boot.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <mybatis-spring-boot-starter.version>2.1.3</mybatis-spring-boot-starter.version>
         <mybatis-plus-boot-starter.version>3.3.2</mybatis-plus-boot-starter.version>
@@ -45,9 +47,9 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/codingdebugallday/plugin-driver-parent</url>
-        <connection>https://github.com/codingdebugallday/plugin-driver-parent.git</connection>
-        <developerConnection>https://github.com/codingdebugallday/plugin-driver-parent.git</developerConnection>
+        <url>https://github.com/thestyleofme/plugin-driver-parent</url>
+        <connection>https://github.com/thestyleofme/plugin-driver-parent.git</connection>
+        <developerConnection>https://github.com/thestyleofme/plugin-driver-parent.git</developerConnection>
     </scm>
 
     <developers>
@@ -74,13 +76,22 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>${spring-boot.version}</version>
-            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <version>${spring-boot.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -96,7 +107,7 @@
         </dependency>
         <!-- plugin-->
         <dependency>
-            <groupId>com.github.codingdebugallday</groupId>
+            <groupId>com.github.thestyleofme</groupId>
             <artifactId>plugin-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
@@ -183,7 +194,7 @@
                         <path>
                             <groupId>org.springframework.boot</groupId>
                             <artifactId>spring-boot-configuration-processor</artifactId>
-                            <version>${spring-boot.version}</version>
+                            <version>${project.parent.parent.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

@@ -3,8 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
+        <groupId>com.github.thestyleofme</groupId>
         <artifactId>driver-plugin-parent</artifactId>
-        <groupId>com.github.codingdebugallday</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -12,7 +12,7 @@
 
     <properties>
         <plugin.id>driver-postgresql</plugin.id>
-        <plugin.class>com.github.codingdebugallday.driver.postgresql.PostgresqlPlugin</plugin.class>
+        <plugin.class>com.github.thestyleofme.driver.postgresql.PostgresqlPlugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>JupiterMouse</plugin.provider>
         <postgresql.jdbc.version>42.2.6</postgresql.jdbc.version>
@@ -20,7 +20,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.codingdebugallday</groupId>
+            <groupId>com.github.thestyleofme</groupId>
             <artifactId>plugin-driver-core</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>

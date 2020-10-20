@@ -10,7 +10,20 @@ plugin-driver基于此需求下而开发，采用插件架构，可适配上述�
 
 ### 使用
 
+由于此项目依赖[springboot-plugin-framework](https://github.com/thestyleofme/springboot-plugin-framework-parent.git) 该模块，
+故先拉取该项目maven install到本地仓库
+
 ```
+git clone https://github.com/thestyleofme/springboot-plugin-framework-parent.git
+cd springboot-plugin-framework-parent
+mvn clean install -pl springboot-plugin-framework
+cd springboot-plugin-framework-extension
+mvn clean install
+```
+
+```
+git clone https://github.com/thestyleofme/plugin-driver-parent.git
+cd plugin-driver-parent
 mvn clean package -DskipTests
 http://localhost:9898/doc.html
 ```

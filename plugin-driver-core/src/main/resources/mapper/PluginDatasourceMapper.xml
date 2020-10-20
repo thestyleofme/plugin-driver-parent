@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.github.codingdebugallday.driver.core.infra.mapper.PluginDatasourceMapper">
-    <resultMap id="BaseResultMap" type="com.github.codingdebugallday.driver.core.domain.entity.PluginDatasource">
+<mapper namespace="com.github.thestyleofme.driver.core.infra.mapper.PluginDatasourceMapper">
+    <resultMap id="BaseResultMap" type="com.github.thestyleofme.driver.core.domain.entity.PluginDatasource">
         <result column="datasource_id" property="datasourceId" jdbcType="DECIMAL"/>
         <result column="datasource_code" property="datasourceCode" jdbcType="VARCHAR"/>
         <result column="datasource_description" property="datasourceDescription" jdbcType="VARCHAR"/>
@@ -20,10 +20,10 @@
         <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <resultMap id="DTOResultMap" type="com.github.codingdebugallday.driver.core.api.dto.PluginDatasourceDTO"
+    <resultMap id="DTOResultMap" type="com.github.thestyleofme.driver.core.api.dto.PluginDatasourceDTO"
                extends="BaseResultMap">
         <association property="plugin"
-                     resultMap="com.github.codingdebugallday.plugin.core.infra.mapper.PluginMapper.BaseResultMap">
+                     resultMap="com.github.thestyleofme.plugin.core.infra.mapper.PluginMapper.BaseResultMap">
         </association>
     </resultMap>
 
@@ -52,14 +52,13 @@
             <property name="prefix" value="plugin_datasource"/>
         </include>
         ,
-        <include refid="com.github.codingdebugallday.plugin.core.infra.mapper.PluginMapper.Base_Column_List">
+        <include refid="com.github.thestyleofme.plugin.core.infra.mapper.PluginMapper.Base_Column_List">
             <property name="prefix" value="plugin"/>
         </include>
         FROM
         plugin_datasource
         LEFT JOIN plugin ON plugin_datasource.driver_id = plugin.id
         <where>
-            2>1
             <if test="dto.datasourceCode !=null">
                 <bind name="datasourceCodeLike" value='"%"+dto.datasourceCode+"%"'/>
                 and plugin_datasource.datasource_code like #{datasourceCodeLike}
@@ -91,6 +90,14 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="dto.tenantId !=null">
+                and ( hd.tenant_id = #{dto.tenantId}
+                <if test="dto.tenantId != 0">
+                    or hd.tenant_id = 0
+                </if>
+                )
+            </if>
+            and hd.enabled_flag = 1
         </where>
     </select>
 
@@ -100,17 +107,16 @@
             <property name="prefix" value="plugin_datasource"/>
         </include>
         ,
-        <include refid="com.github.codingdebugallday.plugin.core.infra.mapper.PluginMapper.Base_Column_List">
+        <include refid="com.github.thestyleofme.plugin.core.infra.mapper.PluginMapper.Base_Column_List">
             <property name="prefix" value="plugin"/>
         </include>
         FROM
         plugin_datasource
         LEFT JOIN plugin ON plugin_datasource.driver_id = plugin.id
         <where>
-            2>1
             <if test="datasourceCode!=null and tenantId !=null">
                 and plugin_datasource.datasource_code=#{datasourceCode}
-                and plugin_datasource.tenant_id=#{tenantId}
+                and plugin_datasource.tenant_id in (#{tenantId},0)
             </if>
         </where>
     </select>

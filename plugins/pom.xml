@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>plugin-driver-parent</artifactId>
-        <groupId>com.github.codingdebugallday</groupId>
+        <groupId>com.github.thestyleofme</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
@@ -15,10 +15,25 @@
     <modules>
         <module>driver-mysql5</module>
         <module>driver-postgresql</module>
-        <module>driver-elasticsearch7</module>
         <module>driver-oracle</module>
+        <module>driver-db2</module>
+        <module>driver-hive</module>
+        <module>driver-hive2</module>
+        <module>driver-hive3</module>
         <module>driver-hana</module>
+        <module>driver-redshift</module>
+        <module>driver-sqlserver</module>
         <module>driver-greenplum6</module>
+        <module>driver-http</module>
+        <module>driver-ftp</module>
+        <module>driver-elasticsearch6</module>
+        <module>driver-elasticsearch7</module>
+        <module>driver-clickhouse</module>
+        <module>driver-mysql8</module>
+        <module>driver-kylin</module>
+        <module>driver-presto</module>
+        <module>driver-mongo</module>
+        <module>driver-emr</module>
     </modules>
 
     <properties>

@@ -4,43 +4,51 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
+        <groupId>com.github.thestyleofme</groupId>
         <artifactId>driver-plugin-parent</artifactId>
-        <groupId>com.github.codingdebugallday</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>driver-elasticsearch7</artifactId>
 
     <properties>
-        <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
         <plugin.id>driver-es7</plugin.id>
-        <plugin.class>com.github.codingdebugallday.driver.es7.ElasticSearch7Plugin</plugin.class>
+        <plugin.class>com.github.thestyleofme.driver.es7.ElasticSearch7Plugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>isaac</plugin.provider>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>com.github.codingdebugallday</groupId>
+            <groupId>com.github.thestyleofme</groupId>
             <artifactId>plugin-driver-core</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <!--es 7.6.2-->
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-elasticsearch</artifactId>
-            <version>4.0.1.RELEASE</version>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-high-level-client</artifactId>
+            <version>7.6.2</version>
             <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
                 <exclusion>
                     <artifactId>log4j-api</artifactId>
                     <groupId>org.apache.logging.log4j</groupId>
                 </exclusion>
                 <exclusion>
-                    <artifactId>slf4j-api</artifactId>
-                    <groupId>org.slf4j</groupId>
+                    <artifactId>elasticsearch</artifactId>
+                    <groupId>org.elasticsearch</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>7.6.2</version>
         </dependency>
     </dependencies>
 
