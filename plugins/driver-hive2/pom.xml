@@ -16,7 +16,7 @@
         <plugin.class>com.github.thestyleofme.driver.hive2.Hive2Plugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>chopper</plugin.provider>
-        <hive2.version>2.3.1</hive2.version>
+        <hive2.version>2.3.4</hive2.version>
         <hadoop2.version>2.7.1</hadoop2.version>
     </properties>
 
