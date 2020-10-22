@@ -109,7 +109,7 @@
 
 > 插件捆绑了Java类和库，这些类和库可以由PF4J在应用程序运行时加载/卸载。插件的入口类必须扩展`BasePlugin`，以Mysql数据源的定义如下：
 
-```java 
+```java
 @Slf4j
 public class Mysql5Plugin extends BasePlugin {
 
@@ -142,10 +142,11 @@ public class Mysql5Plugin extends BasePlugin {
 
 #### 数据源扩展点
 
-> 1. 实现DriverDataSourceFunction<T extends PluginDatasourceVO, R>接口，2. 添加扩展点注解@Extension
+1. 实现DriverDataSourceFunction<T extends PluginDatasourceVO, R>接口
+2. 添加@Component
 
 ```
-@Extension
+@Component
 public class MysqlDataSourceFunction implements DriverDataSourceFunction<PluginDatasourceVO, DataSource> {
 
     @Override
@@ -160,14 +161,13 @@ public class MysqlDataSourceFunction implements DriverDataSourceFunction<PluginD
 
 ```
 
-
-
 #### 接口扩展点
 
-> 1. 实现DriverSessionFunction<R>接口，2. 添加扩展点注解@Extension
+1. 实现DriverSessionFunction<R>接口
+2. 添加@Component
 
 ```java
-@Extension
+@Component
 public class MysqlDriverSessionFactory implements DriverSessionFunction<DataSource> {
 
     private DataSource dataSource;

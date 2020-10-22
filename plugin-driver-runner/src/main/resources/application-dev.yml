@@ -15,7 +15,7 @@ spring:
   application:
     name: ${SPRING_APPLICATION_NAME:plugin-driver}
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://172.23.16.63:23306/hdsp_core?useUnicode=true&characterEncoding=utf-8&useSSL=false}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://172.23.16.63:23306/hzero_platform?useUnicode=true&characterEncoding=utf-8&useSSL=false}
     username: ${SPRING_DATASOURCE_USERNAME:hdsp_dev}
     password: ${SPRING_DATASOURCE_PASSWORD:hdsp_dev123$%^}
     driver-class-name: com.mysql.jdbc.Driver

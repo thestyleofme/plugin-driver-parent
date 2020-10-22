@@ -24,12 +24,28 @@ mvn clean install
 ```
 git clone https://github.com/thestyleofme/plugin-driver-parent.git
 cd plugin-driver-parent
+# 打包全部插件
 mvn clean package -DskipTests
+# 打包指定插件
+cd plugins && mvn clean package -pl driver-mysql5 -am -DskipTests
+# swagger
 http://localhost:9898/doc.html
 ```
 首先需要先打包，保证plugin下代码被编译，然后执行DriverApplication即可，可访问
 swagger地址，查看是否有controller那些接口。
 
+### 其他模块引入
+
+```
+cd plugin-driver-parent
+mvn clean install -pl plugin-driver-core -am -DskipTests
+
+<dependency>
+    <groupId>com.github.thestyleofme</groupId>
+    <artifactId>plugin-driver-core</artifactId>
+    <version>${project.version}</version>
+</dependency>
+```
 
 ### 文档地址
  
