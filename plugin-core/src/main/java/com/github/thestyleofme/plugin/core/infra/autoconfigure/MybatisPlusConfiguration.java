@@ -3,6 +3,7 @@ package com.github.thestyleofme.plugin.core.infra.autoconfigure;
 import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +22,7 @@ public class MybatisPlusConfiguration {
      * 分页插件
      */
     @Bean
+    @ConditionalOnMissingBean(PaginationInterceptor.class)
     public PaginationInterceptor paginationInterceptor() {
         PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
         // 设置请求的页面大于最大页后操作， true调回到首页，false 继续请求  默认false
@@ -33,6 +35,7 @@ public class MybatisPlusConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(OptimisticLockerInterceptor.class)
     public OptimisticLockerInterceptor optimisticLockerInterceptor() {
         return new OptimisticLockerInterceptor();
     }
