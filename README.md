@@ -39,14 +39,27 @@ swagger地址，查看是否有controller那些接口。
 ```
 cd plugin-driver-parent
 mvn clean install -pl plugin-driver-core -am -DskipTests
-
+```
+> pom
+```
 <dependency>
     <groupId>com.github.thestyleofme</groupId>
     <artifactId>plugin-driver-core</artifactId>
     <version>${project.version}</version>
 </dependency>
 ```
+> 配置文件
+```
+jasypt:
+  encryptor:
+    # 加密盐值
+    password: ${JASYPT_ENCRYPTOR_PASSWORD:hUyhdphl2gXcBDEH5dy}
 
+plugin:
+  run-mode: prod
+  plugin-path: dist/plugins
+  plugin-config-file-path: dist/pluginConfig
+```
 ### 文档地址
  
 [详情](docs/README.md)
