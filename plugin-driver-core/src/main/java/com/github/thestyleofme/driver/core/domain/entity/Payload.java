@@ -10,6 +10,8 @@ import java.util.HashMap;
  */
 public class Payload extends HashMap<String, Object> {
 
+    private static final long serialVersionUID = -6825162545504566689L;
+
     public static final Payload EMPTY = new Payload();
 
     public static Payload of() {

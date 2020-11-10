@@ -13,6 +13,9 @@ import java.util.Map;
  */
 
 public class ColumnType {
+
+    private ColumnType(){}
+
     public static final Map<String,String> COLUMN_TYPE = new HashMap<>();
 
     static {

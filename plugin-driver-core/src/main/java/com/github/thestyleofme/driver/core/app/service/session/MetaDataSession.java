@@ -126,6 +126,7 @@ public interface MetaDataSession {
      * @param queryName 名称
      * @param typeCode  类型Code
      * @return 建表｜食欲｜函数 语句
+     * @deprecated
      */
     @Deprecated
     default String showCreateSql(String catalog, String schema, String queryName, String typeCode) {

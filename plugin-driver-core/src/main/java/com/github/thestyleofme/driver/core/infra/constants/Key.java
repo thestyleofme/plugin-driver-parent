@@ -8,6 +8,8 @@ package com.github.thestyleofme.driver.core.infra.constants;
  */
 public class Key {
 
+    private Key(){}
+
     public static final String METHOD = "method";
     public static final String AUTH = "auth";
     public static final String GRANT_TYPE = "grantType";

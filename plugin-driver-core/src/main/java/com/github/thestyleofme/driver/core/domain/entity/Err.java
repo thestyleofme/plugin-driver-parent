@@ -17,6 +17,8 @@ import lombok.Setter;
 @Setter
 public class Err implements Serializable {
 
+    private static final long serialVersionUID = -8232624747756302048L;
+
     private Boolean failed;
 
     private String code;

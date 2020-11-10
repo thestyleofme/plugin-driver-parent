@@ -118,19 +118,6 @@ public interface SqlGenerator {
     //===============================================================================
 
     /**
-     * 增加索引的Sql（可传入过滤）
-     *
-     * @param schemaName    表模式
-     * @param tableName     表名
-     * @param ikList        索引 元数据
-     * @param ignoreIkNames 过滤的ignoreIkNames
-     * @return 增加索引的Sql
-     */
-    /*default String addIndex(String schemaName, String tableName, List<IndexKey> ikList, List<String> ignoreIkNames) {
-        throw new UnsupportedOperationException("Not Implement");
-    }*/
-
-    /**
      * 增加索引的Sql
      *
      * @param schemaName     表模式
@@ -167,18 +154,6 @@ public interface SqlGenerator {
     /**
      * 增加索引的Sql
      *
-     * @param schemaName 表模式
-     * @param tableName  表名
-     * @param ikList     索引 元数据
-     * @return 增加索引的Sql
-     */
-    /*default String addIndex(String schemaName, String tableName, List<IndexKey> ikList) {
-        throw new UnsupportedOperationException("Not Implement");
-    }*/
-
-    /**
-     * 增加索引的Sql
-     *
      * @param schemaName     表模式
      * @param tableName      表名
      * @param ikBeautifyList 索引 格式化元数据
@@ -205,18 +180,6 @@ public interface SqlGenerator {
     /**
      * 增加主键的SQL
      *
-     * @param schemaName 表模式
-     * @param tableName  表名
-     * @param pkList     主键 元数据
-     * @return 增加主键的SQL
-     */
-   /* default String addPrimaryKey(String schemaName, String tableName, List<PrimaryKey> pkList) {
-        throw new UnsupportedOperationException("Not Implement");
-    }*/
-
-    /**
-     * 增加主键的SQL
-     *
      * @param schemaName         表模式
      * @param tableName          表名
      * @param primaryKeyBeautify 格式化主键元数据
@@ -239,18 +202,6 @@ public interface SqlGenerator {
     //===============================================================================
     //  ForeignKey
     //===============================================================================
-
-    /**
-     * 增加外键的SQL
-     *
-     * @param schemaName 表模式
-     * @param tableName  表名
-     * @param fkList     外键 元数据
-     * @return 增加主键的SQL
-     */
-    /*default String addForeignKey(String schemaName, String tableName, List<ForeignKey> fkList) {
-        throw new UnsupportedOperationException("Not Implement");
-    }*/
 
     /**
      * 增加外键的SQL

@@ -21,6 +21,9 @@ import net.sf.jsqlparser.statement.select.*;
  */
 public final class SqlParserUtil {
 
+    private SqlParserUtil() {
+    }
+
     /**
      * 最小匹配if标签
      */
@@ -56,18 +59,17 @@ public final class SqlParserUtil {
     }
 
     public static List<String> parserFields(String text) {
+        String sql = null;
         try {
-            String sql = text.replace(BaseConstant.Symbol.NEWLINE, BaseConstant.Symbol.SPACE);
+            sql = text.replace(BaseConstant.Symbol.NEWLINE, BaseConstant.Symbol.SPACE);
             Map<String, SqlParamDTO> map = SqlParserUtil.parserParams(sql);
             Map<String, Object> paramMap = new HashMap<>(map.size() * 2);
             map.forEach((k, v) -> paramMap.put(k, Optional.ofNullable(v.getDefaultValue()).orElse(DEFAULT_VALUE)));
             String sqlAnalysis = LocalFreeMakerUtil.parserText(sql, paramMap);
-            try {
-                return SqlParserUtil.tryGrammaticalAnalysisSqlColumnNames(sqlAnalysis);
-            } catch (JSQLParserException e) {
-                throw new DriverException(
-                        String.format("sql[%s] parser column error, please check the sql format!", sql));
-            }
+            return SqlParserUtil.tryGrammaticalAnalysisSqlColumnNames(sqlAnalysis);
+        } catch (JSQLParserException e) {
+            throw new DriverException(
+                    String.format("sql[%s] parser column error, please check the sql format!", sql));
         } catch (Exception e) {
             throw new DriverException(String.format("sql:[%s] parser fail", text));
         }

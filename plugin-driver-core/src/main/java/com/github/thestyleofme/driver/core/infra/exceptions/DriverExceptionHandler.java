@@ -73,6 +73,12 @@ public class DriverExceptionHandler {
         return Err.of(getMessage(e));
     }
 
+    @ExceptionHandler(Exception.class)
+    public Err handleException(Exception e) {
+        log.error("Exception", e);
+        return Err.of(getMessage(e));
+    }
+
     /**
      * 获取原始的错误信息，如果没有cause则返回当前message
      *
