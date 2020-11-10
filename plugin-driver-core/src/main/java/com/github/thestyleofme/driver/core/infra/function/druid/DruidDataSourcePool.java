@@ -38,7 +38,6 @@ public class DruidDataSourcePool implements DriverDataSourcePool {
         configPool(dataSource, pluginDatasourceVO);
         // jdbc配置
         Properties properties = DriverUtil.parseDatasourceSettingInfo(pluginDatasourceVO);
-        DriverUtil.verifyConfig(properties);
         dataSource.configFromPropety(properties);
         // 收集监控指标
         RedisMeterRegistry meterRegistry = new RedisMeterRegistry(pluginDatasourceVO);

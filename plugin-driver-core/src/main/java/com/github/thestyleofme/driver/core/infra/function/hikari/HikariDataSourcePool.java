@@ -31,7 +31,6 @@ public class HikariDataSourcePool implements DriverDataSourcePool {
     @Override
     public DataSource create(PluginDatasourceVO pluginDatasourceVO) {
         final Properties properties = DriverUtil.parseDatasourceSettingInfo(pluginDatasourceVO);
-        DriverUtil.verifyConfig(properties);
         // 转换参数
         this.transform(properties);
         HikariConfig hikariConfig = new HikariConfig();
