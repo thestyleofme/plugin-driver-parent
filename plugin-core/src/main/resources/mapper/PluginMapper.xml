@@ -46,22 +46,22 @@
             <property name="prefix" value="hp"/>
         </include>
         from
-        hpfm_plugin hp
+        plugin
         <where>
             <if test="pluginBigClass !=null">
-                and hp.plugin_big_class = #{pluginBigClass}
+                and plugin_big_class = #{pluginBigClass}
             </if>
             <if test="pluginSmallClass !=null">
-                and hp.plugin_small_class = #{pluginSmallClass}
+                and plugin_small_class = #{pluginSmallClass}
             </if>
             <if test="pluginId !=null">
                 <bind name="pluginId" value="'%' + pluginId + '%'"/>
-                and hp.plugin_id like #{pluginId}
+                and plugin_id like #{pluginId}
             </if>
             <if test="tenantId !=null">
-                and ( hp.tenant_id = #{tenantId}
+                and (tenant_id = #{tenantId}
                 <if test="tenantId != 0">
-                    or hp.tenant_id = 0
+                    or tenant_id = 0
                 </if>
                 )
             </if>

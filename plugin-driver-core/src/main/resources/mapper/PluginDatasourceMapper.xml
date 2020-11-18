@@ -91,13 +91,13 @@
                 </foreach>
             </if>
             <if test="dto.tenantId !=null">
-                and ( hd.tenant_id = #{dto.tenantId}
+                and ( plugin_datasource.tenant_id = #{dto.tenantId}
                 <if test="dto.tenantId != 0">
-                    or hd.tenant_id = 0
+                    or plugin_datasource.tenant_id = 0
                 </if>
                 )
             </if>
-            and hd.enabled_flag = 1
+            and plugin_datasource.enabled_flag = 1
         </where>
     </select>
 
