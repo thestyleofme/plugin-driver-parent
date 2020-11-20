@@ -896,9 +896,9 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     }
 
     @Override
-    public boolean tableInsert(String schema, String tableName, List<Tuple<String, String>> values) {
+    public String tableInsertSql(String table, List<Tuple<String, String>> values) {
         StringBuilder sql = new StringBuilder();
-        sql.append(String.format("insert into %s", tableName));
+        sql.append(String.format("insert into %s", table));
 
         sql.append("(");
         // 值sql
@@ -926,7 +926,13 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         sql.append(")");
         valuesSql.append(")");
         sql.append(BaseConstant.Symbol.SPACE).append("VALUES").append(BaseConstant.Symbol.SPACE).append(valuesSql);
-        this.executeOneUpdate(schema, sql.toString(), true, false);
+        return sql.toString();
+    }
+
+    @Override
+    public boolean tableInsert(String schema, String tableName, List<Tuple<String, String>> values) {
+        String sql = this.tableInsertSql(tableName, values);
+        this.executeOneUpdate(schema, sql, true, false);
         return true;
     }
 

@@ -218,6 +218,17 @@ public interface TableSession {
     }
 
     /**
+     * 获取插入sql语句
+     *
+     * @param table  表名
+     * @param values 值 （二元组 <key（列）,value（值）>）
+     * @return String sql
+     */
+    default String tableInsertSql(String table, List<Tuple<String, String>> values) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
      * 插入数据
      *
      * @param schema 表模式
