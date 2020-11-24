@@ -5,6 +5,7 @@ import java.io.StringReader;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import javax.sql.DataSource;
 
 import com.github.thestyleofme.driver.core.app.service.session.DriverSession;
@@ -893,6 +894,24 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
         } catch (SQLException e) {
             throw new DriverException("current schema", e);
         }
+    }
+
+    @Override
+    public String tableUpdateSql(String table, List<Tuple<String, String>> values, String condition) {
+        if (CollectionUtils.isEmpty(values)) {
+            return BaseConstant.Symbol.EMPTY;
+        }
+        StringBuilder sql = new StringBuilder();
+        sql.append(String.format("update %s set ", table));
+        // 值sql
+        String kvSql = values.stream().map(tuple -> String.format("%s='%s' ", tuple.getFirst(), tuple.getSecond()))
+                .collect(Collectors.joining(BaseConstant.Symbol.COMMA));
+        sql.append(kvSql);
+        if (!StringUtils.isEmpty(condition)) {
+            sql.append(String.format("where %s", condition));
+        }
+        sql.append(BaseConstant.Symbol.SEMICOLON);
+        return sql.toString();
     }
 
     @Override

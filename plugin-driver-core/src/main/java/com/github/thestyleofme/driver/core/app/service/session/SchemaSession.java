@@ -182,6 +182,14 @@ public interface SchemaSession {
         throw new UnsupportedOperationException("Not Implement");
     }
 
+    /**
+     * 是否支持批量操作
+     *
+     * @return true/false
+     */
+    default boolean supportedBatch() {
+        return true;
+    }
 
     /**
      * 批量执行SQL，开启事务，没有返回值

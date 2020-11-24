@@ -218,6 +218,18 @@ public interface TableSession {
     }
 
     /**
+     * 获取更新sql语句
+     *
+     * @param table     表名
+     * @param values    值 （二元组 <key（列）,value（值）>）
+     * @param condition 条件 （如：id>10 and name is null）
+     * @return String sql
+     */
+    default String tableUpdateSql(String table, List<Tuple<String, String>> values, String condition) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
      * 获取插入sql语句
      *
      * @param table  表名
