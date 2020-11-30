@@ -6,8 +6,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.lang.NonNull;
 
@@ -54,12 +53,27 @@ public class BeanUtils {
             BeanInfo beanInfo = Introspector.getBeanInfo(clazz, Object.class);
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
             for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-                Method writeMethod = propertyDescriptor.getWriteMethod();
-                writeMethod.invoke(instance, map.get(propertyDescriptor.getName()));
+                Object obj = map.get(propertyDescriptor.getName());
+                if (Objects.nonNull(obj)) {
+                    Method writeMethod = propertyDescriptor.getWriteMethod();
+                    writeMethod.invoke(instance, obj);
+                }
             }
             return instance;
         } catch (InstantiationException | IllegalAccessException | IntrospectionException | InvocationTargetException | NoSuchMethodException e) {
             throw new IllegalStateException("map to java bean error", e);
         }
+    }
+
+    /**
+     * 根据List<Map<String, Object>>数据转换为JavaBean
+     */
+    public static <T> List<T> listMap2Bean(List<Map<String, Object>> listMap, Class<T> clazz) {
+        List<T> list = new ArrayList<>();
+        for (Map<String, Object> map : listMap) {
+            T t = map2Bean(map, clazz);
+            list.add(t);
+        }
+        return list;
     }
 }
