@@ -98,8 +98,8 @@ public interface TableSession {
     /**
      * 获取schema下的table的名称和注释
      *
-     * @param schema
-     * @param tablePattern
+     * @param schema       schema
+     * @param tablePattern tablePattern
      * @return List<Table>
      */
     default List<Table> tablesNameAndDesc(String schema, String tablePattern) {
@@ -109,9 +109,9 @@ public interface TableSession {
     /**
      * 获取schema下的table的名称和注释
      *
-     * @param schema
-     * @param tablePattern
-     * @param type
+     * @param schema       schema
+     * @param tablePattern tablePattern
+     * @param type         type
      * @return List<Table>
      */
     default List<Table> tablesNameAndDesc(String schema, String tablePattern, String... type) {

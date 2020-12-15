@@ -125,8 +125,9 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     private boolean isSchema(DataSource dataSource) {
         try (Connection connection = dataSource.getConnection()) {
             String productName = connection.getMetaData().getDatabaseProductName().toUpperCase();
-            // mysql比较特殊是catalog型的，其余都是schema型
-            return !(productName.contains(DataSourceTypeConstant.Jdbc.MYSQL));
+            // mysql和presto比较特殊是catalog型的，其余都是schema型
+            return !(productName.contains(DataSourceTypeConstant.Jdbc.MYSQL) ||
+                    productName.contains(DataSourceTypeConstant.Jdbc.PRESTO));
         } catch (SQLException e) {
             throw new DriverException("getDatabaseProductName error", e);
         }
