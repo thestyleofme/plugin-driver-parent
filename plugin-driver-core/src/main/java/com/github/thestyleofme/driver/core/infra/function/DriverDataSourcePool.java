@@ -2,10 +2,11 @@ package com.github.thestyleofme.driver.core.infra.function;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.function.Consumer;
 import javax.sql.DataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.github.thestyleofme.driver.core.infra.constants.DataSourceTypeConstant;
 import com.github.thestyleofme.driver.core.infra.utils.DriverUtil;
 import com.github.thestyleofme.driver.core.infra.vo.PluginDatasourceVO;
 import com.zaxxer.hikari.HikariConfig;
@@ -20,8 +21,14 @@ import com.zaxxer.hikari.HikariConfig;
  */
 public interface DriverDataSourcePool {
 
-    String REMARKS = "remarks";
-    String USE_INFORMATION_SCHEMA = "useInformationSchema";
+    /**
+     * 创建数据源
+     *
+     * @param pluginDatasourceVO 配置信息
+     * @param consumer           处理参数逻辑
+     * @return DataSource
+     */
+    DataSource create(PluginDatasourceVO pluginDatasourceVO, Consumer<Properties> consumer);
 
     /**
      * 创建数据源
@@ -43,10 +50,16 @@ public interface DriverDataSourcePool {
         Optional.ofNullable(list.get(1)).ifPresent(s -> dataSource.setDriverClassName(list.get(1)));
         dataSource.setUsername(list.get(2));
         dataSource.setPassword(list.get(3));
-        if (!DataSourceTypeConstant.Jdbc.PRESTO.equals(pluginDatasourceVO.getDatasourceType())) {
-            dataSource.addConnectionProperty(REMARKS, Boolean.TRUE.toString());
-            dataSource.addConnectionProperty(USE_INFORMATION_SCHEMA, Boolean.TRUE.toString());
-        }
+    }
+
+    /**
+     * 默认参数配置
+     *
+     * @param properties properties
+     */
+    default void richProperties(Properties properties) {
+        properties.putIfAbsent("datasource.remarks", Boolean.TRUE.toString());
+        properties.putIfAbsent("datasource.useInformationSchema", Boolean.TRUE.toString());
     }
 
 
@@ -62,10 +75,6 @@ public interface DriverDataSourcePool {
         Optional.ofNullable(list.get(1)).ifPresent(s -> hikariConfig.setDriverClassName(list.get(1)));
         hikariConfig.setUsername(list.get(2));
         hikariConfig.setPassword(list.get(3));
-        if (!DataSourceTypeConstant.Jdbc.PRESTO.equals(pluginDatasourceVO.getDatasourceType())) {
-            hikariConfig.addDataSourceProperty(REMARKS, Boolean.TRUE.toString());
-            hikariConfig.addDataSourceProperty(USE_INFORMATION_SCHEMA, Boolean.TRUE.toString());
-        }
     }
 
 }

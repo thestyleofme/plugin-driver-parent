@@ -23,9 +23,9 @@ public class PrestoDatasourceFunction implements DriverDataSourceFunction<Plugin
 
     @Override
     public DataSource createDataSource(PluginDatasourceVO pluginDatasourceVO) {
-        return DriverDataSourcePoolFactory.create(pluginDatasourceVO);
+        return DriverDataSourcePoolFactory.create(pluginDatasourceVO,
+                DriverDataSourcePoolFactory.noExtraPropertiesConsumer());
     }
-
 
     @Override
     public String getDriverClassName() {

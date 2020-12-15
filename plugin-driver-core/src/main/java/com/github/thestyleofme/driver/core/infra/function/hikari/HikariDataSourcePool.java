@@ -2,6 +2,7 @@ package com.github.thestyleofme.driver.core.infra.function.hikari;
 
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 import javax.sql.DataSource;
 
 import com.github.thestyleofme.driver.core.domain.entity.DriverPoolSettingInfo;
@@ -30,7 +31,16 @@ public class HikariDataSourcePool implements DriverDataSourcePool {
 
     @Override
     public DataSource create(PluginDatasourceVO pluginDatasourceVO) {
+        return create(pluginDatasourceVO, prop -> {
+        });
+    }
+
+    @Override
+    public DataSource create(PluginDatasourceVO pluginDatasourceVO, Consumer<Properties> consumer) {
         final Properties properties = DriverUtil.parseDatasourceSettingInfo(pluginDatasourceVO);
+        // 丰富配置
+        richProperties(properties);
+        consumer.accept(properties);
         // 转换参数
         this.transform(properties);
         HikariConfig hikariConfig = new HikariConfig();

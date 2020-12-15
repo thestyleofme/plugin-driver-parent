@@ -2,6 +2,7 @@ package com.github.thestyleofme.driver.core.infra.function.druid;
 
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Consumer;
 import javax.sql.DataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
@@ -27,7 +28,23 @@ public class DruidDataSourcePool implements DriverDataSourcePool {
     private static final String THREAD_NAME_PREFIX = "metricPublisher";
 
     @Override
+    public void richProperties(Properties properties) {
+        properties.putIfAbsent("remarks", Boolean.TRUE.toString());
+        properties.putIfAbsent("useInformationSchema", Boolean.TRUE.toString());
+    }
+
+    @Override
     public DataSource create(PluginDatasourceVO pluginDatasourceVO) {
+        return create(pluginDatasourceVO, prop -> {
+        });
+    }
+
+    @Override
+    public DataSource create(PluginDatasourceVO pluginDatasourceVO, Consumer<Properties> consumer) {
+        Properties properties = DriverUtil.parseDatasourceSettingInfo(pluginDatasourceVO);
+        // 丰富配置
+        richProperties(properties);
+        consumer.accept(properties);
         final DruidDataSource dataSource = new DruidDataSource();
         // 基本信息
         configCommonDataSource(dataSource, pluginDatasourceVO);
@@ -37,7 +54,6 @@ public class DruidDataSourcePool implements DriverDataSourcePool {
         // 连接池配置
         configPool(dataSource, pluginDatasourceVO);
         // jdbc配置
-        Properties properties = DriverUtil.parseDatasourceSettingInfo(pluginDatasourceVO);
         dataSource.configFromPropety(properties);
         // 收集监控指标
         RedisMeterRegistry meterRegistry = new RedisMeterRegistry(pluginDatasourceVO);
