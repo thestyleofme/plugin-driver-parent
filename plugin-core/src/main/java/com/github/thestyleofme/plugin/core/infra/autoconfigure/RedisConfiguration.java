@@ -24,7 +24,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @MapperScan({
         "com.github.thestyleofme.**.mapper"
 })
-@Configuration
+@Configuration("driverRedisConfiguration")
 public class RedisConfiguration {
 
     @Bean

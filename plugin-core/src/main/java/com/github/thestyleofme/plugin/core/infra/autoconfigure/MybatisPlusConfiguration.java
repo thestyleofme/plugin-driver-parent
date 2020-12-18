@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
  * @author isaac 2020/6/22 13:37
  * @since 1.0
  */
-@Configuration
+@Configuration("driverMybatisPlusConfiguration")
 public class MybatisPlusConfiguration {
 
     /**
