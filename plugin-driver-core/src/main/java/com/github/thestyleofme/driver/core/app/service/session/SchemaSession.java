@@ -214,11 +214,21 @@ public interface SchemaSession {
     }
 
     /**
-     * 获取当前库的schema列表
+     * 获取当前数据源的schema列表
+     *
+     * @param params 传一个，如catalog，示例：presto使用
+     * @return List<String> 模式列表
+     */
+    default List<String> schemaList(String... params) {
+        throw new UnsupportedOperationException("Not Implement");
+    }
+
+    /**
+     * 获取当前数据源的catalog列表
      *
      * @return List<String> 模式列表
      */
-    default List<String> schemaList() {
+    default List<String> catalogList() {
         throw new UnsupportedOperationException("Not Implement");
     }
 

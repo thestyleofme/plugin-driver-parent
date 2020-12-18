@@ -33,13 +33,14 @@ public class PrestoDriverSessionTest {
     @Before
     public void buildOracleSession() {
         HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl("jdbc:presto://172.23.16.69:23333/hive/terry");
-        dataSource.setCatalog("hive");
+        // dataSource.setJdbcUrl("jdbc:presto://172.23.16.69:23333/hive/terry");
+        dataSource.setJdbcUrl("jdbc:presto://172.23.16.78:29527/devmysql/hdsp_test");
         dataSource.setUsername("presto");
-        dataSource.setSchema("terry");
-        dataSource.setPassword(null);
+        // dataSource.setCatalog("hive");
+        // dataSource.setSchema("terry");
+        // dataSource.setPassword(null);
         dataSource.setDriverClassName("com.facebook.presto.jdbc.PrestoDriver");
-        dataSource.setConnectionTestQuery("show tables");
+        dataSource.setConnectionTestQuery("select 1");
         PrestoDriverSessionFactory prestoDriverSessionFactory = new PrestoDriverSessionFactory();
         prestoDriverSessionFactory.setDataSource(dataSource);
         this.driverSession = prestoDriverSessionFactory.getDriverSession();
@@ -56,6 +57,7 @@ public class PrestoDriverSessionTest {
      */
     @Test
     public void testSchemaList() {
+        // List<String> schemaList = driverSession.schemaList("devmysql");
         List<String> schemaList = driverSession.schemaList();
         System.out.println(schemaList);
         assertFalse(CollectionUtils.isEmpty(schemaList));
@@ -140,7 +142,8 @@ public class PrestoDriverSessionTest {
      */
     @Test
     public void testTableList() {
-        List<String> tableList = driverSession.tableList("information_schema");
+        // List<String> tableList = driverSession.tableList("hdsp_test");
+        List<String> tableList = driverSession.tableList("devmysql","hdsp_test");
         tableList.forEach(System.out::println);
         assertFalse(CollectionUtils.isEmpty(tableList));
     }

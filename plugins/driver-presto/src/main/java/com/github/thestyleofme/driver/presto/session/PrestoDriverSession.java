@@ -1,11 +1,12 @@
 package com.github.thestyleofme.driver.presto.session;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import javax.sql.DataSource;
 
 import com.facebook.presto.jdbc.PrestoResultSet;
@@ -33,11 +34,52 @@ public class PrestoDriverSession extends AbstractRdbmsDriverSession {
     private static final String PAGE_SQL = "%s limit %d";
     private static final String DATE_FMT = "parse_datetime('%s', '%s')";
     private static final String DEFAULT_DATE_FMT = "'yyyy-MM-dd hh:mm:ss";
-    private static final String SELECT_SCHEMA_SQL = "SELECT TABLE_SCHEM, TABLE_CATALOG\tFROM system.jdbc.schemas\t" +
-            " WHERE TABLE_CATALOG='%s' ORDER BY TABLE_CATALOG, TABLE_SCHEM;";
 
     public PrestoDriverSession(DataSource dataSource) {
         super(dataSource);
+    }
+
+    @Override
+    public List<String> catalogList() {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "show catalogs";
+            return query(connection, sql);
+        } catch (SQLException e) {
+            throw new DriverException("fetch catalog list error", e);
+        }
+    }
+
+    @Override
+    public List<String> schemaList(String... params) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "show schemas from " + (params.length == 1 ? params[0] : connection.getCatalog());
+            return query(connection, sql);
+        } catch (SQLException e) {
+            throw new DriverException("fetch schema list error", e);
+        }
+    }
+
+    @Override
+    public List<String> tableList(String catalog, String schema, String... type) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = String.format("show tables from %s.%s",
+                    Optional.ofNullable(catalog).orElse(connection.getCatalog()),
+                    Optional.ofNullable(schema).orElse(connection.getSchema()));
+            return query(connection, sql);
+        } catch (SQLException e) {
+            throw new DriverException("fetch table list error", e);
+        }
+    }
+
+    private List<String> query(Connection connection, String sql) throws SQLException {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<String> list = new ArrayList<>();
+            while (resultSet.next()) {
+                list.add(resultSet.getString(1));
+            }
+            return list;
+        }
     }
 
     @Override
@@ -109,14 +151,6 @@ public class PrestoDriverSession extends AbstractRdbmsDriverSession {
             CloseUtil.close(connection);
         }
         return table;
-    }
-
-    @Override
-    public List<String> schemaList() {
-        List<String> schemas = new ArrayList<>();
-        List<Map<String, Object>> results = executeOneQuery(this.currentSchema(), String.format(SELECT_SCHEMA_SQL, this.currentCatalog()));
-        results.forEach(result -> schemas.add((String) result.get("TABLE_SCHEM")));
-        return schemas;
     }
 
 }

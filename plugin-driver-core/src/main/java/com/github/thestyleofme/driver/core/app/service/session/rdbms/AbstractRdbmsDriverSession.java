@@ -502,7 +502,7 @@ public abstract class AbstractRdbmsDriverSession implements DriverSession, Sessi
     }
 
     @Override
-    public List<String> schemaList() {
+    public List<String> schemaList(String... params) {
         List<String> schemaList = new ArrayList<>();
         try (Connection connection = this.dataSource.getConnection();
              ResultSet rs = schemaExtractor().extract(connection.getMetaData())) {

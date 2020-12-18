@@ -2,7 +2,6 @@ package com.github.thestyleofme.driver.redshift.session;
 
 import static com.github.thestyleofme.plugin.core.infra.constants.BaseConstant.Symbol;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ import org.apache.logging.log4j.util.Strings;
 @Slf4j
 public class RedshiftDriverSession extends AbstractRdbmsDriverSession {
 
-    private static final String DEFAULT_SCHEMA = "leviszt";
     /**
      * 表元数据额外数据
      *
@@ -57,14 +55,6 @@ public class RedshiftDriverSession extends AbstractRdbmsDriverSession {
     @Override
     protected String getPageFormat() {
         return DEFAULT_PAGE_SQL;
-    }
-
-    /**
-     * fixme 临时操作 后续干掉
-     */
-    @Override
-    public List<String> schemaList() {
-        return Collections.singletonList(DEFAULT_SCHEMA);
     }
 
     @Override

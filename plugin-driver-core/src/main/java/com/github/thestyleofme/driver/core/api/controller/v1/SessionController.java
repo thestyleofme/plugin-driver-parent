@@ -54,18 +54,29 @@ public class SessionController {
         this.sessionService = sessionService;
     }
 
-    @ApiOperation(value = "获取schema列表", notes = "数据源编码")
-    @GetMapping("/schemas")
-
-    public ResponseEntity<List<String>> schemas(@PathVariable(name = "organizationId") Long tenantId,
+    @ApiOperation(value = "获取catalog列表", notes = "数据源编码")
+    @GetMapping("/catalogs")
+    public ResponseEntity<List<String>> catalogs(@PathVariable(name = "organizationId") Long tenantId,
                                                 @RequestParam(required = false) String datasourceCode) {
         DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
-        return ResponseEntity.ok(driverSession.schemaList());
+        return ResponseEntity.ok(driverSession.catalogList());
     }
 
-    @ApiOperation(value = "获取该schema下所有表名")
-    @GetMapping("/tables")
+    @ApiOperation(value = "获取schema列表", notes = "数据源编码")
+    @GetMapping("/schemas")
+    public ResponseEntity<List<String>> schemas(@PathVariable(name = "organizationId") Long tenantId,
+                                                @RequestParam(required = false) String datasourceCode,
+                                                @RequestParam(required = false) String catalog) {
+        DriverSession driverSession = driverSessionService.getDriverSession(tenantId, datasourceCode);
+        if (StringUtils.isEmpty(catalog)) {
+            return ResponseEntity.ok(driverSession.schemaList());
+        }
+        return ResponseEntity.ok(driverSession.schemaList(catalog));
+    }
 
+    @ApiOperation(value = "获取该schema下所有表名",
+            notes = "如presto类型时,schema为catalog名称，tableName为schema名称")
+    @GetMapping("/tables")
     public ResponseEntity<?> tableList(@PathVariable(name = "organizationId") Long tenantId,
                                        @RequestParam(required = false) String datasourceCode,
                                        @RequestParam(required = false) String schema,

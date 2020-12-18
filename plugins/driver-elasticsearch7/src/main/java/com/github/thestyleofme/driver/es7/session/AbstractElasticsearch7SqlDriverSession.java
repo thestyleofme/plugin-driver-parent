@@ -44,7 +44,7 @@ public abstract class AbstractElasticsearch7SqlDriverSession extends AbstractEla
         this.uri = httpExec.getUri();
     }
     @Override
-    public List<String> schemaList() {
+    public List<String> schemaList(String... params) {
         String url = uri + INDEX_PATH;
         log.info("url:{}", url);
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);

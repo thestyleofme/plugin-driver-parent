@@ -70,7 +70,7 @@ public abstract class AbstractElasticsearch7DriverSession implements DriverSessi
     //============================================
 
     @Override
-    public List<String> schemaList() {
+    public List<String> schemaList(String... params) {
         try {
             GetIndexRequest request = new GetIndexRequest("*");
             GetIndexResponse response = highLevelClient.indices().get(request, RequestOptions.DEFAULT);

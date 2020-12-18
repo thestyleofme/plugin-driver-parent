@@ -142,7 +142,7 @@ public class FtpDriverSession implements DriverSession, SessionTool {
     }
 
     @Override
-    public List<String> schemaList() {
+    public List<String> schemaList(String... params) {
         return Collections.singletonList("default");
     }
 

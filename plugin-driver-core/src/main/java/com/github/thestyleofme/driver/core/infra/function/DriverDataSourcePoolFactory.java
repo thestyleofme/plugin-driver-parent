@@ -28,14 +28,16 @@ public class DriverDataSourcePoolFactory {
         });
     }
 
+    public static void noExtraPropertiesConsumer(Properties properties){
+        // 如presto不支持这些配置，需remove掉这些默认设置的参数
+        properties.remove("dataSource.remarks");
+        properties.remove("dataSource.useInformationSchema");
+        properties.remove("remarks");
+        properties.remove("useInformationSchema");
+    }
+
     public static Consumer<Properties> noExtraPropertiesConsumer() {
-        return properties -> {
-            // 如presto不支持这些配置，需remove掉这些默认设置的参数
-            properties.remove("dataSource.remarks");
-            properties.remove("dataSource.useInformationSchema");
-            properties.remove("remarks");
-            properties.remove("useInformationSchema");
-        };
+        return DriverDataSourcePoolFactory::noExtraPropertiesConsumer;
     }
 
     public static DataSource create(PluginDatasourceVO pluginDatasourceVO, Consumer<Properties> consumer) {

@@ -61,7 +61,7 @@ public class SqlServerDriverSession extends AbstractRdbmsDriverSession {
     }
 
     @Override
-    public List<String> schemaList() {
+    public List<String> schemaList(String... params) {
         List<String> schemaList = new ArrayList<>();
         try (Connection connection = this.dataSource.getConnection();
              ResultSet rs = schemaExtractor()
