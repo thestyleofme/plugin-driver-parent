@@ -40,7 +40,7 @@ import org.springframework.util.CollectionUtils;
 public class MysqlDriverSession extends AbstractRdbmsDriverSession {
 
     private static final String SHOW_CREATE_TABLE = "show create table %s;";
-    private static final String DATE_FMT = "str_to_date(%s, '%s')";
+    private static final String DATE_FMT = "str_to_date('%s', '%s')";
     private static final String DEFAULT_DATE_FMT = "%Y-%m-%d %H:%i:%s";
     private static final String TABLE_METADATA_SQL = "select " +
             "engine as engine," +
