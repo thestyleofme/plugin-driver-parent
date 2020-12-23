@@ -142,6 +142,10 @@
                     <artifactId>swagger-models</artifactId>
                     <groupId>io.swagger</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>swagger-annotations</artifactId>
+                    <groupId>io.swagger</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <!-- fix swagger: error: AbstractSerializableParameter: Illegal DefaultValue null for parameter type integer -->
