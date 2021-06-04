@@ -15,7 +15,7 @@
         <plugin.class>com.github.thestyleofme.driver.http.HttpPlugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>terry</plugin.provider>
-        <httpclient.version>4.5.10</httpclient.version>
+        <httpclient.version>4.5.13</httpclient.version>
     </properties>
 
     <dependencies>
