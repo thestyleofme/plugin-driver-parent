@@ -34,13 +34,69 @@ http://localhost:9898/doc.html
 首先需要先打包，保证plugin下代码被编译，然后执行DriverApplication即可，可访问
 swagger地址，查看是否有controller那些接口。
 
-### 其他模块引入
+下面的操作可以结合代码进行查看 
+
+> 创建驱动 
 
 ```
+POST v1/{tanentId}/plugin 
+BODY 参照截图
+plugin: {
+    "pluginId":"driver-mysql5",
+    "pluginDescription":"hdspdev_mysql5",
+    "pluginVersion":"1.0.0",
+    "pluginBigClass":"RDB",
+    "pluginSmallClass":"MYSQL"
+}
+
+```
+
+![image](docs/images/plugin-core/plugin-create.jpg)
+
+> 创建数据源
+
+```
+POST /v1/{tanentId}/plugin-datasource
+BODY 
+{
+    "databasePoolType": "hikari",
+    "datasourceClass": "MYSQL",
+    "databasePoolSetting": "{\"minimumIdle\":10,\"maxPoolSize\":20,\"connectionTimeout\":30000,\"idleTimeout\":10000,\"validationTimeout\":5000,\"maxLifetime\":1800000,\"connectionTestQuery\":\"select 1\"}",
+    "datasourceCode": "hdsp_mysql5",
+    "datasourceDescription": "hdsp_mysql5",
+    "datasourceType": "RDB",
+    "driverId": 1,
+    "enabledFlag": 1,
+    "settingsInfo": "{\"jdbcUrl\":\"jdbc:mysql://172.23.16.63:23306/hdsp_dispatch?useUnicode=true&characterEncoding=utf-8&useSSL=false\",\"username\":\"hdsp_dev\",\"password\":\"hdsp_dev123$%^\"}",
+    "tenantId": 0
+}
+```
+
+![img.png](docs/images/plugin-driver-core/plugin-datasource-create.png)
+
+接下来就可以统一获取数据源进行相应API调用
+
+```java
+
+@Autowired
+private DriverSessionService driverSessionService;
+
+DriverSession driverSession = driverSessionService.getDriverSession(YOUR_TEANANT_ID, YOUR_DATASOURCE_CODE);
+List<Map<String, Object>> result = driverSession.executeOneQuery(YOUR_SCHEMA, "SELECT 1 FROM TABLE WHERE ID > 20000");
+```
+
+[参照如何使用插件demo示例](docs/plugin-dev.md)
+
+### 其他模块引入
+
+如其他项目依赖多数据源，可添加如下依赖
+
+```
+# 先打包到本地
 cd plugin-driver-parent
 mvn clean install -pl plugin-driver-core -am -DskipTests
 ```
-> pom
+> pom添加依赖即可
 ```
 <dependency>
     <groupId>com.github.thestyleofme</groupId>
