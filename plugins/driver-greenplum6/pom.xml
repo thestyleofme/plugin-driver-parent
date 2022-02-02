@@ -15,7 +15,7 @@
         <plugin.class>com.github.thestyleofme.driver.greenplum.GreenplumPlugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>JupiterMouse</plugin.provider>
-        <greenplum.jdbc.version>42.2.6</greenplum.jdbc.version>
+        <greenplum.jdbc.version>42.2.25</greenplum.jdbc.version>
     </properties>
 
     <dependencies>
