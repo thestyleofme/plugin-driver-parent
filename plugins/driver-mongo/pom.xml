@@ -16,7 +16,7 @@
         <plugin.class>com.github.thestyleofme.driver.mongo.MongoPlugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>stone</plugin.provider>
-        <mongo.jdbc.version>3.12.7</mongo.jdbc.version>
+        <mongo.jdbc.version>3.12.8</mongo.jdbc.version>
     </properties>
 
     <dependencies>
