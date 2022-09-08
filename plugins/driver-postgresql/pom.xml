@@ -15,7 +15,7 @@
         <plugin.class>com.github.thestyleofme.driver.postgresql.PostgresqlPlugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>JupiterMouse</plugin.provider>
-        <postgresql.jdbc.version>42.2.6</postgresql.jdbc.version>
+        <postgresql.jdbc.version>42.4.1</postgresql.jdbc.version>
     </properties>
 
     <dependencies>
