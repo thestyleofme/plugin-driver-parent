@@ -15,7 +15,7 @@
         <plugin.class>com.github.thestyleofme.driver.ftp.FtpPlugin</plugin.class>
         <plugin.version>${project.version}</plugin.version>
         <plugin.provider>lgl</plugin.provider>
-        <commons-net.version>3.6</commons-net.version>
+        <commons-net.version>3.9.0</commons-net.version>
         <jsch.version>0.1.55</jsch.version>
         <javacsv.version>2.0</javacsv.version>
     </properties>
